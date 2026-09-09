@@ -29,6 +29,7 @@ import AuditLogs from "../pages/finance/AuditLogs";
 import WorkAssignment from "../pages/workassignment/WorkAssignment";
 
 import { useClientAuth } from "../context/ClientAuthContext";
+import { canAccessFeature } from "../config/access";
 import ClientDashboard from "../pages/finance/ClientDashboard";
 import WorkTarget from "../pages/workTarget/WorkTarget";
 import ComplaintList from "../pages/complaint/ComplaintList";
@@ -50,10 +51,11 @@ function ProtectedRoute({ children }) {
   return token ? children : <Navigate to="/login" replace />;
 }
 
-// Master Control route guard: redirects to overview if the module is disabled
+// Route guard: redirects to overview if the module is disabled in Master
+// Control or not available to the signed-in role (client admin vs employee).
 function FeatureRoute({ featureKey, children }) {
-  const { enabledFeatures } = useClientAuth();
-  if (!enabledFeatures?.includes(featureKey)) {
+  const { client, enabledFeatures } = useClientAuth();
+  if (!canAccessFeature(featureKey, { client, enabledFeatures })) {
     return <Navigate to="/overview" replace />;
   }
   return children;
@@ -91,11 +93,11 @@ export default function ClientRoutes() {
           element={<FeatureRoute featureKey="PERFORMANCE_REPORT"><EmployeePerformanceReport /></FeatureRoute>}
         />
         <Route path="work-policy" element={<FeatureRoute featureKey="WORK_POLICY"><WorkPolicy /></FeatureRoute>} />
-          <Route path="sop-library" element={<ClientSOPLibrary />} />
-        <Route path="leave-approvals" element={<LeaveApprovals />} />
-        <Route path="offer-letters" element={<OfferLetters />} />
-        <Route path="employee-search" element={<EmployeeSearch />} />
-        <Route path="work-target" element={<WorkTarget />} />
+          <Route path="sop-library" element={<FeatureRoute featureKey="SOP_LIBRARY"><ClientSOPLibrary /></FeatureRoute>} />
+        <Route path="leave-approvals" element={<FeatureRoute featureKey="LEAVE_APPROVALS"><LeaveApprovals /></FeatureRoute>} />
+        <Route path="offer-letters" element={<FeatureRoute featureKey="OFFER_LETTERS"><OfferLetters /></FeatureRoute>} />
+        <Route path="employee-search" element={<FeatureRoute featureKey="EMPLOYEE_SEARCH"><EmployeeSearch /></FeatureRoute>} />
+        <Route path="work-target" element={<FeatureRoute featureKey="WORK_TARGET"><WorkTarget /></FeatureRoute>} />
 
         <Route path="expenses" element={<FeatureRoute featureKey="FINANCE_DASHBOARD"><ClientDashboard /></FeatureRoute>} />
 
@@ -121,7 +123,7 @@ export default function ClientRoutes() {
         <Route path="/invoices" element={<Invoices />} />
         <Route path="/create-invoice" element={<CreateInvoice />} />
         <Route path="/invoice/:id" element={<InvoicePreview />} />
-        <Route path="/proposals" element={<ClientProposals />} />
+        <Route path="/proposals" element={<FeatureRoute featureKey="PROPOSALS"><ClientProposals /></FeatureRoute>} />
        <Route index element={<Navigate to="dashboard" replace />} />
         <Route path="*" element={<Navigate to="/overview" replace />} />
       </Route>

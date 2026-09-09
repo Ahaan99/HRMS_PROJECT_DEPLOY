@@ -280,8 +280,12 @@ export default function PerformanceTracker() {
     <div className="space-y-6">
       <PageHeader
         icon={<TrendingUp size={22} />}
-        title="Employee Performance"
-        desc="Track and manage employee performance with ratings."
+        title={isEmployee ? "My Performance" : "Employee Performance"}
+        desc={
+          isEmployee
+            ? "Your monthly reviews and ratings from your client administrator."
+            : "Track and manage employee performance with ratings."
+        }
         actions={
           !isEmployee && (
             <button onClick={openAddModal} className="btn-primary-premium">
@@ -319,22 +323,24 @@ export default function PerformanceTracker() {
           <input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search by employee name, code, or review..."
+            placeholder={isEmployee ? "Search your reviews..." : "Search by employee name, code, or review..."}
             className="input-premium pl-9 w-full"
           />
         </div>
 
-        <select
-          value={deptFilter}
-          onChange={(e) => setDeptFilter(Number(e.target.value))}
-          className="input-premium w-full xl:w-[220px]"
-        >
-          {deptFilterOptions.map((opt) => (
-            <option key={opt.value} value={opt.value}>
-              {opt.label}
-            </option>
-          ))}
-        </select>
+        {!isEmployee && (
+          <select
+            value={deptFilter}
+            onChange={(e) => setDeptFilter(Number(e.target.value))}
+            className="input-premium w-full xl:w-[220px]"
+          >
+            {deptFilterOptions.map((opt) => (
+              <option key={opt.value} value={opt.value}>
+                {opt.label}
+              </option>
+            ))}
+          </select>
+        )}
 
         <select
           value={performanceFilter}
@@ -463,7 +469,7 @@ export default function PerformanceTracker() {
                     <EmptyState
                       icon={<TrendingUp size={28} />}
                       title="No performance records found"
-                      desc="Add a performance review or adjust the filters."
+                      desc={isEmployee ? "You have no reviews yet." : "Add a performance review or adjust the filters."}
                     />
                   </td>
                 </tr>

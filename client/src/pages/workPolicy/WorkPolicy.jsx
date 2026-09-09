@@ -245,7 +245,7 @@ export default function WorkPolicy() {
       <PageHeader
         icon={<FileText size={22} />}
         title="Work Policy"
-        desc="Manage automated work policies for employees."
+        desc={isEmployee ? "Policies that apply to you." : "Manage automated work policies for employees."}
         actions={
           !isEmployee && (
             <button onClick={openAddModal} className="btn-primary-premium">
@@ -420,7 +420,7 @@ export default function WorkPolicy() {
                     <EmptyState
                       icon={<FileText size={28} />}
                       title="No policies found"
-                      desc="Add a work policy or adjust the filters."
+                      desc={isEmployee ? "No policies apply to you yet." : "Add a work policy or adjust the filters."}
                     />
                   </td>
                 </tr>

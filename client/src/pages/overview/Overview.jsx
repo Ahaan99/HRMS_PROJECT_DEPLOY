@@ -11,6 +11,9 @@ import {
 
 import PageHeader from "../../components/common/PageHeader";
 import API from "../../services/api";
+import { useClientAuth } from "../../context/ClientAuthContext";
+import { isEmployeeRole } from "../../config/access";
+import EmployeeOverview from "./EmployeeOverview";
 
 // =========================
 // HELPERS
@@ -142,6 +145,12 @@ function Panel({ title, sub, to, toLabel, children }) {
 // OVERVIEW PAGE
 // =========================
 export default function Overview() {
+  const { client } = useClientAuth();
+  if (isEmployeeRole(client)) return <EmployeeOverview employee={client} />;
+  return <AdminOverview />;
+}
+
+function AdminOverview() {
   const [loading, setLoading] = useState(true);
   const [employees, setEmployees] = useState([]);
   const [attendance, setAttendance] = useState([]);

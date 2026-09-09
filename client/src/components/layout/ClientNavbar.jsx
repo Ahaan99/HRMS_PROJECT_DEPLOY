@@ -2,6 +2,7 @@ import { useState } from "react";
 import { LogOut, Menu, Sun, Moon, Monitor } from "lucide-react";
 import { useClientAuth } from "../../context/ClientAuthContext";
 import { useTheme } from "../../context/ThemeContext";
+import { isEmployeeRole } from "../../config/access";
 
 const THEME_OPTIONS = [
   { value: "light", label: "Light", Icon: Sun },
@@ -46,10 +47,12 @@ export default function ClientNavbar({ setOpen }) {
 
         <div>
           <h2 className="text-sm md:text-base font-bold tracking-tight text-slate-900">
-            Welcome back
+            Welcome back{client?.name ? `, ${client.name.split(" ")[0]}` : ""}
           </h2>
           <p className="text-xs font-medium text-slate-500">
-            {client?.company_name || "Client Portal"}
+            {isEmployeeRole(client)
+              ? "Employee workspace"
+              : client?.company_name || "Client Portal"}
           </p>
         </div>
       </div>
