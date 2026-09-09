@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import API from "../../services/api.js";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useClientAuth } from "../../context/ClientAuthContext";
 import {
   Target,
@@ -23,8 +23,6 @@ export default function LeadAssigner() {
 
   const { client } = useClientAuth();
   const isEmployee = client?.role === "CLIENT_EMPLOYEE";
-
-  const navigate = useNavigate();
 
   // ✅ FETCH BATCHES (COMMON)
   const fetchBatches = async () => {
@@ -203,11 +201,10 @@ export default function LeadAssigner() {
               : 0;
 
             return (
-              <button
+              <Link
                 key={b.id}
-                type="button"
-                onClick={() => navigate(`/leads/${b.id}`)}
-                className="card-premium group cursor-pointer p-5 text-left transition hover:-translate-y-0.5 hover:shadow-lg"
+                to={`/leads/${b.id}`}
+                className="card-premium group block p-5 text-left transition hover:-translate-y-0.5 hover:shadow-lg"
               >
                 <div className="flex items-start gap-3">
                   <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600 dark:bg-indigo-500/10 dark:text-indigo-400">
@@ -251,7 +248,7 @@ export default function LeadAssigner() {
                     {b.completed} / {b.total} done
                   </p>
                 </div>
-              </button>
+              </Link>
             );
           })}
         </div>

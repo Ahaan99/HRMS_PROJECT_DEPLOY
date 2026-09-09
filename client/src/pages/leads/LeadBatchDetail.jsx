@@ -14,20 +14,16 @@ export default function LeadBatchDetail() {
   const isEmployee = client?.role === "CLIENT_EMPLOYEE";
 
   // 🔥 FETCH
+  // The batch endpoint is tenant-scoped and, for employees, narrowed to their
+  // own rows on the server, so both roles load the same URL.
   const fetchLeads = async () => {
     try {
-      let res;
-      
-      if (isEmployee) {
-        res = await API.get(`/client/leads/my`);
-      } else {
-        res = await API.get(`/client/leads/batch/${id}`);
-      }
-
-      setLeads(res.data.data);
-      setLocalLeads(res.data.data);
-    } catch {
-      toast.error("Failed to load leads");
+      const res = await API.get(`/client/leads/batch/${id}`);
+      const rows = Array.isArray(res.data?.data) ? res.data.data : [];
+      setLeads(rows);
+      setLocalLeads(rows);
+    } catch (err) {
+      toast.error(err.response?.data?.message || "Failed to load leads");
     }
   };
 
@@ -57,8 +53,7 @@ export default function LeadBatchDetail() {
       toast.success("Updated successfully");
       fetchLeads();
     } catch (err) {
-      console.log(err);
-      toast.error("Update failed");
+      toast.error(err.response?.data?.message || "Update failed");
     }
   };
 

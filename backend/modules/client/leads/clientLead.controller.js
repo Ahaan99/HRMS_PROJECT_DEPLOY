@@ -4,9 +4,15 @@ import xlsx from "xlsx";
 // Resolve the caller's tenant scope from clientUnifiedAuthMiddleware.
 //   client_admin     -> req.client   { id, client_code }
 //   CLIENT_EMPLOYEE  -> req.employee { employee_id, client_id }
+// Check the employee first: Node's IncomingMessage already exposes `req.client`
+// (the TCP socket), so its mere presence does not mean the caller is an admin.
 const scopeOf = (req) => {
-  if (req.client) return { clientId: req.client.id, employeeId: null, isAdmin: true };
-  if (req.employee) return { clientId: req.employee.client_id, employeeId: req.employee.employee_id, isAdmin: false };
+  if (req.employee?.employee_id) {
+    return { clientId: req.employee.client_id, employeeId: req.employee.employee_id, isAdmin: false };
+  }
+  if (req.client?.client_code && req.client.id) {
+    return { clientId: req.client.id, employeeId: null, isAdmin: true };
+  }
   return null;
 };
 
