@@ -1,12 +1,12 @@
 # HRMS Full Production Package - Hostinger Deploy Guide
 
-Package date: 2026-09-08. Everything in this zip was built from the same source
+Package date: 2026-09-09. Everything in this zip was built from the same source
 tree and verified together (backend boot PASS with 0 schema failures; 256 live GET
 endpoints 2xx across all 7 portals; per-role access cross-check PASS; the three
 data-flow breaks found in the 2026-09-08 video audit are fixed and re-verified).
 Deploy the whole package - do not mix with older builds.
 
-**Upgrading from the 2026-09-07 build?** Follow 1b. There are NO manual SQL
+**Upgrading from the 2026-09-07 or 2026-09-08 build?** Follow 1b. There are NO manual SQL
 steps any more: on every start the backend creates missing HR Robo / Smart
 Attendance / EVS tables and applies `migrations/*.sql` exactly once (tracked in
 `schema_migrations`). The legacy Python services (HR_robo :8001, Smart
@@ -162,7 +162,37 @@ each portal's `.env.production` and rebuild.
 - `OTP_DEBUG=false`; rotate `JWT_SECRET` and `GROQ_API_KEY` if they were ever shared.
 - Keep `uploads/` outside of any public web root except through the backend's `/uploads` route.
 
-## Change log 2026-09-08 release (this package)
+## Change log 2026-09-09 release (this package)
+Backend
+- **Client Onboarding pipeline** (`/api/super-admin/onboarding`): Proposal Sent -> Details
+  Submitted -> Agreement Generated -> Agreement Signed -> Onboarded, with server-side stage
+  gates. "Agreement Generated" renders the branded MSA PDF into `uploads/generated` and
+  creates a `client_agreements` row (status `draft`); "Signed" sets it `active`;
+  "Onboarded" links an existing client (matched by e-mail/phone) or provisions a new one
+  (gap-safe client code, temporary password shown once, all 21 features enabled) and locks
+  the record. Migration `2026-09-09_onboarding_links.sql` (applied automatically on boot).
+- **Client Agreements for clients**: `GET /api/client/agreements` (scoped by client id).
+- **Client employees**: Work Target and Inventory read routes accept client-employee
+  tokens (own / department / company-wide targets; company stock). All create, update
+  and delete routes stay client-admin only.
+- Emergency alerts table migration `2026-09-09_emergency_alerts.sql`.
+- Local-only test and report scripts removed from the package.
+
+Portals
+- Super Admin: Client Onboarding page (pipeline, stage buttons, Details drawer, locked
+  onboarded rows), Client Agreements list shows onboarding-generated agreements.
+- Client: Agreements page (Admin tab); Employee tab shows Work Target and Inventory
+  read-only; Overview personal workspace for client employees.
+
+Deploy notes for this release
+- No manual SQL. Start the backend once; check `schema_migrations` contains
+  `2026-09-09_onboarding_links.sql` and `2026-09-09_emergency_alerts.sql`.
+- Rebuild/redeploy ALL seven portal folders (admin and client changed; the others
+  were rebuilt from the same tree so versions match).
+- `CORS_ORIGINS` in `.env` must list the admin portal domain you actually use
+  (`https://admin-hrms.recruweb.com`); the template now includes it.
+
+Change log 2026-09-08 release
 Backend
 - **Python services retired**: HR Robo (`/api/hr-robo`, tables `robo_*`) and Smart
   Attendance (`/api/smart-attendance`, tables `attendance_*`) now run natively in Node.
