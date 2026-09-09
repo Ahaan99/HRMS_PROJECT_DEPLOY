@@ -35,6 +35,18 @@ export const loginClientEmployeeService = async ({
   );
 
   if (!rows.length) {
+    const [admin] = await db.query(
+      `SELECT id FROM clients WHERE email = ? AND id = ? LIMIT 1`,
+      [email, client_id],
+    );
+    if (admin.length) {
+      const err = new Error(
+        "This email is the client administrator account. Switch to the Client tab to sign in.",
+      );
+      err.code = "WRONG_LOGIN_TYPE";
+      err.loginType = "admin";
+      throw err;
+    }
     throw new Error("Invalid credentials");
   }
 

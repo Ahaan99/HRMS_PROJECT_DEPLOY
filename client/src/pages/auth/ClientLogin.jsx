@@ -447,7 +447,13 @@ export default function ClientLogin() {
       if (loginType === "admin") navigate("/employees");
       else navigate("/sales");
     } catch (err) {
-      toast.error(err?.response?.data?.message || "Login failed");
+      const data = err?.response?.data;
+      if (data?.code === "WRONG_LOGIN_TYPE" && data.loginType) {
+        setLoginType(data.loginType);
+        toast(data.message, { icon: "↔", duration: 6000 });
+      } else {
+        toast.error(data?.message || "Login failed");
+      }
     } finally {
       setLoading(false);
     }

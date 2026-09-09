@@ -19,9 +19,10 @@ export const loginClientAdmin = async (req, res) => {
       ...data,
     });
   } catch (error) {
-    return res.status(401).json({
+    return res.status(error.code === "WRONG_LOGIN_TYPE" ? 403 : 401).json({
       success: false,
       message: error.message || "Login failed",
+      ...(error.code ? { code: error.code, loginType: error.loginType } : {}),
     });
   }
 };

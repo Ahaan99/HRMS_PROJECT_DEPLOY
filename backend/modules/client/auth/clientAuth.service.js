@@ -13,7 +13,18 @@ export const loginClientAdminService = async ({ email, password }) => {
     [email]
   );
   if (!clients.length) {
-
+    const [emp] = await db.query(
+      `SELECT id FROM client_employees WHERE email = ? LIMIT 1`,
+      [email],
+    );
+    if (emp.length) {
+      const err = new Error(
+        "This email belongs to an employee account. Switch to the Employee tab and enter your client code.",
+      );
+      err.code = "WRONG_LOGIN_TYPE";
+      err.loginType = "employee";
+      throw err;
+    }
     throw new Error("Invalid Credentials");
   }
 

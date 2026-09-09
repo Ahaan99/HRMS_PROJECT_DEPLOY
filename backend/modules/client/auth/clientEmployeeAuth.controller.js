@@ -23,9 +23,10 @@ export const loginClientEmployee = async (req, res) => {
       ...data,
     });
   } catch (err) {
-    return res.status(401).json({
+    return res.status(err.code === "WRONG_LOGIN_TYPE" ? 403 : 401).json({
       success: false,
       message: err.message || "Login failed",
+      ...(err.code ? { code: err.code, loginType: err.loginType } : {}),
     });
   }
 };
