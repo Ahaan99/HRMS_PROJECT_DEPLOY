@@ -27,7 +27,7 @@ router.post("/add", auditMiddleware("ADD_ASSET"), createAsset);
 
 // PUT
 router.put("/:id", auditMiddleware("UPDATE_ASSET"), updateAsset);
-router.put("/status/:id", updateAssetStatus);
+router.put("/status/:id", auditMiddleware("UPDATE_ASSET_STATUS"), updateAssetStatus);
 
 // DELETE
 router.delete("/:id", auditMiddleware("DELETE_ASSET"), deleteAsset);

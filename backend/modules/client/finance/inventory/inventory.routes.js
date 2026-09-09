@@ -36,7 +36,7 @@ router.post("/add", auditMiddleware("ADD_INVENTORY"),createInventoryItem);
 
 // PUT
 router.put("/:id", auditMiddleware("UPDATE_INVENTORY"), updateInventoryItem);
-router.put("/stock/:id", updateStock);
+router.put("/stock/:id", auditMiddleware("UPDATE_INVENTORY_STOCK"), updateStock);
 
 // DELETE
 router.delete("/:id", auditMiddleware("DELETE_INVENTORY"), deleteInventoryItem);
