@@ -62,7 +62,7 @@ export default function WorkAssignmentTable({ rows, loading, onRefresh }) {
             style={{ width: `${progress}%` }}
           />
         </div>
-        <span className="text-xs font-medium text-gray-600 w-8">
+        <span className={`text-xs font-semibold tabular-nums w-9 text-right ${status === "completed" ? "text-emerald-600" : "text-gray-600"}`}>
           {progress}%
         </span>
       </div>
@@ -137,12 +137,14 @@ export default function WorkAssignmentTable({ rows, loading, onRefresh }) {
               </tr>
             ) : (
               rows.map((row) => {
-                const progress = row.target_value
-                  ? Math.min(
-                      Math.round((row.current_value / row.target_value) * 100),
-                      100,
-                    )
-                  : 0;
+                const target = Number(row.target_value) > 0 ? Number(row.target_value) : 100;
+                const progress =
+                  row.status === "completed"
+                    ? 100
+                    : Math.min(
+                        100,
+                        Math.max(0, Math.round(((Number(row.current_value) || 0) / target) * 100)),
+                      );
                 return (
                   <tr key={row.id} className="hover:bg-gray-50/50 transition">
                     <td className="px-4 py-4 text-sm font-mono text-indigo-600">
@@ -184,7 +186,7 @@ export default function WorkAssignmentTable({ rows, loading, onRefresh }) {
                           <input
                             type="number"
                             min="0"
-                            max={row.target_value || 100}
+                            max={Number(row.target_value) > 0 ? Number(row.target_value) : 100}
                             placeholder="Update"
                             className="w-20 px-2 py-1 border rounded text-xs"
                             onChange={(e) => {
@@ -200,7 +202,7 @@ export default function WorkAssignmentTable({ rows, loading, onRefresh }) {
                                   {
                                     current_value: row._newProgress,
                                     status:
-                                      row._newProgress >= row.target_value
+                                      Number(row._newProgress) >= (Number(row.target_value) > 0 ? Number(row.target_value) : 100)
                                         ? "completed"
                                         : "in_progress",
                                   },

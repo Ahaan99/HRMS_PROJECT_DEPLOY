@@ -44,7 +44,7 @@ export default function AssignWorkModal({ open, onClose, onSuccess }) {
       await API.post("/client/work-assignment", {
         title: form.title,
         employeeId: form.employeeId,
-        targetValue: form.targetValue || 0,
+        targetValue: Number(form.targetValue) > 0 ? Number(form.targetValue) : 100,
         unit: form.unit || "",
         deadline: form.deadline || null,
         priority: form.priority,

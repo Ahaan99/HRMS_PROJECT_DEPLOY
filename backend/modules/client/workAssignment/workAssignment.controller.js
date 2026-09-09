@@ -91,7 +91,7 @@ export const createAssignment = async (req, res) => {
         clientId,
         employeeId,
         title,
-        targetValue || 0,
+        Number(targetValue) > 0 ? Number(targetValue) : 100,
         unit || "",
         deadline || null,
         priority || "medium",
@@ -139,7 +139,7 @@ export const updateAssignment = async (req, res) => {
         deadline = ?,
         priority = ?
       WHERE id = ? AND client_id = ?`,
-      [title, targetValue, unit, deadline, priority, id, clientId],
+      [title, Number(targetValue) > 0 ? Number(targetValue) : 100, unit, deadline, priority, id, clientId],
     );
 
     res.json({ success: true });
@@ -164,16 +164,27 @@ export const updateStatus = async (req, res) => {
       });
     }
 
+    const [[task]] = await db.query(
+      `SELECT target_value FROM client_work_assignments WHERE id = ? AND employee_id = ?`,
+      [id, req.employee.employee_id],
+    );
+    if (!task) {
+      return res.status(404).json({ success: false, message: "Assignment not found" });
+    }
+
+    const target = Number(task.target_value) > 0 ? Number(task.target_value) : 100;
+    let value = Math.max(0, Number(current_value) || 0);
+    let nextStatus = status || "in_progress";
+
+    // Keep progress and status consistent in both directions.
+    if (nextStatus === "completed") value = Math.max(value, target);
+    else if (value >= target) nextStatus = "completed";
+
     await db.query(
-      `UPDATE client_work_assignments 
+      `UPDATE client_work_assignments
        SET current_value = ?, status = ?
        WHERE id = ? AND employee_id = ?`,
-      [
-        current_value || 0,
-        status || "in_progress",
-        id,
-        req.employee.employee_id,
-      ]
+      [value, nextStatus, id, req.employee.employee_id],
     );
 
     res.json({ success: true });
