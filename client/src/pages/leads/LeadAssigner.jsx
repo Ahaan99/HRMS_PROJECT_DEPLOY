@@ -94,16 +94,16 @@ export default function LeadAssigner() {
     formData.append("assignedTo", selectedEmployee);
 
     try {
-      await API.post("/client/leads/upload", formData);
+      const res = await API.post("/client/leads/upload", formData);
+      const total = res.data?.data?.total;
 
-      toast.success("Leads uploaded & assigned");
+      toast.success(total ? `${total} lead${total === 1 ? "" : "s"} uploaded & assigned` : "Leads uploaded & assigned");
 
       setFile(null);
       setSelectedEmployee("");
       fetchBatches();
     } catch (err) {
-      console.log(err);
-      toast.error("Upload failed");
+      toast.error(err.response?.data?.message || "Upload failed", { duration: 8000 });
     }
   };
 

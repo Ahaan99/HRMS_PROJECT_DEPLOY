@@ -12,6 +12,17 @@ const scopeOf = (req) => {
 
 const fail = (res, status, message) => res.status(status).json({ success: false, message });
 
+// Header matching is case/spacing/punctuation-insensitive so exported sheets
+// ("Client Name", "Mobile No.", "phone_number") all map to name / phone.
+const normalize = (h) => String(h).toLowerCase().replace(/[^a-z0-9]/g, "");
+const NAME_HEADERS = ["fullname", "name", "clientname", "customername", "leadname", "contactname", "person"];
+const PHONE_HEADERS = ["mobileno", "mobile", "mobilenumber", "phone", "phoneno", "phonenumber", "contact", "contactno", "contactnumber", "whatsapp"];
+const findColumn = (headers, candidates) => {
+  const map = new Map(headers.map((h) => [normalize(h), h]));
+  for (const c of candidates) if (map.has(c)) return map.get(c);
+  return headers.find((h) => candidates.some((c) => normalize(h).includes(c))) || null;
+};
+
 // 🔥 UPLOAD (client admin only)
 export const uploadClientLeads = async (req, res) => {
   try {
@@ -24,12 +35,25 @@ export const uploadClientLeads = async (req, res) => {
 
     const workbook = xlsx.read(file.buffer);
     const sheet = workbook.Sheets[workbook.SheetNames[0]];
-    const data = xlsx.utils.sheet_to_json(sheet);
+    const data = xlsx.utils.sheet_to_json(sheet, { defval: "" });
+    if (!data.length) return fail(res, 400, "The first sheet is empty");
+
+    const headers = Object.keys(data[0]);
+    const nameKey = findColumn(headers, NAME_HEADERS);
+    const phoneKey = findColumn(headers, PHONE_HEADERS);
+    if (!nameKey && !phoneKey) {
+      return fail(
+        res,
+        400,
+        `Could not find a name or phone column. Found: ${headers.join(", ")}. ` +
+          `Use headers like "Full Name" / "Mobile No." (or Name, Client Name, Phone, Contact).`,
+      );
+    }
 
     const leads = data
       .map((row) => ({
-        name: row["Full Name"] || row.name,
-        phone: row["Mobile No."] || row.phone,
+        name: String(nameKey ? row[nameKey] : "").trim() || null,
+        phone: String(phoneKey ? row[phoneKey] : "").trim() || null,
       }))
       .filter((l) => l.name || l.phone);
 
