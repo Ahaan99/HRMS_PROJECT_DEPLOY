@@ -53,6 +53,7 @@ export default function WorkPolicy() {
         toast.error("Failed to load policies");
       }
 
+      if (isEmployee) return;
       try {
         const deptRes = await getDepartments();
         setDepartments(deptRes.data?.data || []);

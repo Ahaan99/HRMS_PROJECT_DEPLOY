@@ -12,6 +12,14 @@ import {
 } from "lucide-react";
 import { reportService, revenueService, expenseService } from "../../services/financeService";
 
+const fmtDate = (v) => {
+  if (!v) return "-";
+  const d = new Date(v);
+  return Number.isNaN(d.getTime())
+    ? "-"
+    : d.toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" });
+};
+
 const inr = (n) => `₹${Number(n || 0).toLocaleString("en-IN")}`;
 
 export default function FinanceDashboard() {
@@ -179,7 +187,7 @@ export default function FinanceDashboard() {
                 >
                   <div>
                     <p className="font-semibold text-slate-900 text-sm">{rev.source}</p>
-                    <p className="text-xs text-slate-500 mt-0.5">{new Date(rev.date).toLocaleDateString()}</p>
+                    <p className="text-xs text-slate-500 mt-0.5">{fmtDate(rev.revenue_date ?? rev.date)}</p>
                   </div>
                   <span className="inline-flex items-center rounded-full bg-emerald-50 px-3 py-1 text-sm font-bold text-emerald-700 ring-1 ring-emerald-200/70">
                     {inr(rev.amount)}
@@ -219,7 +227,7 @@ export default function FinanceDashboard() {
                 >
                   <div>
                     <p className="font-semibold text-slate-900 text-sm">{exp.category}</p>
-                    <p className="text-xs text-slate-500 mt-0.5">{new Date(exp.date).toLocaleDateString()}</p>
+                    <p className="text-xs text-slate-500 mt-0.5">{fmtDate(exp.expense_date ?? exp.date)}</p>
                   </div>
                   <span className="inline-flex items-center rounded-full bg-rose-50 px-3 py-1 text-sm font-bold text-rose-700 ring-1 ring-rose-200/70">
                     {inr(exp.amount)}

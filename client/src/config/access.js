@@ -8,6 +8,7 @@ export const ALWAYS_ON = [
   "LEAVE_APPROVALS",
   "OFFER_LETTERS",
   "EMPLOYEE_SEARCH",
+  "INVOICES",
 ];
 
 // Modules whose backend routes accept a CLIENT_EMPLOYEE token and scope data to

@@ -120,9 +120,9 @@ export default function ClientRoutes() {
         <Route path="/complaints/:id" element={<FeatureRoute featureKey="COMPLAINT"><ComplaintDetail /></FeatureRoute>} />
         <Route path="/leads" element={<FeatureRoute featureKey="LEADS"><LeadList /></FeatureRoute>} />
         <Route path="/leads/:id" element={<FeatureRoute featureKey="LEADS"><LeadDetails /></FeatureRoute>} />
-        <Route path="/invoices" element={<Invoices />} />
-        <Route path="/create-invoice" element={<CreateInvoice />} />
-        <Route path="/invoice/:id" element={<InvoicePreview />} />
+        <Route path="/invoices" element={<FeatureRoute featureKey="INVOICES"><Invoices /></FeatureRoute>} />
+        <Route path="/create-invoice" element={<FeatureRoute featureKey="INVOICES"><CreateInvoice /></FeatureRoute>} />
+        <Route path="/invoice/:id" element={<FeatureRoute featureKey="INVOICES"><InvoicePreview /></FeatureRoute>} />
         <Route path="/proposals" element={<FeatureRoute featureKey="PROPOSALS"><ClientProposals /></FeatureRoute>} />
        <Route index element={<Navigate to="dashboard" replace />} />
         <Route path="*" element={<Navigate to="/overview" replace />} />

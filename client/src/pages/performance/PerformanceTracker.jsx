@@ -54,6 +54,10 @@ export default function PerformanceTracker() {
         toast.error("Failed to load performance");
       }
 
+      // Employees only see their own reviews; the admin-only lookups
+      // (employee list, departments, designations) would 403 for them.
+      if (isEmployee) return;
+
       try {
         const empRes = await getEmployees();
         setEmployees(

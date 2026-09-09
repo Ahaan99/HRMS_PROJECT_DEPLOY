@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import PageHeader from "../../components/common/PageHeader";
+import { useClientAuth } from "../../context/ClientAuthContext";
 import SalesStats from "../../components/sales/SalesStats";
 import SalesFilters from "../../components/sales/SalesFilters";
 import AddEditSaleModal from "../../components/sales/AddEditSaleModal";
@@ -23,6 +24,8 @@ const SalesReports = () => {
   const navigate = useNavigate();
 
   const token = localStorage.getItem("hrms_client_Token");
+  const { client } = useClientAuth();
+  const isEmployee = client?.role === "CLIENT_EMPLOYEE";
 
   // ================= FETCH =================
   const fetchSales = async () => {
@@ -50,7 +53,7 @@ const SalesReports = () => {
 
   useEffect(() => {
     fetchSales();
-    fetchEmployees();
+    if (!isEmployee) fetchEmployees();
   }, []);
 
   // ================= HELPERS =================
