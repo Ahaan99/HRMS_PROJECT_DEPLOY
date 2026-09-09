@@ -83,9 +83,16 @@ export default function AttendanceTracker() {
 
       const mapped = res.data.data.map((r) => ({
         id: r.id,
+        rowKey: r.row_key || `${r.source_table || "sa"}-${r.id}`,
         attendanceId: `ATT${r.id}`,
         employeeId: r.employee_id,
-        employeeName: r.employee_name,
+        employeeName: r.name || r.employee_name || "",
+        employeeCode: r.employeeCode || "",
+        source: r.source || "internal",
+        clientCode: r.client_code || "",
+        // client_portal rows live in client_attendance; their ids are not
+        // super_admin_attendance ids, so they cannot be edited/deleted here.
+        editable: (r.source_table || "super_admin") === "super_admin",
         date: r.date,
         checkInTime: r.check_in,
         checkOutTime: r.check_out,
@@ -298,7 +305,7 @@ export default function AttendanceTracker() {
 
                 return (
                   <tr
-                    key={r.id}
+                    key={r.rowKey}
                     className="border-b border-[#eceff4] last:border-0 hover:bg-[#f9faff]"
                   >
                     <td className="num px-4 py-3 text-xs font-bold text-[#7b8698]">
@@ -307,10 +314,23 @@ export default function AttendanceTracker() {
 
                     <td className="px-4 py-3">
                       <div className="text-[13px] font-bold text-[#0b1220]">
-                        {r.employeeName}
+                        {r.employeeName || `Employee #${r.employeeId}`}
                       </div>
-                      <div className="num mt-0.5 text-[11px] text-[#7b8698]">
-                        #{r.employeeId}
+                      <div className="mt-0.5 flex flex-wrap items-center gap-1.5 text-[11px] text-[#7b8698]">
+                        <span className="num">{r.employeeCode || `#${r.employeeId}`}</span>
+                        {r.source === "client" && (
+                          <span
+                            className="rounded-full bg-[#eef0fe] px-1.5 py-0.5 text-[10px] font-bold text-[#4f63f0]"
+                            title="Entered from the Client portal"
+                          >
+                            Client{r.clientCode ? ` ${r.clientCode}` : ""}
+                          </span>
+                        )}
+                        {(r.source === "geo" || r.source === "smart") && (
+                          <span className="rounded-full bg-[#e7f5f0] px-1.5 py-0.5 text-[10px] font-bold text-[#148662]">
+                            {r.source === "geo" ? "Geo punch" : "Smart punch"}
+                          </span>
+                        )}
                       </div>
                     </td>
 
@@ -342,21 +362,32 @@ export default function AttendanceTracker() {
 
                     <td className="px-4 py-3">
                       <div className="flex justify-end gap-1.5">
-                        <button
-                          onClick={() => openEditModal(r)}
-                          className="flex items-center gap-1 rounded-lg bg-[#eef0fe] px-2.5 py-1.5 text-[11px] font-bold text-[#4f63f0] transition hover:bg-[#4f63f0] hover:text-white"
-                          title="Edit record"
-                        >
-                          <Pencil size={12} /> Edit
-                        </button>
+                        {r.editable ? (
+                          <>
+                            <button
+                              onClick={() => openEditModal(r)}
+                              className="flex items-center gap-1 rounded-lg bg-[#eef0fe] px-2.5 py-1.5 text-[11px] font-bold text-[#4f63f0] transition hover:bg-[#4f63f0] hover:text-white"
+                              title="Edit record"
+                            >
+                              <Pencil size={12} /> Edit
+                            </button>
 
-                        <button
-                          onClick={() => openDeleteModal(r.id)}
-                          className="flex items-center gap-1 rounded-lg bg-[#fdeef0] px-2.5 py-1.5 text-[11px] font-bold text-[#c73e4c] transition hover:bg-[#c73e4c] hover:text-white"
-                          title="Delete record"
-                        >
-                          <Trash2 size={12} /> Delete
-                        </button>
+                            <button
+                              onClick={() => openDeleteModal(r.id)}
+                              className="flex items-center gap-1 rounded-lg bg-[#fdeef0] px-2.5 py-1.5 text-[11px] font-bold text-[#c73e4c] transition hover:bg-[#c73e4c] hover:text-white"
+                              title="Delete record"
+                            >
+                              <Trash2 size={12} /> Delete
+                            </button>
+                          </>
+                        ) : (
+                          <span
+                            className="rounded-lg bg-[#f7f8fb] px-2.5 py-1.5 text-[11px] font-semibold text-[#7b8698]"
+                            title="This employee exists only in the Client portal. Edit it there."
+                          >
+                            Managed by client
+                          </span>
+                        )}
                       </div>
                     </td>
                   </tr>

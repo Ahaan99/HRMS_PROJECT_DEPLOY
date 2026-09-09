@@ -22,20 +22,28 @@ export const getAllAttendance = async (req, res) => {
   try {
     const { search = "", status = "" } = req.query;
 
-    // Internal attendance + client-portal attendance in a single feed.
-    // Client rows are tagged with source='client' and the client_code so the
-    // tracker can show where they came from.
+    // One feed, two sources:
+    //  1. super_admin_attendance - the single source of truth. Client-portal
+    //     entries for employees who exist in HRMS are mirrored here by
+    //     attendanceSync.service.js (source='CLIENT').
+    //  2. client_attendance - ONLY rows for client-only employees that have no
+    //     mirror (the NOT EXISTS mirrors the sync's employeeCode/email match).
+    //     Without this anti-join every synced client entry showed up twice.
+    // row_key is unique across both tables (ids collide between them).
     let query = `
       SELECT * FROM (
-        SELECT a.id, a.employee_id, a.date, a.check_in, a.check_out, a.status,
+        SELECT a.id, CONCAT('sa-', a.id) AS row_key, 'super_admin' AS source_table,
+               a.employee_id, a.date, a.check_in, a.check_out, a.status,
                a.method, a.geo_status, a.created_at, a.updated_at,
                LOWER(COALESCE(a.source, 'internal')) AS source, a.client_id,
-               NULL AS client_code,
+               c.client_code,
                e.employeeCode, COALESCE(e.name, a.employee_name) AS name
           FROM super_admin_attendance a
           LEFT JOIN employees e ON a.employee_id = e.id
+          LEFT JOIN clients c ON c.id = a.client_id
         UNION ALL
-        SELECT ca.id, ca.employee_id, ca.attendance_date AS date,
+        SELECT ca.id, CONCAT('ca-', ca.id) AS row_key, 'client_portal' AS source_table,
+               ca.employee_id, ca.attendance_date AS date,
                ca.check_in, ca.check_out, UPPER(ca.status) AS status,
                'client_portal' AS method, NULL AS geo_status,
                ca.createdAt AS created_at, ca.updatedAt AS updated_at,
@@ -44,6 +52,16 @@ export const getAllAttendance = async (req, res) => {
           FROM client_attendance ca
           LEFT JOIN client_employees ce ON ce.id = ca.employee_id
           LEFT JOIN clients c ON c.id = ca.client_id
+         WHERE NOT EXISTS (
+                 SELECT 1
+                   FROM super_admin_attendance sa
+                   JOIN employees e2 ON e2.id = sa.employee_id
+                  WHERE sa.date = ca.attendance_date
+                    AND (
+                          (ce.employeeCode IS NOT NULL AND e2.employeeCode = ce.employeeCode)
+                       OR (ce.email IS NOT NULL AND e2.email = ce.email)
+                        )
+               )
       ) t
       WHERE 1=1
     `;
