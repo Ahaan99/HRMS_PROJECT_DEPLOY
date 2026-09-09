@@ -6,7 +6,7 @@ const fieldCls =
 const labelCls =
   "text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400";
 
-export default function EODFilters({ filters, onFilterChange }) {
+export default function EODFilters({ filters, onFilterChange, onExport, canExport = true }) {
   const handleChange = (key, value) => {
     onFilterChange((prev) => ({ ...prev, [key]: value }));
   };
@@ -68,7 +68,13 @@ export default function EODFilters({ filters, onFilterChange }) {
 
         <div className="flex-1" />
 
-        <button className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-emerald-600/25 transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-emerald-600/30 focus:outline-none focus:ring-2 focus:ring-emerald-400">
+        <button
+          type="button"
+          onClick={onExport}
+          disabled={!canExport}
+          title={canExport ? "Download the rows shown below as Excel" : "Nothing to export"}
+          className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-emerald-600/25 transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-emerald-600/30 focus:outline-none focus:ring-2 focus:ring-emerald-400 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0"
+        >
           <Download size={16} aria-hidden="true" />
           Export
         </button>

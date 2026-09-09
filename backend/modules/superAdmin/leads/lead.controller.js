@@ -1,5 +1,5 @@
 import * as service from "./lead.service.js";
-import xlsx from "xlsx";
+import { parseLeadSheet } from "../../../utils/leadSheet.js";
 
 // 🔥 UPLOAD
 export const uploadLeads = async (req, res) => {
@@ -10,15 +10,17 @@ export const uploadLeads = async (req, res) => {
     if (!assignedTo) {
       return res.status(400).json({ message: "HR is required" });
     }
+    if (!file) {
+      return res.status(400).json({ message: "Please choose an .xlsx file" });
+    }
 
-    const workbook = xlsx.read(file.buffer);
-    const sheet = workbook.Sheets[workbook.SheetNames[0]];
-    const data = xlsx.utils.sheet_to_json(sheet);
-
-    const leads = data.map((row) => ({
-      name: row["Full Name"] || row.name,
-      phone: row["Mobile No."] || row.phone,
-    }));
+    let leads;
+    try {
+      leads = parseLeadSheet(file.buffer);
+    } catch (err) {
+      if (err.status === 400) return res.status(400).json({ success: false, message: err.message });
+      throw err;
+    }
 
     // 🔥 CREATE BATCH
     const batchId = await service.createBatch(
@@ -38,7 +40,7 @@ export const uploadLeads = async (req, res) => {
 
     await service.insertLeads(finalLeads);
 
-    res.json({ success: true });
+    res.json({ success: true, data: { batchId, total: leads.length } });
   } catch (err) {
     console.error("UPLOAD ERROR:", err);
     res.status(500).json({ message: err.message });

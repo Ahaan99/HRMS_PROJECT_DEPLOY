@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Send, Clock, CheckCircle2, XCircle } from "lucide-react";
 import HRNavbar from "../../components/hr/HRNavbar";
 import EODFilters from "../../components/eodreport/EODFilters";
+import { exportToExcel } from "../../utils/exportToExcel";
 import EODTable from "../../components/eodreport/EODTable";
 
 const STAT_CONFIG = [
@@ -164,7 +165,30 @@ export default function EODReport() {
           ))}
         </div>
 
-        <EODFilters filters={filters} onFilterChange={setFilters} />
+        <EODFilters
+          filters={filters}
+          onFilterChange={setFilters}
+          canExport={rows.length > 0}
+          onExport={() => {
+            const ok = exportToExcel({
+              fileName: `eod-reports-${filters.date || "all"}`,
+              sheetName: "EOD Reports",
+              rows,
+              columns: [
+                { key: "employee", label: "Employee" },
+                { key: "employeeId", label: "Employee ID" },
+                { key: "department", label: "Department" },
+                { key: "tasksCompleted", label: "Tasks Completed" },
+                { key: "tasksInProgress", label: "Tasks In Progress" },
+                { key: "hoursWorked", label: "Hours Worked" },
+                { key: "status", label: "Status" },
+                { key: "submittedAt", label: "Submitted At" },
+              ],
+            });
+            if (ok) toast.success(`Exported ${rows.length} rows`);
+            else toast.error("Nothing to export");
+          }}
+        />
 
         <EODTable rows={rows} loading={loading} onRefresh={fetchReports} />
       </div>

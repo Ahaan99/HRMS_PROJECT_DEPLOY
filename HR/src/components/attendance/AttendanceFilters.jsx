@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { Clock, Download } from "lucide-react";
 
-export default function AttendanceFilters({ filters, onFilterChange }) {
+export default function AttendanceFilters({ filters, onFilterChange, onExport, canExport = true }) {
   const [departments, setDepartments] = useState([]);
 
   const token = localStorage.getItem("hrms_hr_Token");
@@ -83,7 +83,13 @@ export default function AttendanceFilters({ filters, onFilterChange }) {
 
         <div className="flex-1" />
 
-        <button className="group relative flex items-center gap-2 overflow-hidden rounded-lg bg-gradient-to-r from-emerald-500 to-teal-600 px-5 py-2.5 text-sm font-bold text-white shadow-[0_8px_24px_-8px_rgba(16,185,129,0.7)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_12px_32px_-8px_rgba(16,185,129,0.9)]">
+        <button
+          type="button"
+          onClick={onExport}
+          disabled={!canExport}
+          title={canExport ? "Download the rows shown below as Excel" : "Nothing to export"}
+          className="group relative flex items-center gap-2 overflow-hidden rounded-lg bg-gradient-to-r from-emerald-500 to-teal-600 px-5 py-2.5 text-sm font-bold text-white shadow-[0_8px_24px_-8px_rgba(16,185,129,0.7)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_12px_32px_-8px_rgba(16,185,129,0.9)] disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0"
+        >
           <Download className="h-4 w-4" aria-hidden="true" />
           Export
         </button>

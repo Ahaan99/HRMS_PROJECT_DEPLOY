@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import HRNavbar from "../../components/hr/HRNavbar";
 import AttendanceTable from "../../components/attendance/AttendanceTable";
 import AttendanceFilters from "../../components/attendance/AttendanceFilters";
+import { exportToExcel } from "../../utils/exportToExcel";
 import LocationCapture from "../../components/attendance/LocationCapture";
 import OfficeLocation from "../../components/attendance/OfficeLocation";
 import ShiftTimings from "../../components/attendance/ShiftTimings";
@@ -357,7 +358,31 @@ export default function AutomatedAttendance() {
               </div>
 
               <div className="ax-rise" style={{ animationDelay: "0.4s" }}>
-                <AttendanceFilters filters={filters} onFilterChange={setFilters} />
+                <AttendanceFilters
+          filters={filters}
+          onFilterChange={setFilters}
+          canExport={rows.length > 0}
+          onExport={() => {
+            const ok = exportToExcel({
+              fileName: `attendance-${filters.date || "all"}`,
+              sheetName: "Attendance",
+              rows,
+              columns: [
+                { key: "employee", label: "Employee" },
+                { key: "employeeCode", label: "Employee Code" },
+                { key: "department", label: "Department" },
+                { key: "expectedLogin", label: "Expected Login" },
+                { key: "actualLogin", label: "Actual Login" },
+                { key: "expectedLogout", label: "Expected Logout" },
+                { key: "actualLogout", label: "Actual Logout" },
+                { key: "hours", label: "Hours", format: (v) => (v >= 0 ? v : "") },
+                { key: "status", label: "Status", format: (v) => String(v || "").replace("_", " ") },
+              ],
+            });
+            if (ok) toast.success(`Exported ${rows.length} rows`);
+            else toast.error("Nothing to export");
+          }}
+        />
               </div>
               <div className="ax-rise" style={{ animationDelay: "0.48s" }}>
                 <AttendanceTable
