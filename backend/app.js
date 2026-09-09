@@ -96,6 +96,7 @@ import evsRoutes from "./modules/evs/evs.routes.js";
 import hrRoboRoutes from "./modules/hrRobo/hrRobo.routes.js";
 import attendanceRoutes from "./modules/attendance/attendance.routes.js";
 import clientProposalsRoutes from "./modules/proposals/proposalsClient.routes.js";
+import clientAgreementsPortalRoutes from "./modules/client/agreements/clientAgreements.routes.js";
 import salesProposalsRoutes from "./modules/sales/proposals/salesProposals.routes.js";
 
 // Client import
@@ -336,6 +337,7 @@ app.use("/api/hr-robo", hrRoboRoutes);
 /* Smart Attendance — native Node module (replaces Flask :5050) */
 app.use("/api/smart-attendance", attendanceRoutes);
 app.use("/api/client/proposals", clientProposalsRoutes);
+app.use("/api/client/agreements", clientAgreementsPortalRoutes);
 
 // Client routes
 app.use("/api/client", checkPortalStatus("CLIENT"));

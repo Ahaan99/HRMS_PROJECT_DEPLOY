@@ -104,3 +104,12 @@ CHATBOT_README.md
 backend/scripts/_package-*.mjs
 backend/scripts/_build-all-portals.mjs
 backend/routes/testTwilio.route.js
+# -- Test probes, report generators, generated documents (local only) --
+backend/scripts/_*.mjs
+backend/scripts/_*.pdf
+backend/scripts/generate*Report*.mjs
+backend/scripts/generate-full-report.mjs
+*Project-Project*.pdf
+*Project-Report*.pdf
+*.mp4
+employee-verification-system/employee-verification-backend/uploads/

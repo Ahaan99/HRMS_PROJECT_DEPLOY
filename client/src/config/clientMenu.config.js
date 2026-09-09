@@ -37,6 +37,12 @@ export const CLIENT_MENU = [
     icon: Handshake,
   },
   {
+    key: "AGREEMENTS",
+    label: "Agreements",
+    path: "/agreements",
+    icon: FileText,
+  },
+  {
     key: "EMPLOYEE_MANAGEMENT",
     label: "Employee Management",
     path: "/employees",
@@ -120,12 +126,12 @@ export const CLIENT_MENU = [
     path: "/work-assignment",
     icon: ClipboardList,
   },
-  // {
-  //   key: "WORK_TARGET",
-  //   label: "Work Target",
-  //   path: "/work-target",
-  //   icon: Target,
-  // },
+  {
+    key: "WORK_TARGET",
+    label: "Work Target",
+    path: "/work-target",
+    icon: Target,
+  },
   {
     key: "FINANCE_DASHBOARD",
     label: "Finance Dashboard",

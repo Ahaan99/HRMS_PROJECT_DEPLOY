@@ -4,6 +4,7 @@ export const EMPLOYEE_ROLE = "CLIENT_EMPLOYEE";
 export const ALWAYS_ON = [
   "OVERVIEW",
   "PROPOSALS",
+  "AGREEMENTS",
   "SOP_LIBRARY",
   "LEAVE_APPROVALS",
   "OFFER_LETTERS",
@@ -19,8 +20,10 @@ export const EMPLOYEE_FEATURES = [
   "SALES_REPORT",
   "PERFORMANCE_TRACKER",
   "WORK_POLICY",
+  "WORK_TARGET",
   "WORK_ASSIGNMENT",
   "LEADS",
+  "INVENTORY",
 ];
 
 export const isEmployeeRole = (client) => client?.role === EMPLOYEE_ROLE;

@@ -1,24 +1,6 @@
 import { db } from "../../../config/db.js";
 import bcrypt from "bcryptjs";
-
-/* =====================================================
-   Helper: Generate Client Code (C1001 style)
-===================================================== */
-const generateClientCode = async () => {
-  try {
-    const [rows] = await db.query(`
-      SELECT id FROM clients ORDER BY id DESC LIMIT 1
-    `);
-
-    if (!rows.length) return "C1001";
-    
-
-    const nextId = rows[0].id + 1;
-    return `C${1000 + nextId}`;
-  } catch (err) {
-    throw new Error(`Client code generation failed: ${err.message}`);
-  }
-};
+import { generateClientCode } from "./clientProvisioning.js";
 
 /* =====================================================
    Create Client

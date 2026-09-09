@@ -40,6 +40,7 @@ import CreateInvoice from "../pages/invoices/CreateInvoice";
 import InvoicePreview from "../pages/invoices/InvoicePreview";
 import Invoices from "../pages/invoices/Invoices";
 import ClientProposals from "../pages/proposals/ClientProposals";
+import ClientAgreements from "../pages/agreements/ClientAgreements";
 import SalesReports from "../pages/sales/SalesReports";
 import SalesCall from "../pages/sales/SalesCall";
 import FieldSales from "../pages/sales/FieldSales";
@@ -124,6 +125,7 @@ export default function ClientRoutes() {
         <Route path="/create-invoice" element={<FeatureRoute featureKey="INVOICES"><CreateInvoice /></FeatureRoute>} />
         <Route path="/invoice/:id" element={<FeatureRoute featureKey="INVOICES"><InvoicePreview /></FeatureRoute>} />
         <Route path="/proposals" element={<FeatureRoute featureKey="PROPOSALS"><ClientProposals /></FeatureRoute>} />
+        <Route path="/agreements" element={<FeatureRoute featureKey="AGREEMENTS"><ClientAgreements /></FeatureRoute>} />
        <Route index element={<Navigate to="dashboard" replace />} />
         <Route path="*" element={<Navigate to="/overview" replace />} />
       </Route>

@@ -18,6 +18,24 @@ const SELECT_FIELDS = `
 
 export const getWorkTargets = async (req, res) => {
   try {
+    if (req.employee) {
+      // Employee scope: own targets, department targets and company-wide targets of their client.
+      const { employee_id, client_id } = req.employee;
+      const [[me]] = await db.query(
+        `SELECT departmentId FROM client_employees WHERE id = ? AND client_id = ? LIMIT 1`,
+        [employee_id, client_id]
+      );
+      const [rows] = await db.query(
+        `SELECT ${SELECT_FIELDS} FROM client_work_targets
+         WHERE client_id = ?
+           AND (employee_id = ?
+                OR (employee_id IS NULL AND (department_id IS NULL OR department_id = ?)))
+         ORDER BY id DESC`,
+        [client_id, employee_id, me?.departmentId ?? -1]
+      );
+      return res.json({ success: true, data: rows });
+    }
+
     const { client_code } = req.client;
     const client_id = await getClientId(client_code);
 

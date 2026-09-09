@@ -18,8 +18,11 @@ import {
 import {
   getEmployees,
 } from "../../services/employeesService";
+import { useClientAuth } from "../../context/ClientAuthContext";
 
 export default function WorkTarget() {
+  const { client } = useClientAuth();
+  const isEmployee = client?.role === "CLIENT_EMPLOYEE";
   const [openAdd, setOpenAdd] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
 
@@ -48,15 +51,16 @@ export default function WorkTarget() {
   useEffect(() => {
     const fetchAll = async () => {
       try {
+        // Departments / employees are admin-only masters; employees only load their targets.
         const [targetRes, deptRes, empRes] = await Promise.all([
           getWorkTargets(),
-          getDepartments(),
-          getEmployees(),
+          isEmployee ? Promise.resolve(null) : getDepartments(),
+          isEmployee ? Promise.resolve(null) : getEmployees(),
         ]);
 
         setTargets(targetRes.data?.data ?? []);
-        setDepartments(deptRes.data?.data || []);
-        setEmployees(empRes.data?.data || []);
+        setDepartments(deptRes?.data?.data || []);
+        setEmployees(empRes?.data?.data || []);
       } catch (err) {
         toast.error(err?.response?.data?.message || "Failed to load data");
       }
@@ -261,18 +265,20 @@ export default function WorkTarget() {
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Work Target</h1>
+          <h1 className="text-2xl font-bold text-gray-900">{isEmployee ? "My Work Targets" : "Work Target"}</h1>
           <p className="text-gray-500 mt-1">
-            Set and manage work targets for employees.
+            {isEmployee ? "Targets assigned to you, your department or the whole company." : "Set and manage work targets for employees."}
           </p>
         </div>
 
-        <button
-          onClick={openAddModal}
-          className="px-5 py-2.5 rounded-xl bg-black text-white font-semibold hover:bg-gray-900 transition"
-        >
-          + Add Target
-        </button>
+        {!isEmployee && (
+          <button
+            onClick={openAddModal}
+            className="px-5 py-2.5 rounded-xl bg-black text-white font-semibold hover:bg-gray-900 transition"
+          >
+            + Add Target
+          </button>
+        )}
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
@@ -342,13 +348,13 @@ export default function WorkTarget() {
                   <th className="text-left px-5 py-4 font-semibold">Target Value</th>
                   <th className="text-left px-5 py-4 font-semibold">Duration</th>
                   <th className="text-left px-5 py-4 font-semibold">Status</th>
-                  <th className="text-right px-5 py-4 font-semibold">Action</th>
+                  {!isEmployee && <th className="text-right px-5 py-4 font-semibold">Action</th>}
                 </tr>
               </thead>
 
               <tbody>
                 {filteredTargets.map((t) => {
-                  const deptName = deptById[t.departmentId]?.name || "All";
+                  const deptName = deptById[t.departmentId]?.name || (isEmployee && t.departmentId ? "Your department" : "All");
                   const emp = empById[t.employeeId] || {};
                   const badge = getTypeBadge(t.targetType);
                   const isActive = t.isActive === 1 || t.isActive === true;
@@ -380,7 +386,7 @@ export default function WorkTarget() {
                       <td className="px-5 py-4 text-gray-700 whitespace-nowrap">
                         {t.employeeId ? (
                           <div>
-                            <p className="font-semibold text-gray-900">{emp.name || "UNKNOWN"}</p>
+                            <p className="font-semibold text-gray-900">{emp.name || (isEmployee ? "You" : "UNKNOWN")}</p>
                             <p className="text-xs text-gray-500">{emp.employeeCode || "-"}</p>
                           </div>
                         ) : (
@@ -407,21 +413,23 @@ export default function WorkTarget() {
                         </span>
                       </td>
 
-                      <td className="px-5 py-4 text-right whitespace-nowrap">
-                        <button
-                          onClick={() => openEditModal(t)}
-                          className="px-3 py-2 rounded-xl bg-gray-100 hover:bg-gray-200 font-semibold transition"
-                        >
-                          Edit
-                        </button>
+                      {!isEmployee && (
+                        <td className="px-5 py-4 text-right whitespace-nowrap">
+                          <button
+                            onClick={() => openEditModal(t)}
+                            className="px-3 py-2 rounded-xl bg-gray-100 hover:bg-gray-200 font-semibold transition"
+                          >
+                            Edit
+                          </button>
 
-                        <button
-                          onClick={() => handleDelete(t.id)}
-                          className="ml-2 px-3 py-2 rounded-xl bg-red-100 hover:bg-red-200 text-red-700 font-semibold transition"
-                        >
-                          Delete
-                        </button>
-                      </td>
+                          <button
+                            onClick={() => handleDelete(t.id)}
+                            className="ml-2 px-3 py-2 rounded-xl bg-red-100 hover:bg-red-200 text-red-700 font-semibold transition"
+                          >
+                            Delete
+                          </button>
+                        </td>
+                      )}
                     </tr>
                   );
                 })}

@@ -12,6 +12,7 @@ import {
 import { inventoryService } from "../../services/financeService";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { useClientAuth } from "../../context/ClientAuthContext";
 
 const EMPTY_FORM = {
   item_name: "",
@@ -30,6 +31,8 @@ const labelClass =
   "block text-xs font-semibold uppercase tracking-wide text-slate-500 mb-1.5";
 
 export default function InventoryManagement() {
+  const { client } = useClientAuth();
+  const isEmployee = client?.role === "CLIENT_EMPLOYEE";
   const [inventory, setInventory] = useState([]);
   const [totalValue, setTotalValue] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -146,9 +149,10 @@ export default function InventoryManagement() {
             Inventory Management
           </h1>
           <p className="text-slate-500 mt-1 text-sm">
-            Manage stock and inventory items
+            {isEmployee ? "Current stock of your company (read-only)" : "Manage stock and inventory items"}
           </p>
         </div>
+        {!isEmployee && (
         <div className="flex items-center gap-3">
           <button
             onClick={() => navigate("/finance/services")}
@@ -169,6 +173,7 @@ export default function InventoryManagement() {
             Add Item
           </button>
         </div>
+        )}
       </div>
 
       {/* Stat cards */}
@@ -249,7 +254,7 @@ export default function InventoryManagement() {
                   "Purchase Price",
                   "Selling Price",
                   "Total Value",
-                  "Actions",
+                  ...(isEmployee ? [] : ["Actions"]),
                 ].map((h) => (
                   <th
                     key={h}
@@ -332,6 +337,7 @@ export default function InventoryManagement() {
                         (Number(item.price) || 0)
                       ).toLocaleString("en-IN")}
                     </td>
+                    {!isEmployee && (
                     <td className="py-3.5 px-4">
                       <div className="flex items-center gap-1.5">
                         <button
@@ -350,6 +356,7 @@ export default function InventoryManagement() {
                         </button>
                       </div>
                     </td>
+                    )}
                   </tr>
                 ))
               )}

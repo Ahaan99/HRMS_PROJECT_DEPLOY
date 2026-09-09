@@ -10,7 +10,11 @@ import {
 
 import { db } from "../../../../config/db.js";
 
-// ✅ helper
+// Admin tokens carry client_code; employee tokens are resolved to client_id by the unified middleware.
+// NB: req.client is also the raw socket on IncomingMessage, so test req.employee first.
+const resolveClientId = async (req) =>
+  req.employee ? req.employee.client_id : getClientId(req.client.client_code);
+
 const getClientId = async (client_code) => {
   const [rows] = await db.query(
     `SELECT id FROM clients WHERE client_code = ? LIMIT 1`,
@@ -19,15 +23,11 @@ const getClientId = async (client_code) => {
 
   if (!rows.length) throw new Error("Client not found");
 
-  return rows[0].id; // ✅ FIXED
-};
+  return rows[0].id;};
 
-// ✅ GET ALL
 export const getAllInventory = async (req, res) => {
   try {
-    const clientCode = req.client.client_code;
-
-    const clientId = await getClientId(clientCode);
+    const clientId = await resolveClientId(req);
 
     const data = await fetchAllInventory(clientId);
 
@@ -38,12 +38,9 @@ export const getAllInventory = async (req, res) => {
   }
 };
 
-// ✅ TOTAL VALUE
 export const getTotalInventoryValue = async (req, res) => {
   try {
-    const clientCode = req.client.client_code;
-
-    const clientId = await getClientId(clientCode);
+    const clientId = await resolveClientId(req);
 
     const total = await fetchTotalValue(clientId);
 
@@ -54,12 +51,9 @@ export const getTotalInventoryValue = async (req, res) => {
   }
 };
 
-// ✅ CREATE
 export const createInventoryItem = async (req, res) => {
   try {
-    const clientCode = req.client.client_code;
-
-    const clientId = await getClientId(clientCode);
+    const clientId = await resolveClientId(req);
 
     // const { item_name, quantity, price, category } = req.body;
 
@@ -106,12 +100,9 @@ export const createInventoryItem = async (req, res) => {
   }
 };
 
-// ✅ UPDATE
 export const updateInventoryItem = async (req, res) => {
   try {
-    const clientCode = req.client.client_code;
-
-    const clientId = await getClientId(clientCode);
+    const clientId = await resolveClientId(req);
 
     const { id } = req.params;
     // const { item_name, quantity, price, category } = req.body;
@@ -143,12 +134,9 @@ export const updateInventoryItem = async (req, res) => {
   }
 };
 
-// ✅ DELETE
 export const deleteInventoryItem = async (req, res) => {
   try {
-    const clientCode = req.client.client_code;
-
-    const clientId = await getClientId(clientCode);
+    const clientId = await resolveClientId(req);
 
     const { id } = req.params;
 
@@ -161,12 +149,9 @@ export const deleteInventoryItem = async (req, res) => {
   }
 };
 
-// ✅ LOW STOCK
 export const getLowStockItems = async (req, res) => {
   try {
-    const clientCode = req.client.client_code;
-
-    const clientId = await getClientId(clientCode);
+    const clientId = await resolveClientId(req);
 
     const threshold = Number(req.query.threshold) || 10;
 
@@ -179,12 +164,9 @@ export const getLowStockItems = async (req, res) => {
   }
 };
 
-// ✅ UPDATE STOCK
 export const updateStock = async (req, res) => {
   try {
-    const clientCode = req.client.client_code;
-
-    const clientId = await getClientId(clientCode);
+    const clientId = await resolveClientId(req);
 
     const { id } = req.params;
     const { quantity } = req.body;
