@@ -46,7 +46,13 @@ export const createClientSalesService = async (client_code, payload) => {
 
   const nextNumber = (last?.id || 0) + 1;
   const call_id = `CALL-${String(nextNumber).padStart(6, "0")}`;
-  
+
+  // A call only counts as a sale ("converted deal") once the customer has
+  // accepted. Hold / rejected calls must never carry a sold date, otherwise
+  // the Total Sales KPI and the Super Admin report over-count.
+  const finalStatus = status || "hold";
+  const finalSoldDate = finalStatus === "accepted" ? sold_date || null : null;
+
   const [result] = await db.query(
     `INSERT INTO client_sales_calls
      (client_id, employee_id, call_id, customer_name, phone, email,
@@ -56,15 +62,15 @@ export const createClientSalesService = async (client_code, payload) => {
       client_id,
       employee_id,
       call_id,
-      customer_name || null,
-      phone || null,
-      email || null,
+      customer_name?.trim() || null,
+      phone?.trim() || null,
+      email?.trim() || null,
       call_time || null,
       call_date || null,
-      status || "hold",
+      finalStatus,
       follow_up_datetime || null,
-      remarks || null,
-      sold_date || null,
+      remarks?.trim() || null,
+      finalSoldDate,
     ]
   );
 
@@ -231,7 +237,9 @@ export const updateClientSalesService = async (
 
   const finalCallDate = toDate(call_date);
   const finalFollowUp = toDateTime(follow_up_datetime);
-  const finalSoldDate = toDate(sold_date);
+  const finalStatus = status || "hold";
+  // Same rule as create: only an accepted call can have a sold date.
+  const finalSoldDate = finalStatus === "accepted" ? toDate(sold_date) : null;
 
   const finalCallTime = call_time
     ? call_time.length === 5
@@ -266,9 +274,9 @@ export const updateClientSalesService = async (
       email || null,
       finalCallTime,
       finalCallDate,
-      status || "hold",
+      finalStatus,
       finalFollowUp,
-      remarks || null,
+      remarks?.trim() || null,
       finalSoldDate,
       id,
       client_id,

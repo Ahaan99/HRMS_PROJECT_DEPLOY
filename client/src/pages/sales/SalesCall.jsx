@@ -529,7 +529,12 @@ export default function SalesCall() {
 function Modal({ title, onClose, onSubmit, form, setForm, employees }) {
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setForm((p) => ({ ...p, [name]: value }));
+    setForm((p) => {
+      const next = { ...p, [name]: value };
+      // Only an accepted call can be a sale - drop the sold date otherwise.
+      if (name === "status" && value !== "accepted") next.sold_date = "";
+      return next;
+    });
   };
 
   return (
@@ -673,13 +678,21 @@ function Modal({ title, onClose, onSubmit, form, setForm, employees }) {
 
             {/* Sold Date */}
             <div className="flex flex-col">
-              <label className="label-premium">Sold Date</label>
+              <label className="label-premium">
+                Sold Date
+                {form.status !== "accepted" && (
+                  <span className="ml-1 text-[11px] font-normal text-slate-400">
+                    (set status to Accepted first)
+                  </span>
+                )}
+              </label>
               <input
                 name="sold_date"
                 type="date"
-                className="input-premium"
+                className="input-premium disabled:cursor-not-allowed disabled:opacity-50"
                 value={form.sold_date || ""}
                 onChange={handleChange}
+                disabled={form.status !== "accepted"}
               />
             </div>
 
