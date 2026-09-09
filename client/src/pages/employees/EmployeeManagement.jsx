@@ -227,6 +227,7 @@ export default function EmployeeManagement() {
         salary: Number(form.salary || 0),
         statusId: Number(form.statusId || 1),
         isActive: form.isActive ? 1 : 0,
+        ...(form.password ? { password: form.password } : {}),
       };
 
       const res = await createEmployee(payload);

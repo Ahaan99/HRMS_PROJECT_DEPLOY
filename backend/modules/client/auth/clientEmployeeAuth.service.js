@@ -54,7 +54,11 @@ export const loginClientEmployeeService = async ({
 
   // 🔴 password not set yet
   if (!employee.password_hash) {
-    throw new Error("User password not created yet");
+    const err = new Error(
+      "No login password has been set for this employee yet. Ask your client administrator to set one in Employee Management.",
+    );
+    err.code = "PASSWORD_NOT_SET";
+    throw err;
   }
 
   // 🔴 inactive check

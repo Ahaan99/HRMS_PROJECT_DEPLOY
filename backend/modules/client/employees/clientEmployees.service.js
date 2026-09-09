@@ -35,9 +35,13 @@ export const createEmployeeService = async (client_code, payload) => {
     statusId,
     joiningDate,
     salary,
+    password,
   } = payload;
 
   if (!name?.trim()) throw new Error("Name is required");
+  if (password !== undefined && password !== "" && String(password).length < 6) {
+    throw new Error("Login password must be at least 6 characters");
+  }
   if (!email?.trim()) throw new Error("Email is required");
   if (toIdOrNull(departmentId) === null) throw new Error("Department is required");
   if (toIdOrNull(designationId) === null) throw new Error("Designation is required");
@@ -69,12 +73,14 @@ export const createEmployeeService = async (client_code, payload) => {
   // =====================================================
   // INSERT
   // =====================================================
+  const password_hash = password ? await bcrypt.hash(String(password), 10) : null;
+
   const [result] = await db.query(
     `INSERT INTO client_employees
      (client_id, employeeCode, name, email, phone,
       departmentId, designationId, statusId,
-      joiningDate, salary, isActive)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1)`,
+      joiningDate, salary, password_hash, isActive)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1)`,
     [
       client_id,
       employeeCode,
@@ -86,6 +92,7 @@ export const createEmployeeService = async (client_code, payload) => {
       toIdOrNull(statusId),
       joiningDate || null,
       salary ?? null,
+      password_hash,
     ]
   );
 

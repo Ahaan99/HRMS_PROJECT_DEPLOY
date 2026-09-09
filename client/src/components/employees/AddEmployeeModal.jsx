@@ -99,6 +99,15 @@ export default function AddEmployeeModal({
         />
 
         <Input
+          label="Login password"
+          type="password"
+          value={form.password ?? ""}
+          onChange={(e) => setForm((p) => ({ ...p, password: e.target.value }))}
+          placeholder="Min 6 characters - lets the employee sign in to this portal"
+          autoComplete="new-password"
+        />
+
+        <Input
           label="Phone"
           value={form.phone}
           onChange={(e) => {
