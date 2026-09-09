@@ -1,0 +1,43 @@
+﻿Total literal API calls found: 156
+GET endpoints probed: 88
+
+=== ROUTE-NOT-FOUND (real mismatches) ===
+404  /employees?limit=500   <- BranchManagement.jsx, VisitorManagement.jsx 
+404  /super-admin/ai-chat/analytics   <- aiChatService.js 
+404  /super-admin/ai-chat/conversations   <- aiChatService.js 
+404  /super-admin/ai-chat/insights   <- aiChatService.js 
+404  /super-admin/ai-chat/logs   <- aiChatService.js 
+404  /super-admin/ai-chat/responses   <- aiChatService.js 
+404  /super-admin/ai-chat/stats   <- aiChatService.js 
+404  /super-admin/attendance/auto   <- attendanceService.js 
+404  /super-admin/attendance/logs   <- attendanceService.js 
+404  /super-admin/attendance/settings   <- attendanceService.js 
+404  /super-admin/chatbot/conversations   <- chatbotService.js 
+404  /super-admin/chatbot/quick-replies   <- chatbotService.js 
+404  /super-admin/chatbot/settings   <- chatbotService.js 
+404  /super-admin/chatbot/stats   <- chatbotService.js 
+404  /super-admin/chatbot/unread   <- chatbotService.js 
+404  /super-admin/discussion-logs   <- discussionPolicyService.js 
+404  /super-admin/discussion-policies   <- discussionPolicyService.js 
+404  /super-admin/discussion-policies/stats   <- discussionPolicyService.js 
+404  /super-admin/discussion-requests   <- discussionPolicyService.js 
+404  /super-admin/employee-login-times   <- loginTimeService.js 
+404  /super-admin/login-logs   <- loginTimeService.js 
+404  /super-admin/login-logs/stats   <- loginTimeService.js 
+404  /super-admin/login-logs/today   <- loginTimeService.js 
+404  /super-admin/policies/categories   <- companyPolicyService.js 
+404  /super-admin/policies/export   <- companyPolicyService.js 
+404  /super-admin/policy-mail/logs   <- policyMailService.js 
+404  /super-admin/policy-mail/stats   <- policyMailService.js 
+404  /super-admin/policy-mail/templates   <- policyMailService.js 
+404  /super-admin/security/login-logs   <- Security.jsx 
+404  /super-admin/security/stats   <- Security.jsx 
+404  /super-admin/subscription/active   <- subscriptionService.js 
+404  /super-admin/subscription/export   <- subscriptionService.js 
+404  /super-admin/subscription/plans   <- subscriptionService.js 
+404  /super-admin/subscription/stats   <- subscriptionService.js 
+404  /super-admin/work-policies   <- workPolicyService.js 
+404  /super-admin/work-policies/logs   <- clientCandidatePolicyService.js 
+404  /super-admin/work-policies/stats   <- clientCandidatePolicyService.js 
+404  /super-admin/work-targets   <- workPolicyService.js 
+404  /super-admin/work-targets/stats   <- workPolicyService.js 

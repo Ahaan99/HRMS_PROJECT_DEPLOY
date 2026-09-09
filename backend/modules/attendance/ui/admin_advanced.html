@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en" data-sa-base="/api/smart-attendance">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Advanced Attendance Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Manrope:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--green:#10b981;--green-dark:#059669;--blue:#38bdf8;--purple:#8b5cf6;--red:#f43f5e;
+--bg:#05070d;--card:#0d1322;--card2:#121a2e;--border:#243149;--text:#eef3fb;--muted:#8a97ad;
+--font-head:'Sora',sans-serif;--font-body:'Manrope',sans-serif}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);min-height:100vh}
+.topbar{background:rgba(17,19,24,.92);border-bottom:1px solid var(--border);padding:0 20px;height:54px;display:flex;align-items:center;gap:12px}
+.logo{width:34px;height:34px;background:var(--purple);border-radius:9px;display:flex;align-items:center;justify-content:center;font-family:var(--font-head);font-size:12px;font-weight:800;color:#fff}
+.topbar h1{font-family:var(--font-head);font-size:15px;font-weight:700}
+.topbar a{margin-left:auto;color:var(--blue);font-size:12px;text-decoration:none}
+.wrap{max-width:920px;margin:0 auto;padding:24px 16px;display:flex;flex-direction:column;gap:18px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px}
+.card h2{font-family:var(--font-head);font-size:13px;font-weight:700;color:var(--muted);letter-spacing:.5px;text-transform:uppercase;margin-bottom:12px}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th,td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--border)}
+th{color:var(--muted);font-weight:500}
+.btn{padding:8px 14px;border:none;border-radius:8px;font-family:var(--font-head);font-size:12px;font-weight:700;cursor:pointer;color:#fff;transition:.2s}
+.btn-g{background:var(--green)}.btn-r{background:var(--red)}.btn-b{background:var(--blue)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:10px}
+.inp{padding:8px 10px;background:var(--card2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:12px;font-family:var(--font-body)}
+.msg{font-size:11px;color:var(--muted);margin-top:8px}
+.tag{padding:2px 8px;border-radius:10px;font-size:10px;font-weight:600}
+.tag-late{background:rgba(216,90,48,.15);color:var(--red)}
+.tag-ok{background:rgba(29,158,117,.15);color:var(--green)}
+.empty{font-size:12px;color:var(--muted);padding:8px 0}
+
+/* === v0 premium polish layer === */
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-thumb{background:rgba(56,189,248,.28);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:rgba(56,189,248,.5)}
+body{background-image:radial-gradient(1100px 480px at 50% -10%,rgba(56,189,248,.08),transparent 60%),radial-gradient(800px 380px at 100% 112%,rgba(16,185,129,.06),transparent 55%);background-attachment:fixed}
+button,.btn,[class*="btn"]{transition:transform .16s ease,box-shadow .16s ease,filter .16s ease}
+button:hover,.btn:hover,[class*="btn"]:hover{transform:translateY(-1px)}
+button:active,.btn:active{transform:translateY(0)}
+input,select,textarea{transition:border-color .16s,box-shadow .16s}
+input:focus,select:focus,textarea:focus{border-color:var(--blue,#38bdf8)!important;box-shadow:0 0 0 3px rgba(56,189,248,.14)!important;outline:none}
+[class*="card"]{box-shadow:0 10px 32px rgba(0,0,0,.32),inset 0 1px 0 rgba(255,255,255,.04);transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease}
+[class*="card"]:hover{border-color:rgba(56,189,248,.30)}
+table tr{transition:background .14s}
+h1,h2,h3{letter-spacing:-.02em}
+/* === end polish === */
+/* ── RESPONSIVE: tables scroll sideways on small screens ── */
+@media (max-width:768px){
+  .wrap{padding:16px 10px;gap:14px}
+  .card{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .card table{min-width:560px}
+  .topbar{padding:0 12px}
+}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="logo">SA</div>
+  <h1>Advanced Attendance Admin</h1>
+  <a href="/api/smart-attendance/admin">&larr; Back to Dashboard</a>
+</div>
+<div class="wrap">
+
+  <div class="card">
+    <h2>Pending Approvals</h2>
+    <div id="pending-box"><p class="empty">Loading...</p></div>
+    <div class="row">
+      <button class="btn btn-g" onclick="decideAll('approved')">Approve Selected</button>
+      <button class="btn btn-r" onclick="decideAll('rejected')">Reject Selected</button>
+      <span class="msg" id="pending-msg"></span>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Correction Requests</h2>
+    <div id="corr-box"><p class="empty">Loading...</p></div>
+  </div>
+
+  <div class="card">
+    <h2>Monthly Summary</h2>
+    <div class="row" style="margin:0 0 10px">
+      <input class="inp" type="month" id="sum-month">
+      <button class="btn btn-b" onclick="loadSummary()">Load</button>
+    </div>
+    <div id="sum-box"><p class="empty">Pick a month and press Load</p></div>
+  </div>
+
+  <div class="card">
+    <h2>Shift Settings</h2>
+    <div class="row" style="margin:0">
+      <label style="font-size:11px;color:var(--muted)">Start <input class="inp" type="time" id="sh-start"></label>
+      <label style="font-size:11px;color:var(--muted)">End <input class="inp" type="time" id="sh-end"></label>
+      <label style="font-size:11px;color:var(--muted)">Grace (min) <input class="inp" type="number" id="sh-grace" style="width:70px"></label>
+    </div>
+    <div class="row">
+      <label style="font-size:11px;color:var(--muted)">Half-day &lt; hrs <input class="inp" type="number" step="0.5" id="sh-half" style="width:70px"></label>
+      <label style="font-size:11px;color:var(--muted)">OT after hrs <input class="inp" type="number" step="0.5" id="sh-ot" style="width:70px"></label>
+      <button class="btn btn-g" onclick="saveShift()">Save Shift</button>
+      <span class="msg" id="sh-msg"></span>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>HRMS Sync</h2>
+    <div class="row" style="margin:0">
+      <label style="font-size:11px;color:var(--muted)"><input type="checkbox" id="hr-on"> Enabled</label>
+      <input class="inp" id="hr-url" placeholder="HRMS URL e.g. http://127.0.0.1:5001" style="flex:1;min-width:220px">
+      <input class="inp" id="hr-key" placeholder="Integration key (leave blank to keep)" style="flex:1;min-width:200px">
+    </div>
+    <div class="row">
+      <button class="btn btn-g" onclick="saveHrms()">Save</button>
+      <button class="btn btn-b" onclick="retrySync()">Retry Failed Syncs</button>
+      <span class="msg" id="hr-msg"></span>
+    </div>
+  </div>
+
+</div>
+<script>
+const j = r => r.json();
+
+async function loadPending() {
+  const d = await fetch('/api/smart-attendance/api/attendance/pending').then(j).catch(() => null);
+  const box = document.getElementById('pending-box');
+  if (!d || !d.ok || !d.records.length) { box.innerHTML = '<p class="empty">No pending records</p>'; return; }
+  let h = '<table><tr><th><input type="checkbox" onchange="toggleAll(this)"></th><th>Emp</th><th>Name</th><th>Date</th><th>In</th><th>Out</th><th>Status</th><th>Method</th></tr>';
+  for (const r of d.records) {
+    const tag = r.status === 'Late' ? 'tag-late' : 'tag-ok';
+    h += `<tr><td><input type="checkbox" class="pchk" value="${r.id}"></td><td>${r.emp_id}</td><td>${r.name || ''}</td><td>${r.date}</td><td>${r.time || '-'}</td><td>${r.check_out || '-'}</td><td><span class="tag ${tag}">${r.status || 'Present'}</span></td><td>${r.method || '-'}</td></tr>`;
+  }
+  box.innerHTML = h + '</table>';
+}
+function toggleAll(cb) { document.querySelectorAll('.pchk').forEach(c => c.checked = cb.checked); }
+async function decideAll(decision) {
+  const ids = [...document.querySelectorAll('.pchk:checked')].map(c => c.value);
+  const m = document.getElementById('pending-msg');
+  if (!ids.length) { m.textContent = 'Select records first'; return; }
+  const d = await fetch('/api/smart-attendance/api/attendance/approve', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ids, decision})}).then(j).catch(() => null);
+  m.textContent = d ? (d.message || d.error) : 'Failed';
+  loadPending();
+}
+
+async function loadCorrections() {
+  const d = await fetch('/api/smart-attendance/api/corrections?state=pending').then(j).catch(() => null);
+  const box = document.getElementById('corr-box');
+  if (!d || !d.ok || !d.corrections.length) { box.innerHTML = '<p class="empty">No pending corrections</p>'; return; }
+  let h = '<table><tr><th>Emp</th><th>Date</th><th>In</th><th>Out</th><th>Reason</th><th></th></tr>';
+  for (const c of d.corrections) {
+    h += `<tr><td>${c.emp_id}</td><td>${c.date}</td><td>${c.check_in || '-'}</td><td>${c.check_out || '-'}</td><td>${c.reason}</td><td><button class="btn btn-g" onclick="decideCorr('${c.id}','approve')">Approve</button> <button class="btn btn-r" onclick="decideCorr('${c.id}','reject')">Reject</button></td></tr>`;
+  }
+  box.innerHTML = h + '</table>';
+}
+async function decideCorr(id, decision) {
+  await fetch('/api/smart-attendance/api/corrections/' + id + '/decide', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({decision})}).then(j).catch(() => null);
+  loadCorrections(); loadPending();
+}
+
+async function loadSummary() {
+  const month = document.getElementById('sum-month').value;
+  const d = await fetch('/api/smart-attendance/api/summary?month=' + month).then(j).catch(() => null);
+  const box = document.getElementById('sum-box');
+  if (!d || !d.ok || !d.rows.length) { box.innerHTML = '<p class="empty">No data for ' + month + '</p>'; return; }
+  let h = '<table><tr><th>Emp</th><th>Name</th><th>Days</th><th>Late</th><th>Half</th><th>Hours</th><th>OT</th></tr>';
+  for (const r of d.rows) h += `<tr><td>${r.emp_id}</td><td>${r.name || ''}</td><td>${r.days_present}</td><td>${r.late_days}</td><td>${r.half_days}</td><td>${r.total_hours}</td><td>${r.total_overtime}</td></tr>`;
+  box.innerHTML = h + '</table>';
+}
+
+async function loadShift() {
+  const d = await fetch('/api/smart-attendance/api/shift-settings').then(j).catch(() => null);
+  if (!d || !d.ok) return;
+  document.getElementById('sh-start').value = d.shift.start;
+  document.getElementById('sh-end').value = d.shift.end;
+  document.getElementById('sh-grace').value = d.shift.grace_min;
+  document.getElementById('sh-half').value = d.shift.half_day_hours;
+  document.getElementById('sh-ot').value = d.shift.overtime_after_hours;
+}
+async function saveShift() {
+  const body = {
+    start: document.getElementById('sh-start').value,
+    end: document.getElementById('sh-end').value,
+    grace_min: document.getElementById('sh-grace').value,
+    half_day_hours: document.getElementById('sh-half').value,
+    overtime_after_hours: document.getElementById('sh-ot').value
+  };
+  const d = await fetch('/api/smart-attendance/api/shift-settings', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(body)}).then(j).catch(() => null);
+  document.getElementById('sh-msg').textContent = d ? (d.message || d.error) : 'Failed';
+}
+
+async function loadHrms() {
+  const d = await fetch('/api/smart-attendance/api/hrms-settings').then(j).catch(() => null);
+  if (!d || !d.ok) return;
+  document.getElementById('hr-on').checked = d.hrms.enabled;
+  document.getElementById('hr-url').value = d.hrms.url || '';
+  document.getElementById('hr-key').placeholder = d.hrms.key ? 'Key set (' + d.hrms.key + ') - blank to keep' : 'Integration key';
+}
+async function saveHrms() {
+  const body = {enabled: document.getElementById('hr-on').checked, url: document.getElementById('hr-url').value};
+  const k = document.getElementById('hr-key').value.trim();
+  if (k) body.key = k;
+  const d = await fetch('/api/smart-attendance/api/hrms-settings', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(body)}).then(j).catch(() => null);
+  document.getElementById('hr-msg').textContent = d ? (d.message || d.error) : 'Failed';
+}
+async function retrySync() {
+  const d = await fetch('/api/smart-attendance/api/hrms-sync/retry', {method: 'POST'}).then(j).catch(() => null);
+  document.getElementById('hr-msg').textContent = d ? (d.message || d.error) : 'Failed';
+}
+
+document.getElementById('sum-month').value = new Date().toISOString().slice(0, 7);
+loadPending(); loadCorrections(); loadShift(); loadHrms(); loadSummary();
+</script>
+</body>
+</html>

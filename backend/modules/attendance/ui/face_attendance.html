@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en" data-sa-base="/api/smart-attendance">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Face Attendance</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Manrope:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--green:#10b981;--green-dark:#059669;--red:#f43f5e;--bg:#05070d;--card:#0d1322;--card2:#121a2e;--border:#243149;--text:#eef3fb;--muted:#8a97ad;--font-head:'Sora',sans-serif;--font-body:'Manrope',sans-serif}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);min-height:100vh;display:flex;flex-direction:column}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:40px 40px;opacity:.3;z-index:0}
+
+.topbar{position:relative;z-index:10;background:rgba(17,19,24,.92);border-bottom:1px solid var(--border);padding:0 20px;height:54px;display:flex;align-items:center;gap:12px;backdrop-filter:blur(12px)}
+.back-btn{padding:6px 12px;border:1px solid var(--border);border-radius:8px;background:transparent;color:var(--muted);font-family:var(--font-body);font-size:12px;cursor:pointer;transition:.2s;text-decoration:none;display:flex;align-items:center;gap:5px}
+.back-btn:hover{color:var(--text);border-color:var(--text)}
+.logo{width:34px;height:34px;background:var(--green);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px}
+.topbar h1{font-family:var(--font-head);font-size:15px;font-weight:700}
+.topbar-right{margin-left:auto}
+.btn-logout{padding:6px 14px;border:1px solid var(--border);border-radius:8px;background:transparent;color:var(--red);font-family:var(--font-body);font-size:12px;cursor:pointer;transition:.2s}
+.btn-logout:hover{background:rgba(216,90,48,.1)}
+
+.content{position:relative;z-index:1;flex:1;display:flex;align-items:center;justify-content:center;padding:20px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:24px;width:100%;max-width:420px;display:flex;flex-direction:column;gap:16px}
+
+.emp-info{background:var(--card2);border-radius:12px;padding:16px}
+.emp-info h2{font-family:var(--font-head);font-size:18px;font-weight:700;margin-bottom:4px}
+.emp-info p{font-size:12px;color:var(--muted)}
+
+.net-bar{padding:10px 14px;border-radius:10px;font-size:13px;font-weight:500}
+.net-bar.ok {background:rgba(29,158,117,.1);border:1px solid rgba(29,158,117,.25);color:var(--green)}
+.net-bar.bad{background:rgba(216,90,48,.1);border:1px solid rgba(216,90,48,.25);color:var(--red)}
+.net-bar.chk{background:rgba(55,138,221,.1);border:1px solid rgba(55,138,221,.25);color:#38bdf8}
+
+.cam-wrap{position:relative;background:#000;border-radius:12px;overflow:hidden;aspect-ratio:4/3}
+.cam-wrap video{width:100%;height:100%;object-fit:cover}
+.cam-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.7);flex-direction:column;gap:8px;color:var(--muted);font-size:13px}
+.cam-overlay .icon{font-size:36px}
+
+.btn{padding:14px;border:none;border-radius:11px;font-family:var(--font-head);font-size:15px;font-weight:700;cursor:pointer;transition:.2s;width:100%;letter-spacing:.3px}
+.btn-green{background:var(--green);color:#fff}
+.btn-green:hover:not(:disabled){background:var(--green-dark);transform:translateY(-1px)}
+.btn-gray{background:var(--card2);color:var(--text)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+
+.status-card{background:var(--card2);border-radius:12px;padding:14px 16px}
+.status-card h3{font-size:13px;font-weight:600;margin-bottom:10px;font-family:var(--font-head)}
+.status-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--border)}
+.status-row:last-child{border-bottom:none}
+.status-row .label{font-size:12px;color:var(--muted)}
+.status-row .val{font-size:12px;font-weight:500}
+.badge-present{background:rgba(29,158,117,.2);color:var(--green);padding:2px 8px;border-radius:20px;font-size:11px}
+
+.msg-box{padding:10px 14px;border-radius:9px;font-size:13px;display:none}
+.msg-box.show{display:block}
+.msg-box.ok {background:rgba(29,158,117,.1);border:1px solid rgba(29,158,117,.25);color:var(--green)}
+.msg-box.err{background:rgba(216,90,48,.1);border:1px solid rgba(216,90,48,.25);color:var(--red)}
+
+.hint{font-size:11px;color:var(--muted);text-align:center}
+.fade-in{animation:fadeIn .4s ease forwards}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* === v0 premium polish layer === */
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-thumb{background:rgba(56,189,248,.28);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:rgba(56,189,248,.5)}
+body{background-image:radial-gradient(1100px 480px at 50% -10%,rgba(56,189,248,.08),transparent 60%),radial-gradient(800px 380px at 100% 112%,rgba(16,185,129,.06),transparent 55%);background-attachment:fixed}
+button,.btn,[class*="btn"]{transition:transform .16s ease,box-shadow .16s ease,filter .16s ease}
+button:hover,.btn:hover,[class*="btn"]:hover{transform:translateY(-1px)}
+button:active,.btn:active{transform:translateY(0)}
+input,select,textarea{transition:border-color .16s,box-shadow .16s}
+input:focus,select:focus,textarea:focus{border-color:var(--blue,#38bdf8)!important;box-shadow:0 0 0 3px rgba(56,189,248,.14)!important;outline:none}
+[class*="card"]{box-shadow:0 10px 32px rgba(0,0,0,.32),inset 0 1px 0 rgba(255,255,255,.04);transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease}
+[class*="card"]:hover{border-color:rgba(56,189,248,.30)}
+table tr{transition:background .14s}
+h1,h2,h3{letter-spacing:-.02em}
+/* === end polish === */
+</style>
+<script src="/api/smart-attendance/static/vendor/sa-face.js"></script>
+</head>
+<body>
+
+<div class="topbar">
+  <a class="back-btn" href="/api/smart-attendance/employee">← Back</a>
+  <div class="logo">🤳</div>
+  <h1>Face Attendance</h1>
+  <div class="topbar-right">
+    <button class="btn-logout" onclick="doLogout()">Logout</button>
+  </div>
+</div>
+
+<div class="content fade-in">
+  <div class="card">
+    <div class="emp-info">
+      <h2 id="emp-name">Loading...</h2>
+      <p id="emp-id">Emp ID: —</p>
+    </div>
+
+    <div class="net-bar chk" id="net-bar">📍 Location check ...</div>
+
+    <div class="cam-wrap">
+      <video id="cam-video" autoplay playsinline></video>
+      <div class="cam-overlay" id="cam-overlay">
+        <div class="icon">🤳</div>
+        <div>For mark select button</div>
+      </div>
+    </div>
+
+    <button class="btn btn-green" id="mark-btn" onclick="markAttendance()">Mark Face Attendance</button>
+    <p class="hint">Camera + GPS location  verify </p>
+
+    <div class="msg-box" id="msg"></div>
+
+    <div class="status-card">
+      <h3>Today Status</h3>
+      <div class="status-row"><span class="label">Status</span><span class="val" id="st-status">—</span></div>
+      <div class="status-row"><span class="label">Time</span><span class="val" id="st-time">—</span></div>
+      <div class="status-row"><span class="label">Date</span><span class="val" id="st-date">—</span></div>
+      <div class="status-row"><span class="label">Location</span><span class="val" id="st-net">—</span></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const user = JSON.parse(sessionStorage.getItem('user') || '{}');
+let stream  = null;
+let marked  = false;
+let userLat = null;
+let userLng = null;
+
+document.getElementById('emp-name').textContent = `Welcome, ${user.name || '—'}`;
+document.getElementById('emp-id').textContent   = `Emp ID: ${user.emp_id || '—'}`;
+document.getElementById('st-date').textContent  = new Date().toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'});
+
+checkLocation();
+checkStatus();
+setInterval(checkLocation, 15000);
+
+/* Get GPS position as a promise; falls back to low accuracy + cached position */
+function getPosition() {
+  return new Promise((resolve, reject) => {
+    if (!navigator.geolocation) { reject({ code: -1 }); return; }
+    navigator.geolocation.getCurrentPosition(
+      resolve,
+      (err1) => {
+        if (err1.code === 1) { reject(err1); return; } /* permission denied: no point retrying */
+        /* retry: low accuracy, accept up to 2-minute-old cached position */
+        navigator.geolocation.getCurrentPosition(
+          resolve,
+          (err2) => reject(err2),
+          { enableHighAccuracy: false, timeout: 15000, maximumAge: 120000 }
+        );
+      },
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 30000 }
+    );
+  });
+}
+
+function gpsErrorMessage(err) {
+  if (!window.isSecureContext)
+    return '✗ GPS blocked: HTTP par kaam nahi karta — http://localhost:5000 ya HTTPS se kholo';
+  if (!err || err.code === -1) return '✗ GPS is browser mein support nahi karta';
+  if (err.code === 1) return '✗ GPS permission blocked hai — address bar ke lock icon > Site settings > Location > Allow karo. Page khud detect kar lega.';
+  if (err.code === 2) return '✗ Location mil nahi rahi — Windows Settings > Privacy > Location ON karo (ya WiFi on rakho)';
+  if (err.code === 3) return '✗ GPS timeout — signal weak hai, "Retry" dabao';
+  return '✗ GPS error — retry karo';
+}
+
+/* Live permission watcher: auto re-checks location the moment the user
+   clicks Allow in the browser — no refresh needed */
+(async function watchGpsPermission() {
+  if (!navigator.permissions || !navigator.permissions.query) return;
+  try {
+    const status = await navigator.permissions.query({ name: 'geolocation' });
+    status.onchange = () => { if (status.state === 'granted') checkLocation(); };
+  } catch (e) { /* unsupported — tap-to-retry still works */ }
+})();
+
+async function checkLocation() {
+  const bar = document.getElementById('net-bar');
+  bar.textContent = '📍 Location check ho raha hai...';
+  bar.className   = 'net-bar chk';
+  bar.style.cursor = 'pointer';
+  bar.onclick = checkLocation; /* tap the bar to retry any time */
+
+  /* Geolocation needs a secure context: HTTPS or localhost */
+  if (!window.isSecureContext) {
+    bar.textContent = gpsErrorMessage(null);
+    bar.className   = 'net-bar bad';
+    return;
+  }
+
+  try {
+    const pos = await getPosition();
+    userLat = pos.coords.latitude;
+    userLng = pos.coords.longitude;
+
+    const r = await fetch('/api/smart-attendance/api/location-status', {
+      method:  'POST',
+      headers: {'Content-Type': 'application/json'},
+      body:    JSON.stringify({lat: userLat, lng: userLng})
+    }).then(r => r.json()).catch(() => null);
+
+    if (!r) { bar.textContent = '✗ Server se connect nahi hua — tap to retry'; bar.className = 'net-bar bad'; return; }
+
+    if (r.in_office) {
+      bar.textContent = `✓ Office mein ho — ${r.distance}m (limit: ${r.radius}m)`;
+      bar.className   = 'net-bar ok';
+      document.getElementById('st-net').textContent = `Office ✓ (${r.distance}m)`;
+    } else {
+      bar.textContent = `✗ Office se ${r.distance}m door — ${r.radius}m andar aao (admin se office location set karwao agar galat hai)`;
+      bar.className   = 'net-bar bad';
+      document.getElementById('st-net').textContent = `Bahar (${r.distance}m)`;
+    }
+  } catch (err) {
+    bar.textContent = gpsErrorMessage(err) + ' — tap to retry';
+    bar.className   = 'net-bar bad';
+  }
+}
+
+async function checkStatus() {
+  const d = await fetch('/api/smart-attendance/api/my-status').then(r => r.json()).catch(() => null);
+  if (!d) return;
+  if (d.marked) {
+    marked = true;
+    document.getElementById('st-status').innerHTML = '<span class="badge-present">Present ✓</span>';
+    document.getElementById('st-time').textContent = d.record?.time || '—';
+    const btn = document.getElementById('mark-btn');
+    btn.textContent = 'Already Marked Today ✓';
+    btn.disabled    = true;
+    btn.className   = 'btn btn-gray';
+  } else {
+    document.getElementById('st-status').textContent = 'Not marked yet';
+  }
+}
+
+async function markAttendance() {
+  if (marked) return;
+
+  /* no coords yet? fetch them NOW instead of just telling the user to wait */
+  if (!userLat || !userLng) {
+    showMsg('GPS location le rahe hain — 2 second ruko...', 'ok');
+    try {
+      const pos = await getPosition();
+      userLat = pos.coords.latitude;
+      userLng = pos.coords.longitude;
+      checkLocation(); /* refresh the status bar in background */
+    } catch (err) {
+      showMsg(gpsErrorMessage(err), 'err');
+      return;
+    }
+  }
+
+  const loc = await fetch('/api/smart-attendance/api/location-status', {
+    method:  'POST',
+    headers: {'Content-Type': 'application/json'},
+    body:    JSON.stringify({lat: userLat, lng: userLng})
+  }).then(r => r.json()).catch(() => null);
+
+  if (!loc || !loc.in_office) {
+    showMsg(`Office boundary mein nahi ho (${loc ? loc.distance+'m' : '?'}) — attendance blocked`, 'err');
+    return;
+  }
+
+  if (!stream) {
+    try {
+      stream = await navigator.mediaDevices.getUserMedia({video: true});
+      document.getElementById('cam-video').srcObject = stream;
+      document.getElementById('cam-overlay').style.display = 'none';
+      showMsg('Camera khul gayi — face engine load ho raha hai...', 'ok');
+      /* load face-api models while the camera warms up, then capture */
+      SAFace.ready().catch(() => {});
+      setTimeout(doCapture, 1500);
+    } catch(e) {
+      showMsg('Camera permission do: ' + e.message, 'err');
+    }
+    return;
+  }
+  doCapture();
+}
+
+async function doCapture() {
+  if (!stream) return;
+
+  /* refresh GPS if possible, but REUSE last verified coords if it fails —
+     location was already checked; don't fail the capture on a GPS hiccup */
+  try {
+    const pos = await getPosition();
+    userLat = pos.coords.latitude;
+    userLng = pos.coords.longitude;
+  } catch (e) {
+    if (!userLat || !userLng) {
+      showMsg('GPS nahi mila capture ke time', 'err');
+      document.getElementById('mark-btn').disabled = false;
+      document.getElementById('mark-btn').textContent = 'Try Again';
+      return;
+    }
+  }
+
+  {
+    const vid    = document.getElementById('cam-video');
+
+    const btn = document.getElementById('mark-btn');
+    btn.textContent = 'Processing...';
+    btn.disabled    = true;
+
+    /* Face recognition runs in the browser (face-api.js); only the 128-d
+       descriptor is sent - the photo never leaves this device. */
+    let descriptor = null;
+    try {
+      descriptor = await SAFace.describe(vid);
+    } catch (e) {
+      showMsg('Face engine load nahi hua - page reload karke dobara try karein', 'err');
+      btn.disabled = false; btn.textContent = 'Try Again'; return;
+    }
+    if (!descriptor) {
+      showMsg('Camera me face clear nahi dikh raha - roshni me aayein aur dobara try karein', 'err');
+      btn.disabled = false; btn.textContent = 'Try Again'; return;
+    }
+
+    const res = await fetch('/api/smart-attendance/api/mark-attendance', {
+      method:  'POST',
+      headers: {'Content-Type': 'application/json'},
+      body:    JSON.stringify({descriptor, lat: userLat, lng: userLng, tolerance: 0.5})
+    }).then(r => r.json()).catch(() => null);
+
+    if (!res) { showMsg('Server error', 'err'); btn.disabled = false; btn.textContent = 'Mark Face Attendance'; return; }
+
+    if (res.ok && res.marked.length > 0) {
+      const mine = res.marked.find(m => m.emp_id === user.emp_id);
+      if (mine) {
+        marked = true;
+        showMsg(`✓ Attendance mark ho gayi! Time: ${mine.time}`, 'ok');
+        btn.textContent = 'Attendance Marked ✓';
+        btn.className   = 'btn btn-gray';
+        document.getElementById('st-status').innerHTML = '<span class="badge-present">Present ✓</span>';
+        document.getElementById('st-time').textContent = mine.time;
+        stream.getTracks().forEach(t => t.stop());
+        stream = null;
+        document.getElementById('cam-overlay').style.display = 'flex';
+        setTimeout(() => { window.location.href = '/api/smart-attendance/employee'; }, 2000);
+      } else if (res.marked.some(m => m.status === 'already_marked')) {
+        showMsg('Aaj ki attendance pehle se mark hai!', 'ok');
+        checkStatus();
+      } else {
+        showMsg('Aapka face nahi mila — seedha camera ke saamne baitho', 'err');
+        btn.disabled = false; btn.textContent = 'Try Again';
+      }
+    } else {
+      showMsg(res.error || 'Face detect nahi hua — dobara try karo', 'err');
+      btn.disabled = false; btn.textContent = 'Try Again';
+    }
+  }
+}
+
+function showMsg(msg, type) {
+  const el = document.getElementById('msg');
+  el.textContent = msg;
+  el.className   = `msg-box ${type} show`;
+}
+
+async function doLogout() {
+  await fetch('/api/smart-attendance/api/logout', {method:'POST'});
+  sessionStorage.clear();
+  window.location.href = '/api/smart-attendance/';
+}
+</script>
+</body>
+</html>

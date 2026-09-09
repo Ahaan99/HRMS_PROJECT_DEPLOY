@@ -1,0 +1,252 @@
+/* ==========================================================================
+   ADVANCED CRM CONTROLLER DESIGN FRAMEWORK - GLASSMORPHIC DARK SYSTEM
+   ========================================================================== */
+
+:root {
+  --crm-bg-glass: rgba(15, 23, 42, 0.4);
+  --crm-card-border: rgba(255, 255, 255, 0.07);
+  --crm-row-hover: rgba(59, 130, 246, 0.06);
+  --crm-input-dark: rgba(9, 13, 22, 0.5);
+
+  --crm-neon-indigo: #6366f1;
+  --crm-neon-cyan: #38bdf8;
+  --crm-danger-crimson: #ef4444;
+
+  --crm-text-primary: #ffffff;
+  --crm-text-slate: #cbd5e1;
+  --crm-text-muted: #64748b;
+
+  --crm-transition-smooth: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ==========================================================================
+   CANDIDATE FORM WRAPPER
+   ========================================================================== */
+.candidate-form-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100%;
+  padding: 20px;
+}
+
+.candidate-card {
+  background: linear-gradient(135deg, #1a1f35 0%, #16213e 100%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 24px;
+  padding: 40px;
+  max-width: 700px;
+  width: 100%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.candidate-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.candidate-header h2 {
+  font-size: 32px;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0 0 12px 0;
+  background: linear-gradient(135deg, #ffffff 30%, #94a3b8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.candidate-header p {
+  color: #cbd5e1;
+  font-size: 15px;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ==========================================================================
+   FORM GRID & LAYOUT
+   ========================================================================== */
+.candidate-portal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.section-title {
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--crm-neon-indigo);
+  margin: 0 0 16px 0;
+  margin-top: 24px;
+}
+
+.form-grid {
+  display: grid;
+  gap: 20px;
+}
+
+.layout-double {
+  grid-template-columns: 1fr 1fr;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group.span-2 {
+  grid-column: span 2;
+}
+
+.form-group label {
+  font-weight: 600;
+  color: #e2e8f0;
+  font-size: 14px;
+}
+
+.form-group input {
+  background: rgba(9, 13, 22, 0.6);
+  border: 1px solid rgba(100, 116, 139, 0.3);
+  border-radius: 12px;
+  padding: 12px 16px;
+  color: #ffffff;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.form-group input::placeholder {
+  color: #64748b;
+}
+
+.form-group input:focus {
+  outline: none;
+  background: rgba(9, 13, 22, 0.8);
+  border-color: var(--crm-neon-indigo);
+  box-shadow: 0 0 12px rgba(99, 102, 241, 0.3);
+}
+
+/* ==========================================================================
+   FILE UPLOAD ZONE
+   ========================================================================== */
+.resume-upload-zone {
+  margin-top: 8px;
+}
+
+.file-drop-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 32px 24px;
+  background: rgba(56, 189, 248, 0.05);
+  border: 2px dashed rgba(56, 189, 248, 0.3);
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.file-drop-area:hover {
+  border-color: var(--crm-neon-cyan);
+  background: rgba(56, 189, 248, 0.1);
+}
+
+.file-drop-area.file-selected {
+  border-color: #34d399;
+  background: rgba(16, 185, 129, 0.08);
+}
+
+.upload-text {
+  font-weight: 600;
+  color: #e2e8f0;
+  font-size: 15px;
+}
+
+.upload-formats {
+  font-size: 12px;
+  color: #64748b;
+}
+
+.hidden-file-input {
+  display: none;
+}
+
+/* ==========================================================================
+   SUBMIT BUTTON
+   ========================================================================== */
+.submit-action-btn {
+  padding: 14px 28px;
+  background: linear-gradient(135deg, var(--crm-neon-indigo) 0%, #a855f7 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.35);
+  margin-top: 8px;
+}
+
+.submit-action-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(99, 102, 241, 0.45);
+}
+
+.submit-action-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ==========================================================================
+   RESPONSIVE DESIGN
+   ========================================================================== */
+@media (max-width: 768px) {
+  .candidate-card {
+    padding: 28px 20px;
+  }
+
+  .candidate-header h2 {
+    font-size: 24px;
+  }
+
+  .layout-double {
+    grid-template-columns: 1fr;
+  }
+
+  .form-group.span-2 {
+    grid-column: span 1;
+  }
+
+  .file-drop-area {
+    padding: 24px 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .candidate-form-wrapper {
+    padding: 12px;
+  }
+
+  .candidate-card {
+    padding: 20px 16px;
+  }
+
+  .candidate-header h2 {
+    font-size: 20px;
+  }
+
+  .candidate-header p {
+    font-size: 13px;
+  }
+
+  .form-grid {
+    gap: 16px;
+  }
+
+  .section-title {
+    font-size: 12px;
+  }
+}

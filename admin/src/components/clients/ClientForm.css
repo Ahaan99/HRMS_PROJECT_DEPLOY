@@ -1,0 +1,266 @@
+/* ==========================================================================
+   CLIENT FORM GLASSMORPHIC DARK DESIGN SYSTEM
+   ========================================================================== */
+
+:root {
+  --client-bg-glass: rgba(15, 23, 42, 0.4);
+  --client-card-border: rgba(255, 255, 255, 0.07);
+  --client-input-dark: rgba(9, 13, 22, 0.5);
+  --client-neon-indigo: #6366f1;
+  --client-neon-cyan: #38bdf8;
+  --client-text-primary: #ffffff;
+  --client-text-slate: #cbd5e1;
+  --client-text-muted: #64748b;
+  --client-transition-smooth: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ==========================================================================
+   CONTAINER & CARD WRAPPER
+   ========================================================================== */
+
+.client-form-container-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100%;
+  padding: 20px;
+}
+
+.client-form-card {
+  background: linear-gradient(135deg, #1a1f35 0%, #16213e 100%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 24px;
+  padding: 40px;
+  max-width: 900px;
+  width: 100%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+/* ==========================================================================
+   HEADER SECTION
+   ========================================================================== */
+
+.client-form-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.client-form-header h2 {
+  font-size: 32px;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0 0 12px 0;
+  background: linear-gradient(135deg, #ffffff 30%, #94a3b8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.client-form-header p {
+  color: #cbd5e1;
+  font-size: 15px;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ==========================================================================
+   FORM STRUCTURE
+   ========================================================================== */
+
+.client-portal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.client-section-title {
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--client-neon-indigo);
+  margin: 0 0 16px 0;
+  margin-top: 24px;
+}
+
+/* Grid Layouts */
+.client-form-grid {
+  display: grid;
+  gap: 20px;
+}
+
+.client-layout-double {
+  grid-template-columns: 1fr 1fr;
+}
+
+.client-layout-triple {
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+.client-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.client-form-group.client-full-width {
+  grid-column: 1 / -1;
+}
+
+.client-form-group.client-span-2 {
+  grid-column: span 2;
+}
+
+/* Labels */
+.client-form-group label {
+  font-weight: 600;
+  color: #e2e8f0;
+  font-size: 14px;
+}
+
+/* Input Fields */
+.client-form-group input,
+.client-form-group select,
+.client-form-group textarea {
+  background: rgba(9, 13, 22, 0.6);
+  border: 1px solid rgba(100, 116, 139, 0.3);
+  border-radius: 12px;
+  padding: 12px 16px;
+  color: #ffffff;
+  font-size: 14px;
+  font-family: inherit;
+  transition: all 0.3s ease;
+}
+
+.client-form-group input::placeholder,
+.client-form-group textarea::placeholder {
+  color: #64748b;
+}
+
+.client-form-group input:focus,
+.client-form-group select:focus,
+.client-form-group textarea:focus {
+  outline: none;
+  background: rgba(9, 13, 22, 0.8);
+  border-color: var(--client-neon-indigo);
+  box-shadow: 0 0 12px rgba(99, 102, 241, 0.3);
+}
+
+/* Select Styling */
+.client-form-group select {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23cbd5e1' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 20px;
+  padding-right: 40px;
+}
+
+/* Textarea */
+.client-form-group textarea {
+  resize: vertical;
+  line-height: 1.5;
+}
+
+/* ==========================================================================
+   SUBMIT BUTTON
+   ========================================================================== */
+
+.client-submit-btn {
+  padding: 14px 28px;
+  background: linear-gradient(135deg, var(--client-neon-indigo) 0%, #a855f7 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.35);
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 48px;
+}
+
+.client-submit-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(99, 102, 241, 0.45);
+}
+
+.client-submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Spinner */
+.client-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: clientSpin 0.6s linear infinite;
+}
+
+@keyframes clientSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ==========================================================================
+   RESPONSIVE DESIGN
+   ========================================================================== */
+
+@media (max-width: 768px) {
+  .client-form-card {
+    padding: 28px 20px;
+  }
+
+  .client-form-header h2 {
+    font-size: 24px;
+  }
+
+  .client-layout-double,
+  .client-layout-triple {
+    grid-template-columns: 1fr;
+  }
+
+  .client-form-group.client-span-2 {
+    grid-column: span 1;
+  }
+}
+
+@media (max-width: 480px) {
+  .client-form-container-wrapper {
+    padding: 12px;
+  }
+
+  .client-form-card {
+    padding: 20px 16px;
+  }
+
+  .client-form-header h2 {
+    font-size: 20px;
+  }
+
+  .client-form-header p {
+    font-size: 13px;
+  }
+
+  .client-form-grid {
+    gap: 16px;
+  }
+
+  .client-section-title {
+    font-size: 12px;
+  }
+
+  .client-submit-btn {
+    font-size: 13px;
+    padding: 12px 20px;
+  }
+}

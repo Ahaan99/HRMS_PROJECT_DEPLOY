@@ -1,0 +1,162 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ===== Mobile responsive hardening (global) ===== */
+html, body { overflow-x: hidden; }
+img, video, canvas { max-width: 100%; height: auto; }
+@media (max-width: 768px) {
+  table { display: block; width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  pre { overflow-x: auto; }
+  input, select, textarea { font-size: 16px; }
+}
+
+/* ============================================================
+   PREMIUM DARK MODE - deep navy/slate palette
+   Activated via class="dark" on <html> (ThemeContext + inline
+   script in index.html).
+   ============================================================ */
+
+.theme-transition,
+.theme-transition * {
+  transition:
+    background-color 0.25s ease,
+    border-color 0.25s ease,
+    color 0.25s ease !important;
+}
+
+.dark {
+  color-scheme: dark;
+  --ink: #f1f5f9;
+  --ink-2: #cbd5e1;
+  --ink-3: #8b96a9;
+  --paper: #0b0f1a;
+  --card: #121828;
+  --line: #232d45;
+}
+
+.dark body,
+.dark .bg-gray-50,
+.dark .bg-slate-50,
+.dark .bg-gray-100,
+.dark .bg-slate-100 { background-color: var(--paper); color: var(--ink); }
+
+/* gradient page backgrounds used across employee pages */
+.dark .bg-gradient-to-br,
+.dark .bg-gradient-to-b,
+.dark .bg-gradient-to-r.from-indigo-50,
+.dark .from-indigo-50,
+.dark .from-slate-50,
+.dark .from-gray-50 { background-image: none !important; }
+.dark div[class*="from-indigo-50"],
+.dark div[class*="from-slate-50"],
+.dark div[class*="from-gray-50"],
+.dark div[class*="from-blue-50"],
+.dark div[class*="from-purple-50"] { background-color: var(--paper); }
+
+/* ---------- surfaces ---------- */
+.dark .bg-white { background-color: var(--card); }
+.dark .bg-white\/60,
+.dark .bg-white\/70,
+.dark .bg-white\/80,
+.dark .bg-white\/90 { background-color: rgba(18, 24, 40, 0.82); }
+.dark .hover\:bg-gray-50:hover,
+.dark .hover\:bg-slate-50:hover { background-color: #182034; }
+.dark .hover\:bg-gray-100:hover,
+.dark .hover\:bg-slate-100:hover { background-color: #202a44; }
+
+/* ---------- text ---------- */
+.dark .text-gray-900,
+.dark .text-slate-900,
+.dark .text-gray-800,
+.dark .text-slate-800,
+.dark .text-black { color: var(--ink); }
+.dark .text-gray-700,
+.dark .text-slate-700,
+.dark .text-gray-600,
+.dark .text-slate-600 { color: var(--ink-2); }
+.dark .text-gray-500,
+.dark .text-slate-500,
+.dark .text-gray-400,
+.dark .text-slate-400 { color: var(--ink-3); }
+
+/* ---------- borders ---------- */
+.dark .border,
+.dark .border-b,
+.dark .border-t,
+.dark .border-l,
+.dark .border-r,
+.dark .border-gray-100,
+.dark .border-gray-200,
+.dark .border-gray-300,
+.dark .border-slate-100,
+.dark .border-slate-200 { border-color: var(--line); }
+.dark .border-white\/40,
+.dark .border-white\/50,
+.dark .border-white\/60 { border-color: rgba(44, 56, 86, 0.7); }
+.dark .divide-gray-100 > *,
+.dark .divide-gray-200 > * { border-color: var(--line); }
+
+/* ---------- accents / status tints ---------- */
+.dark .bg-indigo-50,
+.dark .bg-blue-50 { background-color: rgba(124, 140, 245, 0.16); }
+.dark .text-indigo-600,
+.dark .text-indigo-700,
+.dark .text-blue-600,
+.dark .text-blue-700 { color: #7c8cf5; }
+.dark .bg-green-50,
+.dark .bg-green-100,
+.dark .bg-emerald-50,
+.dark .bg-emerald-100 { background-color: rgba(52, 211, 153, 0.12); }
+.dark .text-green-600,
+.dark .text-green-700,
+.dark .text-green-800,
+.dark .text-emerald-600,
+.dark .text-emerald-700 { color: #34d399; }
+.dark .bg-amber-50,
+.dark .bg-amber-100,
+.dark .bg-yellow-50,
+.dark .bg-yellow-100 { background-color: rgba(245, 176, 77, 0.12); }
+.dark .text-amber-600,
+.dark .text-amber-700,
+.dark .text-amber-800,
+.dark .text-yellow-600,
+.dark .text-yellow-700,
+.dark .text-yellow-800 { color: #f5b04d; }
+.dark .bg-red-50,
+.dark .bg-red-100,
+.dark .bg-rose-50 { background-color: rgba(242, 139, 150, 0.12); }
+.dark .text-red-600,
+.dark .text-red-700,
+.dark .text-rose-600 { color: #f28b96; }
+
+/* ---------- shadows ---------- */
+.dark .shadow-sm,
+.dark .shadow,
+.dark .shadow-md,
+.dark .shadow-lg,
+.dark .shadow-xl {
+  --tw-shadow-color: rgba(0, 0, 0, 0.55);
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.4),
+    0 10px 26px -10px rgba(0, 0, 0, 0.55);
+}
+
+/* ---------- forms ---------- */
+.dark input,
+.dark select,
+.dark textarea {
+  background-color: #0e1422;
+  border-color: var(--line);
+  color: var(--ink);
+}
+.dark input::placeholder,
+.dark textarea::placeholder { color: var(--ink-3); }
+
+/* ---------- tables ---------- */
+.dark table thead th { color: var(--ink-3); }
+.dark table tbody tr:hover { background-color: rgba(124, 140, 245, 0.06); }
+
+/* ---------- scrollbars ---------- */
+.dark ::-webkit-scrollbar-thumb { background: #2c3856; }
+.dark ::-webkit-scrollbar-track { background: transparent; }

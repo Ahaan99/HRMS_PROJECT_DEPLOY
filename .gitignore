@@ -1,0 +1,106 @@
+# ── Dependencies ─────────────────────────────
+node_modules/
+**/node_modules/
+
+# ── Environment / secrets (NEVER commit) ─────
+.env
+**/.env
+.env.local
+.env.*.local
+
+# ── Build output ──────────────────────────────
+dist/
+**/dist/
+build/
+**/build/
+
+# ── Python ────────────────────────────────────
+__pycache__/
+**/__pycache__/
+*.pyc
+venv/
+**/venv/
+.venv/
+**/.venv/
+*.egg-info/
+
+# ── Local databases / runtime data ───────────
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+
+# ── Logs ──────────────────────────────────────
+logs/
+**/logs/
+*.log
+npm-debug.log*
+
+# ── Uploaded / generated media (runtime) ─────
+HR_robo/uploads/
+HR_robo/video_storage/
+backen/uploads/
+
+# ── OS / editor ───────────────────────────────
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Project reports (local only)
+*Project_Report*
+PROJECT_REPORT*
+backend/uploads/ 
+HRMS Recruweb deploy.zip 
+HRMS Recruweb deploy/
+
+# -- MCP agent artifacts (never commit) --------
+.mcp_logs/
+**/.mcp_logs/
+.mcp_backups/
+**/.mcp_backups/
+_mcp_screens/
+**/_mcp_screens/
+_mcp_sessions/
+**/_mcp_*/
+
+# -- Local scratch / probe OUTPUTS (scripts/_*.mjs tooling IS committed) --
+_probe_del.ps1
+_audit_routes.ps1
+backend/_chk.mjs
+backend/_otp_out.txt
+backend/fk_dump.json
+backend/{
+backend/_*.txt
+backend/_*.json
+backend/scripts/_*.txt
+backend/scripts/_*.json
+backend/uploads/hr-robo/
+backend/uploads/evs/
+
+# -- Deploy archives -----------------------------
+*.zip
+
+# -- Backend service secrets (prod) ---------------
+HR_robo/.env.production
+employee-verification-system/employee-verification-backend/.env.production
+smart-Attendance-main/**/backend/.env.production
+backend/.env.production
+backend/.env.freshtest
+
+# -- Not part of the deployable app (kept locally only) ----------
+# Legacy Python services: EVS / HR Robo / Smart Attendance now run natively
+# inside backend/ (see backend/app.js). Old sources stay on disk, not in git.
+HR_robo/
+smart-Attendance-main/
+# Ad-hoc local probe scripts (Python) - may hold local DB credentials
+/scripts/
+CHATBOT_README.md
+# Real per-host frontend env (domains + SSO key). Commit only *.example.
+**/.env.production
+!**/.env.production.example
+# Hostinger packaging helpers / unauthenticated Twilio test route
+backend/scripts/_package-*.mjs
+backend/scripts/_build-all-portals.mjs
+backend/routes/testTwilio.route.js

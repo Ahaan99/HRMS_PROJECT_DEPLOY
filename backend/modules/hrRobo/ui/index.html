@@ -1,0 +1,2594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="config.js"></script>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Ardhnarishvar HR — AI Interview System</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#0b0f17;--bg2:#101623;--bg3:#18202f;--card:#121927;--card2:#161f30;
+  --border:rgba(148,163,184,.13);--border2:rgba(148,163,184,.26);
+  --accent:#5b8def;--accent2:#7ba6f3;--accent3:#9db9f5;
+  --green:#2fbf8f;--amber:#e8a33d;--red:#e5646e;
+  --text:#f1f5f9;--text2:#aab6c8;--text3:#66738a;
+  --ink:#ffffff;
+}
+body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;min-height:100vh;background-image:radial-gradient(1200px 520px at 50% -12%,rgba(56,189,248,.10),transparent 62%),radial-gradient(900px 420px at 100% 115%,rgba(52,211,153,.07),transparent 60%);background-attachment:fixed;}
+
+#login-screen{position:fixed;inset:0;background:var(--bg);background-image:radial-gradient(1200px 560px at 50% -10%,rgba(56,189,248,.15),transparent 60%),radial-gradient(700px 400px at 8% 108%,rgba(52,211,153,.10),transparent 55%);display:flex;z-index:1000;overflow-y:auto;padding:24px 16px;}
+#login-screen .login-card{margin:auto;}
+.login-card{background:linear-gradient(180deg,rgba(19,29,49,.92),rgba(9,15,27,.94));backdrop-filter:blur(20px);border:1px solid var(--border2);border-radius:22px;padding:48px;width:560px;box-shadow:0 30px 80px rgba(0,0,0,.55),0 0 60px rgba(56,189,248,.05),inset 0 1px 0 rgba(255,255,255,.07);}
+.login-logo{text-align:center;margin-bottom:30px;}
+.brand-icon{width:86px;height:86px;margin:0 auto 14px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:26px;display:flex;align-items:center;justify-content:center;font-size:42px;box-shadow:0 12px 34px rgba(56,189,248,.35),inset 0 1px 0 rgba(255,255,255,.35);}
+.brand-name{font-size:31px;font-weight:800;letter-spacing:-.02em;background:linear-gradient(100deg,#eaf2fb 5%,var(--accent) 55%,var(--accent2) 95%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.brand-sub{font-size:11px;color:var(--text3);margin-top:6px;font-family:'JetBrains Mono',monospace;letter-spacing:.24em;text-transform:uppercase;}
+
+.login-tabs{display:flex;gap:5px;background:rgba(4,9,17,.7);padding:5px;border-radius:12px;margin-bottom:20px;border:1px solid var(--border);}
+.ltab{flex:1;padding:11px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;border:none;background:transparent;color:var(--text3);transition:all .2s;font-family:'Outfit',sans-serif;}
+.ltab:hover{color:var(--text2);}
+.ltab.active{background:linear-gradient(135deg,var(--accent),var(--accent2));color:var(--ink);font-weight:700;box-shadow:0 6px 18px rgba(56,189,248,.35);}
+
+.form-group{margin-bottom:14px;}
+.form-label{font-size:11px;font-weight:600;color:var(--text3);margin-bottom:6px;display:block;text-transform:uppercase;letter-spacing:.14em;}
+.form-input{width:100%;background:rgba(4,9,17,.65);border:1px solid var(--border2);border-radius:10px;color:var(--text);font-family:'Outfit',sans-serif;font-size:15px;padding:13px 16px;outline:none;transition:border-color .2s,box-shadow .2s;}
+.form-input::placeholder{color:var(--text3);}
+.form-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(56,189,248,.14);}
+select.form-input{cursor:pointer;}
+textarea.form-input{resize:vertical;min-height:70px;}
+.btn{padding:11px 22px;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;border:none;transition:all .2s;font-family:'Outfit',sans-serif;}
+.btn-full{width:100%;}
+.btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:var(--ink);box-shadow:0 8px 24px rgba(56,189,248,.30);}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 12px 30px rgba(56,189,248,.42);}
+.btn-green{background:var(--green);color:var(--ink);box-shadow:0 8px 22px rgba(52,211,153,.28);}.btn-green:hover{transform:translateY(-1px);}
+.login-hint{font-size:12px;color:var(--text3);text-align:center;margin-top:12px;font-family:'JetBrains Mono',monospace;}
+
+.layout{display:flex;min-height:100vh;}
+.sidebar{width:224px;background:rgba(7,12,22,.85);backdrop-filter:blur(14px);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;}
+.logo{padding:20px 18px;border-bottom:1px solid var(--border);}
+.logo-icon{width:40px;height:40px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:8px;box-shadow:0 6px 16px rgba(56,189,248,.30);}
+.logo-text{font-size:13px;font-weight:800;letter-spacing:-.01em;background:linear-gradient(100deg,#eaf2fb 5%,var(--accent) 60%,var(--accent2) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.logo-sub{font-size:9px;color:var(--text3);font-family:'JetBrains Mono',monospace;margin-top:2px;letter-spacing:.18em;text-transform:uppercase;}
+.nav{flex:1;padding:10px 8px;overflow-y:auto;}
+.nav-sec{padding:8px 12px 4px;font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.16em;margin-top:6px;}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 12px;cursor:pointer;font-size:14px;font-weight:500;color:var(--text2);transition:all .18s;border-left:2px solid transparent;border-radius:9px;margin:1px 0;}
+.nav-item:hover{color:var(--text);background:rgba(56,189,248,.06);}
+.nav-item.active{color:var(--accent3);background:linear-gradient(90deg,rgba(56,189,248,.14),rgba(56,189,248,.03));border-left-color:var(--accent);box-shadow:inset 0 1px 0 rgba(255,255,255,.04);}
+.sidebar-footer{padding:14px 16px;border-top:1px solid var(--border);}
+.user-info{display:flex;align-items:center;gap:9px;}
+.user-avatar{width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:var(--ink);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0;}
+.user-name{font-size:13px;font-weight:600;}.user-role{font-size:11px;color:var(--text3);}
+.logout-btn{margin-left:auto;font-size:10px;color:var(--text3);cursor:pointer;background:none;border:1px solid transparent;padding:4px 8px;border-radius:6px;transition:all .15s;}
+.logout-btn:hover{color:var(--red);border-color:rgba(248,113,113,.35);}
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+.topbar{background:rgba(7,12,22,.75);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);padding:0 24px;height:56px;display:flex;align-items:center;gap:10px;flex-shrink:0;}
+.topbar-title{font-size:16px;font-weight:700;letter-spacing:-.01em;flex:1;}
+.chip{background:rgba(4,9,17,.6);border:1px solid var(--border);border-radius:8px;padding:5px 11px;font-size:11px;color:var(--text2);font-family:'JetBrains Mono',monospace;}
+.chip span{color:var(--green);}
+.btn-sm{padding:8px 16px;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;border:none;transition:all .18s;font-family:'Outfit',sans-serif;}
+.btn-sm.primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:var(--ink);font-weight:700;box-shadow:0 6px 16px rgba(56,189,248,.28);}
+.btn-sm.primary:hover{transform:translateY(-1px);}
+.btn-sm.outline{background:transparent;border:1px solid var(--border2);color:var(--text2);}.btn-sm.outline:hover{border-color:var(--accent);color:var(--text);box-shadow:0 0 0 3px rgba(56,189,248,.10);}
+.btn-sm.danger{background:transparent;border:1px solid var(--red);color:var(--red);}.btn-sm.danger:hover{background:rgba(248,113,113,.10);}
+.btn-sm.green{background:var(--green);color:var(--ink);font-weight:700;}
+.content{flex:1;padding:22px 24px;overflow-y:auto;display:flex;flex-direction:column;gap:16px;}
+.panel{display:none;flex-direction:column;gap:16px;}
+.panel.active{display:flex;}
+
+.card{background:linear-gradient(180deg,rgba(17,26,44,.72),rgba(10,16,28,.80));backdrop-filter:blur(12px);border:1px solid var(--border);border-radius:16px;padding:22px;box-shadow:0 10px 34px rgba(0,0,0,.30),inset 0 1px 0 rgba(255,255,255,.04);}
+.card-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+.card-t{font-size:15px;font-weight:700;letter-spacing:-.01em;}
+.badge{font-size:11px;font-weight:700;padding:5px 12px;border-radius:20px;letter-spacing:.02em;}
+.b-blue{background:rgba(56,189,248,.14);color:#7dd3fc;border:1px solid rgba(56,189,248,.25);}
+.b-green{background:rgba(52,211,153,.14);color:#6ee7b7;border:1px solid rgba(52,211,153,.25);}
+.b-amber{background:rgba(251,191,36,.13);color:#fcd34d;border:1px solid rgba(251,191,36,.25);}
+.b-red{background:rgba(248,113,113,.13);color:#fca5a5;border:1px solid rgba(248,113,113,.25);}
+.b-purple{background:rgba(125,211,252,.12);color:#bae6fd;border:1px solid rgba(125,211,252,.22);}
+.b-pink{background:rgba(94,234,212,.12);color:#99f6e4;border:1px solid rgba(94,234,212,.22);}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
+
+/* ── Responsive: tablet & mobile ── */
+.menu-btn{display:none;background:rgba(4,9,17,.6);border:1px solid var(--border2);color:var(--text);border-radius:9px;padding:6px 11px;font-size:16px;cursor:pointer;line-height:1;}
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:98;}
+@media(max-width:900px){
+  .g4{grid-template-columns:1fr 1fr;}
+}
+@media(max-width:768px){
+  .menu-btn{display:inline-flex;align-items:center;}
+  .sidebar{position:fixed;top:0;left:0;bottom:0;z-index:99;transform:translateX(-100%);transition:transform .25s ease;box-shadow:0 0 40px rgba(0,0,0,.5);}
+  .sidebar.open{transform:translateX(0);}
+  .sidebar-overlay.show{display:block;}
+  .g2{grid-template-columns:1fr;}
+  .content{padding:14px 12px;}
+  .topbar{padding:0 12px;gap:8px;}
+  .topbar .chip{display:none;}
+  .topbar .chip#clock{display:inline-block;}
+  .mv{font-size:28px;}
+  .card{padding:16px;overflow-x:auto;}
+  .login-card{margin:12px;}
+}
+@media(max-width:480px){
+  .g4{grid-template-columns:1fr;}
+  .topbar .chip#clock{display:none;}
+}
+
+.metric-card{background:linear-gradient(180deg,rgba(17,26,44,.72),rgba(10,16,28,.82));backdrop-filter:blur(12px);border:1px solid var(--border);border-radius:16px;padding:22px 24px;position:relative;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.04);transition:transform .2s,border-color .2s;}
+.metric-card:hover{transform:translateY(-2px);border-color:var(--border2);}
+.metric-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
+.mc-purple::before{background:linear-gradient(90deg,#38bdf8,#34d399);}
+.mc-green::before{background:linear-gradient(90deg,#34d399,#38bdf8);}
+.mc-amber::before{background:linear-gradient(90deg,#fbbf24,#fb923c);}
+.mc-pink::before{background:linear-gradient(90deg,#7dd3fc,#34d399);}
+.ml{font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.14em;margin-bottom:8px;}
+.mv{font-size:38px;font-weight:700;font-family:'JetBrains Mono',monospace;letter-spacing:-.03em;}
+.ms{font-size:12px;color:var(--text3);margin-top:5px;}
+
+.r-item{background:rgba(18,28,48,.55);border:1px solid var(--border);border-radius:12px;padding:14px 16px;display:flex;align-items:center;gap:12px;transition:all .18s;margin-bottom:9px;}
+.r-item:last-child{margin-bottom:0;}
+.r-item:hover{border-color:rgba(56,189,248,.35);background:rgba(18,28,48,.8);transform:translateX(2px);}
+.av{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;flex-shrink:0;}
+.r-name{font-size:15px;font-weight:600;letter-spacing:-.01em;}
+.r-meta{font-size:12px;color:var(--text2);}
+.tag{font-size:9px;padding:2px 8px;border-radius:20px;background:rgba(4,9,17,.6);border:1px solid var(--border);color:var(--text2);display:inline-block;margin:1px;}
+.cid-chip{display:inline-flex;align-items:center;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent3);background:rgba(56,189,248,.10);border:1px solid rgba(56,189,248,.28);padding:2px 9px;border-radius:20px;}
+
+/* Video */
+.video-grid{display:grid;grid-template-columns:2fr 1fr;gap:16px;}
+.video-main{background:#01040a;border:1px solid rgba(56,189,248,.25);border-radius:18px;aspect-ratio:16/9;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;box-shadow:0 20px 60px rgba(0,0,0,.5),0 0 40px rgba(56,189,248,.08),inset 0 1px 0 rgba(255,255,255,.05);}
+.video-placeholder{text-align:center;color:var(--text3);}
+.video-label{position:absolute;bottom:12px;left:14px;font-size:11px;font-weight:700;background:rgba(1,6,14,.75);backdrop-filter:blur(8px);border:1px solid var(--border);padding:4px 10px;border-radius:7px;letter-spacing:.04em;}
+.video-controls{display:flex;gap:10px;justify-content:center;margin-top:14px;}
+.vc-btn{width:48px;height:48px;border-radius:14px;border:none;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;transition:all .2s;}
+.vc-btn:hover{transform:translateY(-2px);}
+.vc-btn.on{background:rgba(18,28,48,.85);border:1px solid var(--border2);}
+.vc-btn.off{background:var(--red);box-shadow:0 6px 18px rgba(248,113,113,.35);}
+.vc-btn.end{background:var(--red);width:64px;box-shadow:0 6px 18px rgba(248,113,113,.35);}
+.live-badge{position:absolute;top:12px;right:12px;display:flex;align-items:center;gap:6px;background:rgba(248,113,113,.9);color:#fff;font-size:10px;font-weight:800;padding:5px 10px;border-radius:7px;letter-spacing:.08em;display:none;box-shadow:0 4px 14px rgba(248,113,113,.4);}
+.timer-badge{position:absolute;top:12px;left:14px;font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;background:rgba(1,6,14,.75);backdrop-filter:blur(8px);border:1px solid var(--border);padding:4px 10px;border-radius:7px;display:none;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.live-dot{width:6px;height:6px;border-radius:50%;background:#fff;animation:blink 1s infinite;}
+
+.iv-sidebar{display:flex;flex-direction:column;gap:14px;}
+.emotion-bar{display:flex;gap:8px;align-items:center;margin-bottom:7px;}
+.em-lbl{font-size:10px;color:var(--text2);width:76px;flex-shrink:0;letter-spacing:.04em;}
+.em-trk{flex:1;height:5px;background:rgba(4,9,17,.8);border-radius:3px;overflow:hidden;border:1px solid var(--border);}
+.em-fill{height:100%;border-radius:3px;transition:width .5s;}
+.em-pct{font-size:10px;font-family:'JetBrains Mono',monospace;width:32px;text-align:right;}
+
+.modal-overlay{position:fixed;inset:0;background:rgba(1,4,10,.75);backdrop-filter:blur(6px);z-index:500;display:none;align-items:center;justify-content:center;}
+.modal-overlay.show{display:flex;}
+.modal{background:linear-gradient(180deg,rgba(19,29,49,.97),rgba(10,16,28,.98));border:1px solid var(--border2);border-radius:18px;padding:28px;width:520px;max-width:95vw;max-height:92vh;overflow-y:auto;box-shadow:0 40px 100px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.06);}
+.modal h3{font-size:16px;font-weight:700;margin-bottom:18px;letter-spacing:-.01em;}
+.modal-actions{display:flex;gap:9px;margin-top:20px;justify-content:flex-end;}
+
+.tbl{width:100%;border-collapse:collapse;font-size:13px;}
+.tbl th{background:rgba(4,9,17,.6);color:var(--text3);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;padding:10px 12px;text-align:left;border-bottom:1px solid var(--border);}
+.tbl td{padding:10px 12px;border-bottom:1px solid var(--border);color:var(--text2);}
+.tbl tr:hover td{background:rgba(56,189,248,.04);}
+.tbl tr:last-child td{border:none;}
+
+.notif{position:fixed;top:16px;right:16px;z-index:9999;background:linear-gradient(180deg,rgba(19,29,49,.97),rgba(10,16,28,.98));backdrop-filter:blur(12px);border:1px solid rgba(52,211,153,.5);border-radius:12px;padding:13px 18px;font-size:12px;color:var(--text);transform:translateX(130%);transition:transform .3s cubic-bezier(.2,.9,.3,1.2);max-width:320px;box-shadow:0 14px 44px rgba(0,0,0,.5);}
+.notif.show{transform:translateX(0);}
+
+.id-banner{background:linear-gradient(135deg,rgba(56,189,248,.12),rgba(52,211,153,.07));border:1px solid rgba(56,189,248,.30);border-radius:14px;padding:18px 22px;display:flex;align-items:center;gap:14px;box-shadow:inset 0 1px 0 rgba(255,255,255,.05);}
+.big-id{font-size:32px;font-weight:700;font-family:'JetBrains Mono',monospace;letter-spacing:.04em;background:linear-gradient(100deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+
+.result-card{text-align:center;padding:26px;}
+.result-icon{font-size:56px;margin-bottom:12px;}
+.result-status{font-size:22px;font-weight:800;margin-bottom:6px;letter-spacing:-.01em;}
+.result-score{font-size:44px;font-weight:700;font-family:'JetBrains Mono',monospace;margin-bottom:4px;letter-spacing:-.03em;}
+.result-sub{font-size:12px;color:var(--text3);}
+
+.ai-badge{display:inline-flex;align-items:center;gap:6px;font-size:10px;padding:4px 11px;border-radius:20px;background:rgba(56,189,248,.14);color:var(--accent3);border:1px solid rgba(56,189,248,.30);font-weight:700;letter-spacing:.06em;}
+.ai-dot{width:5px;height:5px;border-radius:50%;background:var(--accent);animation:blink 1.5s infinite;}
+
+.typing-dots span{display:inline-block;animation:tdot .8s infinite;}
+.typing-dots span:nth-child(2){animation-delay:.15s;}
+.typing-dots span:nth-child(3){animation-delay:.3s;}
+@keyframes tdot{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+
+::-webkit-scrollbar{width:5px;height:5px;}::-webkit-scrollbar-thumb{background:rgba(56,189,248,.30);border-radius:3px;}::-webkit-scrollbar-thumb:hover{background:rgba(56,189,248,.5);}
+
+/* Wave animation for voice */
+.wave-bar{width:4px;background:linear-gradient(180deg,var(--accent),var(--accent2));border-radius:3px;animation:wave 0.8s ease-in-out infinite;box-shadow:0 0 8px rgba(56,189,248,.5);}
+.wave-bar:nth-child(2){animation-delay:0.1s}.wave-bar:nth-child(3){animation-delay:0.2s}.wave-bar:nth-child(4){animation-delay:0.3s}.wave-bar:nth-child(5){animation-delay:0.4s}.wave-bar:nth-child(6){animation-delay:0.2s}.wave-bar:nth-child(7){animation-delay:0.1s}
+@keyframes wave{0%,100%{transform:scaleY(0.4)}50%{transform:scaleY(1.2)}}
+.wave-bar.green{background:var(--green);box-shadow:0 0 8px rgba(52,211,153,.5);}
+.mic-listening{border-color:var(--green) !important;background:rgba(52,211,153,0.15) !important;color:var(--green) !important;animation:pulse-mic 1s ease-in-out infinite;}
+@keyframes pulse-mic{0%,100%{box-shadow:0 0 0 0 rgba(52,211,153,0.45)}50%{box-shadow:0 0 0 10px rgba(52,211,153,0)}}
+
+/* Score ring */
+.score-ring{width:80px;height:80px;margin:6px auto;position:relative;}
+.score-ring svg{transform:rotate(-90deg);}
+.score-text{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;font-family:'JetBrains Mono',monospace;}
+
+/* Robot image animations — the aurora signature */
+.robot-img{width:180px;height:180px;object-fit:contain;border-radius:50%;filter:drop-shadow(0 0 20px rgba(56,189,248,0.5));transition:all 0.3s;}
+@keyframes robot-idle{0%,100%{transform:translateY(0px) rotate(0deg);}25%{transform:translateY(-6px) rotate(-1deg);}75%{transform:translateY(-3px) rotate(1deg);}}
+@keyframes robot-talk{0%,100%{transform:scale(1) rotate(0deg);}20%{transform:scale(1.04) rotate(-2deg);}40%{transform:scale(0.97) rotate(2deg);}60%{transform:scale(1.05) rotate(-1deg);}80%{transform:scale(0.98) rotate(1deg);}}
+@keyframes robot-glow{0%,100%{filter:drop-shadow(0 0 16px rgba(56,189,248,0.45));}50%{filter:drop-shadow(0 0 32px rgba(56,189,248,0.9)) drop-shadow(0 0 12px rgba(52,211,153,0.55));}}
+.robot-img.idle{animation:robot-idle 3s ease-in-out infinite, robot-glow 2.5s ease-in-out infinite;}
+.robot-img.talking{animation:robot-talk 0.5s ease-in-out infinite, robot-glow 0.8s ease-in-out infinite;}
+/* Logo image small */
+.logo-img{width:34px;height:34px;object-fit:cover;border-radius:10px;border:2px solid rgba(56,189,248,0.5);}
+.brand-img{width:86px;height:86px;object-fit:cover;border-radius:26px;box-shadow:0 12px 34px rgba(56,189,248,.4);border:2px solid rgba(56,189,248,0.45);}
+
+</style>
+<!-- EmailJS for real Gmail sending -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
+<style id="premium-overrides">
+/* ═ premium enterprise polish — kills neon glow, unifies geometry ═ */
+body{background-image:radial-gradient(1100px 480px at 50% -12%,rgba(91,141,239,.07),transparent 60%)!important;}
+#login-screen{background-image:radial-gradient(1100px 520px at 50% -10%,rgba(91,141,239,.10),transparent 60%)!important;}
+.brand-icon,.logo-icon{box-shadow:0 10px 26px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.18)!important;}
+.brand-name,.logo-text{background:none!important;-webkit-text-fill-color:var(--text)!important;color:var(--text)!important;}
+.btn-primary{box-shadow:0 6px 18px rgba(11,18,32,.45)!important;}
+.btn-primary:hover{box-shadow:0 10px 26px rgba(11,18,32,.55)!important;}
+.btn-green{box-shadow:0 6px 18px rgba(11,18,32,.40)!important;}
+.ltab.active{box-shadow:0 4px 14px rgba(11,18,32,.45)!important;}
+.login-card{border-radius:18px!important;box-shadow:0 30px 80px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.05)!important;}
+.card{border-radius:14px!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.03),0 6px 20px rgba(0,0,0,.22)!important;}
+.id-banner{border-radius:16px!important;background:linear-gradient(135deg,var(--bg3),var(--bg2))!important;border:1px solid var(--border2)!important;box-shadow:0 12px 32px rgba(0,0,0,.28)!important;}
+.big-id{color:var(--accent3)!important;text-shadow:none!important;}
+.badge{border-radius:999px!important;letter-spacing:.04em!important;text-shadow:none!important;box-shadow:none!important;}
+.tag{border-radius:999px!important;}
+.form-input:focus{box-shadow:0 0 0 3px rgba(91,141,239,.16)!important;}
+
+/* ================= PREMIUM LOGIN REDESIGN (scoped to #login-screen) ================= */
+@keyframes lgFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@keyframes lgAurora{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(40px,-30px) scale(1.15)}}
+@keyframes lgAurora2{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-50px,25px) scale(1.1)}}
+@keyframes lgIn{from{opacity:0;transform:translateY(18px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+
+#login-screen{
+  background:#0a0812!important;
+  background-image:
+    linear-gradient(rgba(167,139,250,.05) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(167,139,250,.05) 1px,transparent 1px),
+    radial-gradient(900px 500px at 15% -10%,rgba(124,58,237,.22),transparent 60%),
+    radial-gradient(800px 460px at 100% 110%,rgba(217,70,239,.14),transparent 58%),
+    radial-gradient(700px 400px at 85% 0%,rgba(99,102,241,.12),transparent 55%)!important;
+  background-size:56px 56px,56px 56px,auto,auto,auto!important;
+}
+#login-screen::before,#login-screen::after{
+  content:"";position:fixed;border-radius:50%;pointer-events:none;filter:blur(110px);z-index:0;
+}
+#login-screen::before{width:480px;height:480px;left:-140px;top:-140px;background:rgba(124,58,237,.28);animation:lgAurora 14s ease-in-out infinite;}
+#login-screen::after{width:420px;height:420px;right:-120px;bottom:-120px;background:rgba(217,70,239,.20);animation:lgAurora2 17s ease-in-out infinite;}
+
+#login-screen .login-card{
+  position:relative;z-index:1;
+  background:linear-gradient(180deg,rgba(23,16,45,.94),rgba(12,8,24,.96))!important;
+  border:1px solid rgba(167,139,250,.22)!important;
+  border-radius:24px!important;
+  box-shadow:0 40px 100px rgba(0,0,0,.65),0 0 80px rgba(124,58,237,.18),inset 0 1px 0 rgba(255,255,255,.07)!important;
+  animation:lgIn .6s cubic-bezier(.22,1,.36,1) both;
+}
+#login-screen .brand-img{animation:lgFloat 5s ease-in-out infinite;border-radius:26px;box-shadow:0 0 0 1px rgba(167,139,250,.35),0 0 44px rgba(168,85,247,.5),0 16px 40px rgba(0,0,0,.5)!important;}
+#login-screen .brand-name{
+  background:linear-gradient(100deg,#f5f3ff 8%,#c4b5fd 45%,#f0abfc 75%,#a5b4fc 98%)!important;
+  -webkit-background-clip:text!important;-webkit-text-fill-color:transparent!important;
+  letter-spacing:-.02em!important;
+}
+#login-screen .brand-sub{color:#8b83a8!important;letter-spacing:.28em!important;}
+
+#login-screen .login-tabs{
+  background:rgba(8,5,18,.75)!important;border:1px solid rgba(167,139,250,.16)!important;
+  border-radius:14px!important;padding:6px!important;
+}
+#login-screen .ltab{border-radius:10px!important;color:#8b83a8!important;}
+#login-screen .ltab:hover{color:#d6d0e8!important;}
+#login-screen .ltab.active{
+  background:linear-gradient(120deg,#8b5cf6,#d946ef 55%,#6366f1)!important;
+  color:#fff!important;
+  box-shadow:0 6px 22px rgba(217,70,239,.45),inset 0 1px 0 rgba(255,255,255,.25)!important;
+}
+
+#login-screen .form-label{color:#8b83a8!important;}
+#login-screen .form-input{
+  background:rgba(8,5,18,.6)!important;border:1px solid rgba(167,139,250,.18)!important;
+  border-radius:12px!important;
+}
+#login-screen .form-input:focus{
+  border-color:#a78bfa!important;
+  box-shadow:0 0 0 3px rgba(167,139,250,.18),0 0 24px rgba(139,92,246,.14)!important;
+}
+
+#login-screen .btn-primary,#login-screen .btn-green{
+  background:linear-gradient(120deg,#8b5cf6,#d946ef 55%,#6366f1)!important;
+  color:#fff!important;border-radius:12px!important;padding:14px 22px!important;font-size:14px!important;
+  box-shadow:0 10px 32px rgba(217,70,239,.38),inset 0 1px 0 rgba(255,255,255,.25)!important;
+  position:relative;overflow:hidden;
+}
+#login-screen .btn-primary:hover,#login-screen .btn-green:hover{
+  transform:translateY(-2px)!important;
+  box-shadow:0 16px 42px rgba(217,70,239,.5),inset 0 1px 0 rgba(255,255,255,.3)!important;
+  filter:brightness(1.08);
+}
+#login-screen .login-hint{color:#8b83a8!important;}
+/* =============== END PREMIUM LOGIN REDESIGN =============== */
+</style>
+</head>
+<body>
+<div class="notif" id="notif"></div>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-card">
+    <div class="login-logo">
+      <img src="static/img/ardhnarishvar_logo.png" class="brand-img" alt="Ardhnarishvar">
+      <div class="brand-name">Ardhnarishvar HR</div>
+      <div class="brand-sub">AI Interview System</div>
+    </div>
+    <div class="login-tabs">
+      <button class="ltab active" id="ltab-admin" onclick="switchLoginTab('admin')">🔐 Admin</button>
+      <button class="ltab" id="ltab-candidate" onclick="switchLoginTab('candidate')">👤 Candidate</button>
+    </div>
+
+    <!-- Admin Login -->
+    <div id="login-admin-section">
+      <div class="form-group"><label class="form-label">Email</label><input class="form-input" id="login-email" type="email" placeholder="Enter Mail"></div>
+      <div class="form-group"><label class="form-label">Password</label><input class="form-input" id="login-pass" type="password" placeholder="Enter password"  onkeypress="if(event.key==='Enter')doAdminLogin()"></div>
+      <button class="btn btn-primary btn-full" onclick="doAdminLogin()">🚀 Admin Login</button>
+      
+    </div>
+
+    <!-- Candidate -->
+    <div id="login-candidate-section" style="display:none">
+      <div class="login-tabs" style="margin-bottom:14px;">
+        <button class="ltab active" id="ctab-login" onclick="switchCandTab('login')">Login</button>
+        <button class="ltab" id="ctab-register" onclick="switchCandTab('register')">Register</button>
+      </div>
+      <div id="cand-login-form">
+        <div class="form-group"><label class="form-label">Candidate ID</label><input class="form-input" id="cand-id-input" type="number" placeholder="Apna Candidate ID"></div>
+        <div class="form-group"><label class="form-label">Email</label><input class="form-input" id="cand-email-input" type="email" placeholder="Registered email"></div>
+        <button class="btn btn-green btn-full" onclick="doCandidateLogin()">Login</button>
+        <div class="login-hint">Please register first to get your ID</div>
+      </div>
+      <div id="cand-register-form" style="display:none">
+        <div class="form-group"><label class="form-label">Full Name *</label><input class="form-input" id="reg-name" placeholder="Full name"></div>
+        <div class="form-group"><label class="form-label">Email *</label><input class="form-input" id="reg-email" type="email" placeholder="your@email.com"></div>
+        <div class="form-group"><label class="form-label">Phone</label><input class="form-input" id="reg-phone" placeholder="+91 9999999999"></div>
+        <div class="form-group"><label class="form-label">Job Position *</label><select class="form-input" id="reg-position"><option value="">-- Select --</option></select></div>
+        <div class="form-group"><label class="form-label">Experience (years)</label><input class="form-input" id="reg-exp" type="number" value="0" min="0"></div>
+        <div class="form-group"><label class="form-label">Resume (PDF/DOCX) *</label><input class="form-input" id="reg-resume" type="file" accept=".pdf,.docx" style="padding:8px;"></div>
+        <div class="form-group"><label class="form-label">Skills (comma separated)</label><input class="form-input" id="reg-skills" placeholder="Python, React, SQL"></div>
+        <button class="btn btn-green btn-full" onclick="doRegisterCandidate()" id="reg-btn">📝 Register & Apply</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div class="layout" id="main-app" style="display:none">
+  <div class="sidebar-overlay" id="sb-overlay" onclick="toggleSidebar(false)"></div>
+  <div class="sidebar">
+    <div class="logo">
+      <img src="static/img/ardhnarishvar_logo.png" class="logo-img" alt="Ardhnarishvar">
+      <div class="logo-text">Ardhnarishvar HR</div>
+      <div class="logo-sub" id="sidebar-mode-label">Admin Panel</div>
+    </div>
+    <div class="nav" id="main-nav"></div>
+    <div class="sidebar-footer">
+      <div class="user-info">
+        <div class="user-avatar" id="user-av">SA</div>
+        <div><div class="user-name" id="user-name">Admin</div><div class="user-role" id="user-role">super_admin</div></div>
+        <button class="logout-btn" onclick="logout()">⏻</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="topbar">
+      <button class="menu-btn" onclick="toggleSidebar()" aria-label="Toggle menu">☰</button><div class="topbar-title" id="panel-title">Dashboard</div>
+      <div class="chip">Ardhnarishvar AI: <span>● Active</span></div>
+      <div class="chip" id="clock">--:--:--</div>
+    </div>
+    <div class="content">
+
+      <!-- ADMIN DASHBOARD -->
+      <div class="panel" id="panel-dashboard">
+        <div class="g4">
+          <div class="metric-card mc-purple"><div class="ml">Total Candidates</div><div class="mv" style="color:#c084fc" id="m-total">0</div><div class="ms">Registered</div></div>
+          <div class="metric-card mc-green"><div class="ml">Shortlisted</div><div class="mv" style="color:#34d399" id="m-short">0</div><div class="ms">For interview</div></div>
+          <div class="metric-card mc-amber"><div class="ml">Interviews Done</div><div class="mv" style="color:#fbbf24" id="m-done">0</div><div class="ms">Completed</div></div>
+          <div class="metric-card mc-pink"><div class="ml">Selected</div><div class="mv" style="color:#f472b6" id="m-sel">0</div><div class="ms">Final</div></div>
+        </div>
+        <div class="g2">
+          <div class="card"><div class="card-h"><div class="card-t">🎯 Recent Candidates</div><span class="badge b-purple" id="dash-cb">0</span></div><div id="dash-candidates"><div style="color:var(--text3);font-size:12px;text-align:center;padding:20px">Loading...</div></div></div>
+          <div class="card"><div class="card-h"><div class="card-t">📅 Upcoming Interviews</div><span class="badge b-green">Scheduled</span></div><div id="dash-interviews"><div style="color:var(--text3);font-size:12px;text-align:center;padding:20px">Loading...</div></div></div>
+        </div>
+      </div>
+
+      <!-- RESUME SHORTLIST -->
+      <div class="panel" id="panel-resume">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div><div style="font-size:14px;font-weight:600">📄 Resume Shortlisting</div><div style="font-size:11px;color:var(--text3);margin-top:2px">Review candidate resumes — shortlist or reject</div></div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <select class="form-input" id="filter-status" style="width:140px;font-size:11px;padding:6px 10px" onchange="loadAdminCandidates()">
+              <option value="all">All Candidates</option><option value="pending">Pending</option>
+              <option value="shortlisted">Shortlisted</option><option value="rejected">Rejected</option>
+            </select>
+            <button class="btn-sm outline" onclick="loadAdminCandidates()">🔄 Refresh</button>
+          </div>
+        </div>
+        <div class="card"><div class="card-h"><div class="card-t">Applications</div><span class="badge b-purple" id="admin-cand-count">0</span></div><div id="admin-candidates-list"><div style="color:var(--text3);text-align:center;padding:30px;font-size:12px">Loading...</div></div></div>
+      </div>
+
+      <!-- SCHEDULE (ADMIN) -->
+      <div class="panel" id="panel-schedule">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div><div style="font-size:14px;font-weight:600">📅 Interview Schedule</div><div style="font-size:11px;color:var(--text3);margin-top:2px">Set interview schedule for shortlisted candidates</div></div>
+          <button class="btn-sm primary" onclick="openScheduleModal()">+ New Schedule</button>
+        </div>
+        <div class="card"><div class="card-h"><div class="card-t">Scheduled Interviews</div><span class="badge b-green" id="sched-count">0</span></div><div id="schedule-list"><div style="color:var(--text3);text-align:center;padding:30px;font-size:12px">Loading...</div></div></div>
+      </div>
+
+      <!-- LIVE ADMIN MONITOR -->
+      <div class="panel" id="panel-live-admin">
+        <div style="font-size:14px;font-weight:600">🎥 Live Interview Monitor</div>
+        <div class="g2">
+          <div class="card"><div class="card-h"><div class="card-t">Completed Interviews</div><span class="badge b-purple">Recordings</span></div><div id="admin-completed-list"><div style="color:var(--text3);font-size:12px;text-align:center;padding:20px">Loading...</div></div></div>
+          <div class="card"><div class="card-h"><div class="card-t">Active Now</div><span class="badge b-green">Live</span></div><div style="color:var(--text3);font-size:12px;text-align:center;padding:20px">No active interview</div></div>
+        </div>
+      </div>
+
+      <!-- RESULTS (ADMIN) -->
+      <div class="panel" id="panel-results-admin">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div><div style="font-size:14px;font-weight:600">📊 Interview Results</div><div style="font-size:11px;color:var(--text3);margin-top:2px">Enter result after interview</div></div>
+          <button class="btn-sm outline" onclick="loadAdminResults()">🔄 Refresh</button>
+        </div>
+        <div class="card"><div class="card-h"><div class="card-t">Candidate Results</div><span class="badge b-amber" id="result-count">0</span></div><div id="admin-results-list"><div style="color:var(--text3);text-align:center;padding:30px;font-size:12px">Loading...</div></div></div>
+      </div>
+
+      <!-- JOB POSITIONS -->
+      <div class="panel" id="panel-positions">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div style="font-size:14px;font-weight:600">💼 Job Positions</div>
+          <button class="btn-sm primary" onclick="openPositionModal()">+ Add Position</button>
+        </div>
+        <div class="card"><div class="card-h"><div class="card-t">Open Positions</div><span class="badge b-purple" id="pos-count">0</span></div><div id="positions-list"><div style="color:var(--text3);text-align:center;padding:20px;font-size:12px">Loading...</div></div></div>
+      </div>
+
+      <div class="panel" id="panel-admin-settings">
+        <div style="font-size:14px;font-weight:600">⚙️ Admin Settings</div>
+        <div class="g2">
+          <div class="card"><div class="card-h"><div class="card-t">👥 Admin Users</div><button class="btn-sm primary" style="font-size:10px;padding:4px 10px" onclick="openAddUserModal()">+ Add</button></div><div id="admin-users-list"></div></div>
+          <div class="card"><div class="card-h"><div class="card-t">🤖 System Info</div></div>
+            <div style="font-size:12px;color:var(--text2);line-height:2.2">
+              <div>Brand: <span style="color:var(--accent)">Ardhnarishvar HR</span></div>
+              <div>AI Model: <span style="color:var(--accent3)">Claude Sonnet 4</span></div>
+              <div>Language: <span style="color:var(--accent3)">English + Hinglish</span></div>
+              <div>Interview: <span style="color:var(--accent3)">Live Video Call</span></div>
+              <div>Result: <span style="color:var(--accent3)">Admin Manual Entry</span></div>
+            </div>
+          </div>
+        </div>
+        <!-- EmailJS Config -->
+        <div class="card" style="margin-top:16px">
+          <div class="card-h"><div class="card-t">📧 Email Notification Settings (EmailJS)</div><span class="badge b-amber" id="ejs-status-badge">Not Configured</span></div>
+          <div style="font-size:12px;color:var(--text3);margin-bottom:12px;line-height:1.6">For real Gmail notifications <a href="https://www.emailjs.com" target="_blank" style="color:var(--accent)">emailjs.com</a> create a free account. Enter Service ID, Template ID and Public Key here.</div>
+          <div class="g2" style="gap:10px">
+            <div class="form-group"><label class="form-label">EmailJS Service ID</label><input class="form-input" id="ejs-service" placeholder="service_xxxxxxx"></div>
+            <div class="form-group"><label class="form-label">EmailJS Public Key</label><input class="form-input" id="ejs-pubkey" placeholder="your_public_key"></div>
+          </div>
+          <div class="g2" style="gap:10px">
+            <div class="form-group"><label class="form-label">Candidate Notification Template ID</label><input class="form-input" id="ejs-tpl-cand" placeholder="template_xxxxxxx"></div>
+            <div class="form-group"><label class="form-label">Admin Notification Template ID</label><input class="form-input" id="ejs-tpl-admin" placeholder="template_xxxxxxx"></div>
+          </div>
+          <div class="form-group"><label class="form-label">Admin Gmail Address</label><input class="form-input" id="ejs-admin-email" placeholder="admin@gmail.com" type="email"></div>
+          <div style="display:flex;gap:8px;margin-top:4px">
+            <button class="btn-sm primary" onclick="saveEmailJSConfig()">💾 Save Email Config</button>
+            <button class="btn-sm outline" onclick="testEmailJS()">🧪 Test Email</button>
+            <button class="btn-sm outline" onclick="viewEmailLogs()">📋 Email Logs</button>
+          </div>
+          <div id="ejs-test-result" style="margin-top:10px;font-size:12px;color:var(--text3)"></div>
+        </div>
+      </div>
+
+      <!-- CANDIDATE PROFILE -->
+      <div class="panel" id="panel-cand-profile">
+        <div style="font-size:14px;font-weight:600">👤 My Profile</div>
+        <div id="cand-profile-content"><div style="color:var(--text3);font-size:12px;text-align:center;padding:30px">Loading...</div></div>
+      </div>
+
+      <!-- CANDIDATE SCHEDULE -->
+      <div class="panel" id="panel-cand-schedule">
+        <div><div style="font-size:14px;font-weight:600">📅 My Interview Schedule</div><div style="font-size:11px;color:var(--text3);margin-top:2px">Admin will schedule — it will appear here. Join from Live Interview.</div></div>
+        <div id="cand-schedule-content"><div style="color:var(--text3);font-size:12px;text-align:center;padding:30px">Loading...</div></div>
+      </div>
+
+      <!-- LIVE INTERVIEW (common for admin+candidate) -->
+      <div class="panel" id="panel-interview">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <span class="ai-badge"><span class="ai-dot"></span> Claude AI Live Interview — English/Hinglish Adaptive</span>
+          <div id="interview-session-info" style="font-size:11px;color:var(--text3)"></div>
+        </div>
+        <div class="video-grid">
+          <div>
+            <!-- Single merged video card: AI + Camera PiP inside -->
+            <div class="video-main" id="video-main-area" style="position:relative;">
+              <div class="video-placeholder" id="interviewer-placeholder">
+                <img id="robot-img" src="static/img/ardhnarishvar_logo.png" class="robot-img idle" alt="Ardhnarishvar Robot">
+                <div style="font-size:13px;font-weight:600;margin-top:10px;color:var(--accent)">Ardhnarishvar AI Interviewer</div>
+                <div style="font-size:11px;margin-top:4px">Claude Powered</div>
+              </div>
+              <div class="live-badge" id="live-badge"><div class="live-dot"></div>LIVE</div>
+              <div class="timer-badge" id="interview-timer">00:00</div>
+              <div class="video-label">AI Interviewer — Ardhnarishvar</div>
+              <!-- Camera PiP — bottom-right corner inside main card -->
+              <div id="pip-cam-box" style="position:absolute;bottom:14px;right:14px;width:160px;height:100px;border-radius:10px;overflow:hidden;border:2px solid rgba(168,85,247,0.7);background:#111;box-shadow:0 4px 16px rgba(0,0,0,0.6);z-index:10;display:flex;align-items:center;justify-content:center;">
+                <video id="local-video" style="width:100%;height:100%;object-fit:cover;display:none" autoplay muted playsinline></video>
+                <div id="self-placeholder" style="text-align:center;color:#888;">
+                  <div style="font-size:22px">👤</div>
+                  <div style="font-size:10px;margin-top:3px">You (Camera)</div>
+                </div>
+              </div>
+              <div id="self-label" style="position:absolute;bottom:14px;right:14px;font-size:10px;font-weight:600;color:#fff;background:rgba(0,0,0,0.6);padding:2px 7px;border-radius:4px;z-index:11;display:none;bottom:8px;right:178px;"></div>
+            </div>
+            <!-- Controls -->
+            <div class="video-controls" id="video-controls" style="display:none">
+              <button class="vc-btn on" id="btn-mic" onclick="toggleMic()">🎤</button>
+              <button class="vc-btn on" id="btn-cam" onclick="toggleCam()">📹</button>
+              <button class="vc-btn end" onclick="endInterview()">📵</button>
+            </div>
+            <!-- Setup -->
+            <div id="interview-start-area" style="margin-top:12px">
+              <div class="card">
+                <div class="card-h"><div class="card-t">⚙️ Interview Setup</div></div>
+                <div class="form-group" style="margin-bottom:10px"><label class="form-label">Candidate ID</label><input class="form-input" id="iv-cand-id" type="number" placeholder="Candidate ID"></div>
+                <div class="form-group" style="margin-bottom:10px"><label class="form-label">Job Role</label><input class="form-input" id="iv-job-role" value="Software Engineer"></div>
+                <div class="form-group" style="margin-bottom:14px"><label class="form-label">Language</label>
+                  <select class="form-input" id="iv-lang">
+                    <option value="auto">Auto (English → Hinglish)</option>
+                    <option value="english">English Only</option>
+                    <option value="hinglish">Hinglish Only</option>
+                  </select>
+                </div>
+                <button class="btn-sm green btn-full" style="padding:10px" onclick="startLiveInterview()">📹 Start Live Interview</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right panel -->
+          <div class="iv-sidebar">
+            <div class="card" style="text-align:center">
+              <div style="font-size:20px;font-weight:700" id="iv-cname">—</div>
+              <div style="font-size:11px;color:var(--text2);margin-top:2px" id="iv-crole">—</div>
+              <div style="font-size:10px;color:var(--accent3);margin-top:4px;font-family:monospace" id="iv-phase">Phase: Setup</div>
+              <div class="score-ring">
+                <svg width="80" height="80" viewBox="0 0 80 80">
+                  <circle cx="40" cy="40" r="32" fill="none" stroke="var(--border)" stroke-width="8"/>
+                  <circle cx="40" cy="40" r="32" fill="none" stroke="var(--accent)" stroke-width="8" stroke-linecap="round" stroke-dasharray="201" stroke-dashoffset="201" id="score-circle"/>
+                </svg>
+                <div class="score-text" id="score-display">--</div>
+              </div>
+            </div>
+            <div class="card" style="flex:1">
+              <div class="card-h"><div class="card-t">💬 Interview Q&A</div><span class="badge b-purple">AI Live</span></div>
+              <div id="interview-chat" style="height:220px;overflow-y:auto;display:flex;flex-direction:column;gap:8px;margin-bottom:10px">
+                <div style="background:var(--bg3);border-radius:8px;padding:10px;font-size:13px;color:var(--text2)"><img src="static/img/ardhnarishvar_logo.png" style="width:18px;height:18px;border-radius:50%;vertical-align:middle;margin-right:4px"> Click <strong>Start Live Interview</strong> to begin.</div>
+              </div>
+              <!-- Voice status indicator -->
+              <div id="voice-status" style="display:none;text-align:center;padding:8px;background:var(--bg3);border-radius:8px;margin-bottom:8px">
+                <div id="voice-status-text" style="font-size:12px;color:var(--accent3);font-weight:600">🤖 Robot is speaking...</div>
+                <div id="voice-wave" style="display:flex;align-items:center;justify-content:center;gap:3px;margin-top:6px">
+                  <div class="wave-bar" style="height:8px"></div>
+                  <div class="wave-bar" style="height:16px"></div>
+                  <div class="wave-bar" style="height:12px"></div>
+                  <div class="wave-bar" style="height:20px"></div>
+                  <div class="wave-bar" style="height:10px"></div>
+                  <div class="wave-bar" style="height:18px"></div>
+                  <div class="wave-bar" style="height:8px"></div>
+                </div>
+              </div>
+              <!-- Mic button for voice answer -->
+              <div id="voice-controls" style="display:none;margin-bottom:8px">
+                <button id="mic-answer-btn" onclick="toggleVoiceAnswer()" style="width:100%;padding:12px;border-radius:10px;border:2px solid var(--accent);background:rgba(168,85,247,0.1);color:var(--accent);font-size:14px;font-weight:700;cursor:pointer;transition:all 0.2s">
+                  🎤 Click to speak
+                </button>
+                <div id="transcript-preview" style="margin-top:6px;font-size:11px;color:var(--text3);min-height:18px;text-align:center;font-style:italic"></div>
+              </div>
+              <!-- Type fallback -->
+              <div style="display:flex;gap:6px">
+                <input class="form-input" id="candidate-input" style="font-size:12px;padding:8px 12px" placeholder="Or type here..." onkeypress="if(event.key==='Enter')sendInterviewAnswer()">
+                <button class="btn-sm primary" onclick="sendInterviewAnswer()">↵</button>
+              </div>
+            </div>
+            <div class="card">
+              <div style="font-size:10px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px">Live Analysis</div>
+              <div class="emotion-bar"><div class="em-lbl">Confidence</div><div class="em-trk"><div class="em-fill" id="ef-conf" style="width:0%;background:var(--green)"></div></div><div class="em-pct" id="ep-conf">--</div></div>
+              <div class="emotion-bar"><div class="em-lbl">Nervousness</div><div class="em-trk"><div class="em-fill" id="ef-nerv" style="width:0%;background:var(--amber)"></div></div><div class="em-pct" id="ep-nerv">--</div></div>
+              <div class="emotion-bar"><div class="em-lbl">Engagement</div><div class="em-trk"><div class="em-fill" id="ef-eng" style="width:0%;background:var(--accent)"></div></div><div class="em-pct" id="ep-eng">--</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CANDIDATE RESULT -->
+      <div class="panel" id="panel-cand-result">
+        <div style="font-size:14px;font-weight:600">📊 My Interview Result</div>
+        <div id="cand-result-content"><div style="color:var(--text3);font-size:12px;text-align:center;padding:30px">Loading...</div></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- MODALS -->
+<div class="modal-overlay" id="schedule-modal">
+  <div class="modal">
+    <h3>📅 Schedule Interview</h3>
+    <div class="form-group"><label class="form-label">Candidate ID *</label><input class="form-input" id="sch-cand-id" type="number" placeholder="Shortlisted candidate ka ID"></div>
+    <div class="form-group"><label class="form-label">Interview Start Time *</label><input class="form-input" id="sch-datetime" type="datetime-local"></div>
+    <div class="form-group"><label class="form-label">Interview End Time *</label><input class="form-input" id="sch-endtime" type="datetime-local"><div style="font-size:11px;color:var(--text3);margin-top:4px">Candidate sirf is time window mein hi interview de payega</div></div>
+    <div class="form-group"><label class="form-label">Interview Round</label>
+      <select class="form-input" id="sch-round">
+        <option value="ai_screening">AI Screening</option>
+        <option value="round_1_hr">Round 1 — HR</option>
+        <option value="round_2_technical">Round 2 — Technical</option>
+        <option value="round_3_final">Round 3 — Final</option>
+      </select>
+    </div>
+    <div class="form-group"><label class="form-label">Notes</label><textarea class="form-input" id="sch-notes" style="min-height:60px" placeholder="Optional..."></textarea></div>
+    <div class="modal-actions"><button class="btn-sm outline" onclick="closeModal('schedule-modal')">Cancel</button><button class="btn-sm primary" onclick="saveSchedule()">Schedule ✓</button></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="resume-view-modal">
+  <div class="modal" style="width:600px">
+    <h3>📄 Resume — <span id="resume-view-name"></span></h3>
+    <div id="resume-view-content" style="background:var(--bg2);border-radius:8px;padding:16px;font-size:12px;color:var(--text2);max-height:380px;overflow-y:auto;line-height:1.7">Loading...</div>
+    <div class="modal-actions"><button class="btn-sm outline" onclick="closeModal('resume-view-modal')">Close</button><button class="btn-sm primary" onclick="downloadResume()">⬇ Download</button></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="video-view-modal">
+  <div class="modal" style="width:700px;max-width:96vw">
+    <h3>🎥 Interview Recording — <span id="video-view-name"></span></h3>
+    <!-- In-browser video player -->
+    <div style="background:#000;border-radius:10px;overflow:hidden;margin-bottom:14px;position:relative;">
+      <video id="iv-video-player"
+        controls
+        style="width:100%;max-height:400px;display:block;outline:none;"
+        preload="auto">
+        Your browser does not support the video tag.
+      </video>
+      <div id="iv-video-placeholder" style="aspect-ratio:16/9;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--text3);display:none;">
+        <div style="font-size:42px;margin-bottom:10px">🎬</div>
+        <div style="font-size:13px;font-weight:600;color:var(--text2)">No recording available</div>
+        <div style="font-size:11px;margin-top:6px;color:var(--text3)">This interview was conducted live without recording.</div>
+      </div>
+    </div>
+    <div id="iv-video-info" style="font-size:11px;color:var(--text3);margin-bottom:12px;font-family:monospace;padding:8px 12px;background:var(--bg3);border-radius:6px;display:none"></div>
+    <div class="modal-actions">
+      <button class="btn-sm outline" onclick="closeVideoModal()">✕ Close</button>
+      <button class="btn-sm outline" id="btn-iv-download" onclick="downloadIVVideo()" style="display:none">⬇ Download</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="result-modal">
+  <div class="modal">
+    <h3>📊 Enter Interview Result</h3>
+    <input type="hidden" id="result-cand-id">
+    <div style="margin-bottom:14px;padding:12px;background:var(--bg2);border-radius:8px">
+      <div style="font-size:13px;font-weight:600" id="result-cand-name"></div>
+      <div style="font-size:11px;color:var(--text2);margin-top:2px" id="result-cand-role"></div>
+    </div>
+    <div class="form-group"><label class="form-label">Final Status *</label>
+      <select class="form-input" id="result-status">
+        <option value="selected">✅ Selected</option>
+        <option value="not_selected">❌ Not Selected</option>
+        <option value="on_hold">⏸ On Hold</option>
+      </select>
+    </div>
+    <div class="form-group"><label class="form-label">Score (0–100)</label><input class="form-input" id="result-score" type="number" min="0" max="100" placeholder="e.g. 78"></div>
+    <div class="g2" style="gap:10px;margin-bottom:14px">
+      <div class="form-group" style="margin-bottom:0"><label class="form-label">Communication (0–10)</label><input class="form-input" id="result-comm" type="number" min="0" max="10" placeholder="7"></div>
+      <div class="form-group" style="margin-bottom:0"><label class="form-label">Technical (0–10)</label><input class="form-input" id="result-tech" type="number" min="0" max="10" placeholder="8"></div>
+    </div>
+    <div class="form-group"><label class="form-label">Feedback / Notes</label><textarea class="form-input" id="result-feedback" placeholder="Feedback about the candidate..."></textarea></div>
+    <div class="modal-actions"><button class="btn-sm outline" onclick="closeModal('result-modal')">Cancel</button><button class="btn-sm primary" onclick="saveResult()">💾 Save Result</button></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="position-modal">
+  <div class="modal">
+    <h3>💼 Add Job Position</h3>
+    <div class="form-group"><label class="form-label">Job Title *</label><input class="form-input" id="pos-title" placeholder="e.g. Senior React Developer"></div>
+    <div class="form-group"><label class="form-label">Department *</label><input class="form-input" id="pos-dept" placeholder="e.g. Engineering"></div>
+    <div class="form-group"><label class="form-label">Min Experience (years)</label><input class="form-input" id="pos-exp" type="number" value="2"></div>
+    <div class="form-group"><label class="form-label">Salary Range</label><input class="form-input" id="pos-salary" placeholder="e.g. 8-15 LPA"></div>
+    <div class="form-group"><label class="form-label">Description</label><textarea class="form-input" id="pos-desc" placeholder="Job description..."></textarea></div>
+    <div class="modal-actions"><button class="btn-sm outline" onclick="closeModal('position-modal')">Cancel</button><button class="btn-sm primary" onclick="addPosition()">Add Position</button></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="add-user-modal">
+  <div class="modal">
+    <h3>👤 Add Admin User</h3>
+    <div class="form-group"><label class="form-label">Full Name</label><input class="form-input" id="nu-name" placeholder="Full name"></div>
+    <div class="form-group"><label class="form-label">Email</label><input class="form-input" id="nu-email" type="email" placeholder="email@company.com"></div>
+    <div class="form-group"><label class="form-label">Password</label><input class="form-input" id="nu-pass" type="password" placeholder="Min 8 chars"></div>
+    <div class="form-group"><label class="form-label">Role</label>
+      <select class="form-input" id="nu-role"><option value="hr_viewer">HR Viewer</option><option value="hr_admin">HR Admin</option><option value="super_admin">Super Admin</option></select>
+    </div>
+    <div class="modal-actions"><button class="btn-sm outline" onclick="closeModal('add-user-modal')">Cancel</button><button class="btn-sm primary" onclick="addAdminUser()">Create User</button></div>
+  </div>
+</div>
+
+<!-- EDIT ADMIN MODAL -->
+<div class="modal-overlay" id="edit-admin-modal">
+  <div class="modal">
+    <h3>✏️ Edit Admin Account</h3>
+    <input type="hidden" id="edit-admin-id">
+    <div class="form-group"><label class="form-label">Full Name</label><input class="form-input" id="edit-admin-name" placeholder="Full name"></div>
+    <div class="form-group"><label class="form-label">Email</label><input class="form-input" id="edit-admin-email" type="email" placeholder="email@company.com"></div>
+    <div class="form-group"><label class="form-label">New Password (leave blank to keep unchanged)</label><input class="form-input" id="edit-admin-pass" type="password" placeholder="New password (optional)"></div>
+    <div class="form-group"><label class="form-label">Role</label>
+      <select class="form-input" id="edit-admin-role"><option value="hr_viewer">HR Viewer</option><option value="hr_admin">HR Admin</option><option value="super_admin">Super Admin</option></select>
+    </div>
+    <div class="modal-actions"><button class="btn-sm outline" onclick="closeModal('edit-admin-modal')">Cancel</button><button class="btn-sm primary" onclick="saveEditAdmin()">💾 Save Changes</button></div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════
+//  Ardhnarishvar HR System v5.0 — Claude AI
+//  Admin + Candidate Dual Login
+// ═══════════════════════════════════════════
+const API_BASE=HR_ROBO_BASE+'/api/v1';
+let TOKEN=localStorage.getItem('nova_token')||'';
+let userMode='';
+let currentUser={};
+let currentCandidate=null;
+let currentSessionId=null;
+let ivHistory=[];
+let localStream=null;
+let mediaRecorder=null;
+let recordedChunks=[];
+let recordingMime='video/webm'; // captured at recording start
+let autoSaveInt=null; // auto-save interval handle
+
+// ── saveAndStopRecording: universal save — works even on nav-away / close ──
+function saveAndStopRecording(){
+  if(!mediaRecorder) return;
+  const durationSec = timerSec || 0;
+  const cId = parseInt((document.getElementById('iv-cand-id')||{}).value||0);
+  if(!cId) return;
+  // Request any buffered data first
+  try{ if(mediaRecorder.state==='recording') mediaRecorder.requestData(); } catch(e){}
+  // Stop auto-save interval
+  if(autoSaveInt){ clearInterval(autoSaveInt); autoSaveInt=null; }
+  // Now save whatever chunks we have (synchronous-ish via FileReader)
+  if(recordedChunks.length > 0){
+    const mime = recordingMime || 'video/webm';
+    const blob = new Blob(recordedChunks, {type: mime});
+    const reader = new FileReader();
+    reader.onload = () => {
+      try{
+        const videoData = reader.result;
+        saveVideoForCandidate(cId, videoData, mime, durationSec);
+        console.log('💾 Recording saved! cId:'+cId+' dur:'+durationSec+'s size:'+Math.round(blob.size/1024)+'KB');
+      } catch(e){ console.error('❌ Save error:', e); }
+    };
+    reader.readAsDataURL(blob);
+    // Also upload to the server so the Superadmin dashboard can play it back
+    uploadVideoToServer(cId, blob, mime, durationSec);
+  }
+}
+
+// ── Upload recording to HR_robo server (video_storage/) with retries ──
+// IndexedDB copy above is the local backup; this makes the recording visible
+// on the Superadmin AI Platform Audit page tied to the candidate.
+function uploadVideoToServer(cId, blob, mime, durationSec, attempt){
+  attempt = attempt || 1;
+  const MAX_ATTEMPTS = 3;
+  let candName = '';
+  try{ candName = (currentCandidate && currentCandidate.name) || document.getElementById('user-name').textContent || ''; }catch(e){}
+  const url = HR_ROBO_BASE+'/api/videos/upload/'+cId+
+    '?mime='+encodeURIComponent((mime||'video/webm'))+
+    '&duration='+encodeURIComponent(durationSec||0)+
+    '&name='+encodeURIComponent(candName);
+  fetch(url, {method:'POST', headers:{'Content-Type': (mime||'video/webm').split(';')[0]}, body: blob})
+    .then(r => { if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
+    .then(res => { console.log('☁️ Recording uploaded to server: '+res.url+' ('+Math.round((res.size||0)/1024)+'KB)'); })
+    .catch(err => {
+      console.warn('☁️ Upload attempt '+attempt+' failed:', err && err.message);
+      if(attempt < MAX_ATTEMPTS){
+        setTimeout(()=>uploadVideoToServer(cId, blob, mime, durationSec, attempt+1), 3000*attempt);
+      } else {
+        console.error('❌ Recording upload failed after '+MAX_ATTEMPTS+' attempts — local IndexedDB copy is kept.');
+      }
+    });
+}
+
+// ── Auto-save every 30 seconds during interview ──
+function startAutoSave(cId){
+  if(autoSaveInt) clearInterval(autoSaveInt);
+  autoSaveInt = setInterval(()=>{
+    if(mediaRecorder && mediaRecorder.state==='recording' && recordedChunks.length > 0){
+      try{ mediaRecorder.requestData(); } catch(e){} // flush latest chunk
+      setTimeout(()=>{ // small delay to let ondataavailable fire
+        if(recordedChunks.length > 0){
+          const mime = recordingMime || 'video/webm';
+          const blob = new Blob(recordedChunks, {type: mime});
+          const reader = new FileReader();
+          reader.onload = () => {
+            try{
+              const videoData = reader.result;
+              const dSec = timerSec || 0;
+              saveVideoForCandidate(cId, videoData, mime, dSec);
+              console.log('🔄 Auto-saved: '+Math.round(blob.size/1024)+'KB at '+dSec+'s');
+            } catch(e){}
+          };
+          reader.readAsDataURL(blob);
+        }
+      }, 300);
+    }
+  }, 30000); // every 30 seconds
+}
+
+// ── beforeunload: save recording if tab closed / refreshed ──
+window.addEventListener('beforeunload', function(e){
+  if(mediaRecorder && (mediaRecorder.state==='recording' || recordedChunks.length > 0)){
+    saveAndStopRecording();
+  }
+});
+
+// ── visibilitychange: save when tab goes hidden (mobile switch, etc.) ──
+document.addEventListener('visibilitychange', function(){
+  if(document.hidden && mediaRecorder && mediaRecorder.state==='recording'){
+    try{ mediaRecorder.requestData(); } catch(e){}
+    setTimeout(saveAndStopRecording, 400);
+  }
+});
+let micEnabled=true,camEnabled=true;
+let timerInt=null,emotionInt=null,timerSec=0;
+let currentScore=0;
+
+/* ------------------------------------------------------------------
+   DB = SHARED server-backed store.
+   Old behaviour: everything lived in this browser's localStorage, so a
+   candidate who registered on laptop B was invisible to the admin on
+   laptop A.  Now the backend (/api/store, table robo_snapshots) is the
+   single source of truth:
+     - on page load we PULL the whole dataset (localStorage = offline cache)
+     - every DB.set() writes the cache + localStorage and PUSHES to server
+     - every 15s we re-pull and refresh the open admin panel if data changed
+   'admins' (local demo login list) never leaves this browser.
+   ------------------------------------------------------------------ */
+const STORE_URL=(typeof HR_ROBO_BASE!=='undefined'?HR_ROBO_BASE:'/api/hr-robo')+'/api/store';
+const DB_LOCAL_ONLY=new Set(['admins']);
+/* Identity of a list item — MUST match storeItemKey() in hrRobo.controller.js.
+   Pushes are merged server-side by this key, so laptop A can never wipe a
+   candidate that laptop B just registered. */
+function itemKey(key,it){
+  if(it===null||typeof it!=='object') return 'v:'+JSON.stringify(it);
+  if(key==='results') return 'c:'+String(it.candidate_id??it.id??JSON.stringify(it));
+  if(it.id!==undefined&&it.id!==null) return 'i:'+String(it.id);
+  if(it.candidate_id!==undefined&&it.candidate_id!==null) return 'c:'+String(it.candidate_id)+':'+String(it.ts??it.timestamp??it.time??it.created_at??'');
+  return 'j:'+JSON.stringify(it);
+}
+const DB={
+  _cache:{}, _updated:{}, _ready:false, _online:false, _timers:{}, _removed:{}, _inflight:{},
+  _lsGet(k,d){try{const v=localStorage.getItem('ardh5_'+k);return v!==null?JSON.parse(v):d;}catch{return d;}},
+  _lsSet(k,v){try{localStorage.setItem('ardh5_'+k,JSON.stringify(v));}catch(e){console.warn('DB local cache failed:',e);}},
+  _authHeaders(){const h={'Content-Type':'application/json'};if(TOKEN&&TOKEN!=='demo')h['Authorization']='Bearer '+TOKEN;return h;},
+  get(k,d){ if(Object.prototype.hasOwnProperty.call(this._cache,k)) return this._cache[k]; return this._lsGet(k,d); },
+  set(k,v){
+    // For 'results', strip video_data (kept in IndexedDB) so the JSON stays small
+    if(k==='results'&&Array.isArray(v)){
+      v=v.map(r=>{
+        if(r.video_data){
+          VideoDB.saveVideo(r.candidate_id, r.video_data, r.video_mime||'video/webm');
+          const {video_data,...rest}=r;
+          return {...rest, has_video:true};
+        }
+        return r;
+      });
+    }
+    // Items present before but missing now were deleted on purpose — tell the
+    // server so the merge drops them (everything else is unioned, not replaced).
+    const prev=this._cache[k];
+    if(Array.isArray(prev)&&Array.isArray(v)){
+      const now=new Set(v.map(it=>itemKey(k,it)));
+      const gone=prev.map(it=>itemKey(k,it)).filter(x=>!now.has(x));
+      if(gone.length) this._removed[k]=[...(this._removed[k]||[]),...gone];
+    }
+    this._cache[k]=v; this._lsSet(k,v); this._push(k,v);
+  },
+  _push(k,v){
+    if(DB_LOCAL_ONLY.has(k)||!this._ready) return;            // never push before the first pull
+    clearTimeout(this._timers[k]);
+    this._timers[k]=setTimeout(()=>{
+      this._timers[k]=null;
+      const removed=this._removed[k]||[]; this._removed[k]=[];
+      const body={value:this._cache[k]};                        // always push the latest cache
+      if(removed.length) body.removed=removed;
+      this._inflight[k]=(this._inflight[k]||0)+1;
+      fetch(STORE_URL+'/'+encodeURIComponent(k),{method:'PUT',headers:this._authHeaders(),body:JSON.stringify(body)})
+        .then(async r=>{
+          if(!r.ok){const t=await r.text().catch(()=>'');console.warn('[store] push '+k+' failed '+r.status,t);this._removed[k]=[...removed,...(this._removed[k]||[])];return;}
+          const j=await r.json().catch(()=>({}));
+          if(j.updated_at)this._updated[k]=j.updated_at;
+          // Adopt the server's merged list (contains other laptops' items) unless
+          // the user changed this key again while the request was in flight.
+          if(Array.isArray(j.value)&&!this._timers[k]){ this._cache[k]=j.value; this._lsSet(k,j.value); }
+        })
+        .catch(e=>{console.warn('[store] push '+k+' offline:',e.message);this._removed[k]=[...removed,...(this._removed[k]||[])];})
+        .finally(()=>{this._inflight[k]--;});
+    },250);
+  },
+  async pull(){
+    const r=await fetch(STORE_URL,{cache:'no-store'});
+    if(!r.ok) throw new Error('store HTTP '+r.status);
+    const j=await r.json();
+    const changed=[];
+    for(const [k,v] of Object.entries(j.data||{})){
+      // Skip keys with an unsaved local edit in progress — the push response
+      // will bring back the merged list instead.
+      if(this._timers[k]||this._inflight[k]) continue;
+      if((j.updated||{})[k]!==this._updated[k]){changed.push(k);}
+      this._cache[k]=v; this._updated[k]=(j.updated||{})[k]; this._lsSet(k,v);
+    }
+    this._ready=true; this._online=true;
+    return changed;
+  }
+};
+
+// IndexedDB helper for large video blobs
+const VideoDB={
+  _db:null,
+  open(){
+    if(this._db) return Promise.resolve(this._db);
+    return new Promise((res,rej)=>{
+      const req=indexedDB.open('ardh5_videos',1);
+      req.onupgradeneeded=e=>e.target.result.createObjectStore('videos',{keyPath:'cid'});
+      req.onsuccess=e=>{this._db=e.target.result;res(this._db);};
+      req.onerror=e=>rej(e);
+    });
+  },
+  saveVideo(cid, dataUrl, mime){
+    return this.open().then(db=>new Promise((res,rej)=>{
+      const tx=db.transaction('videos','readwrite');
+      const req=tx.objectStore('videos').put({cid, dataUrl, mime});
+      req.onsuccess=()=>{console.log('✅ VideoDB saved cid:'+cid);res();};
+      req.onerror=e=>{console.warn('VideoDB save err:',e);rej(e);};
+    })).catch(e=>console.warn('VideoDB open err:',e));
+  },
+  getVideo(cid){
+    return this.open().then(db=>new Promise((res,rej)=>{
+      const req=db.transaction('videos','readonly').objectStore('videos').get(cid);
+      req.onsuccess=e=>res(e.target.result||null);
+      req.onerror=e=>rej(e);
+    }));
+  }
+};
+
+// Central helper: save video to IndexedDB + update result metadata in localStorage
+// Call this instead of manually setting video_data on results
+function saveVideoForCandidate(cId, dataUrl, mime, durationSec){
+  // 1. Save video blob to IndexedDB (no size limit issues)
+  VideoDB.saveVideo(cId, dataUrl, mime).catch(e=>console.error('Video IDB save failed:',e));
+  // 2. Update result metadata (NO video_data — keeps localStorage small)
+  const results = DB.get('results', []);
+  const idx = results.findIndex(r => r.candidate_id === cId);
+  const meta = {
+    candidate_id: cId,
+    has_video: true,
+    video_mime: mime,
+    video_duration: durationSec,
+    saved_at: new Date().toISOString()
+  };
+  if(idx >= 0){
+    // Preserve existing result fields (score, status, etc.), just update video meta
+    results[idx] = {...results[idx], ...meta};
+  } else {
+    results.push(meta);
+  }
+  // DB.set will NOT see video_data here, so no stripping needed — saves cleanly
+  DB.set('results', results); // shared store -> admin on any laptop sees has_video
+  console.log('💾 Video meta saved! cId:'+cId+' dur:'+durationSec+'s mime:'+mime);
+}
+
+function initDB(){
+  if(!DB.get('positions',null))DB.set('positions',[
+    {id:1,title:'Senior Full Stack Developer',department:'Engineering',exp_min:3,salary:'10-18 LPA',description:'React, Node.js, PostgreSQL',active:true},
+    {id:2,title:'Product Manager',department:'Product',exp_min:4,salary:'15-25 LPA',description:'Product strategy and roadmap',active:true},
+    {id:3,title:'Data Scientist',department:'AI/ML',exp_min:2,salary:'12-20 LPA',description:'Python, ML, Deep Learning',active:true},
+    {id:4,title:'UI/UX Designer',department:'Design',exp_min:2,salary:'8-14 LPA',description:'Figma, Prototyping, Design systems',active:true}
+  ]);
+  if(!DB.get('candidates',null))DB.set('candidates',[]);
+  if(!DB.get('schedules',null))DB.set('schedules',[]);
+  if(!DB.get('results',null))DB.set('results',[]);
+  if(!DB.get('admins',null))DB.set('admins',[{id:1,name:'Super Admin',email:'admin@ardhnarishvar.com',password:'Admin@2024',role:'super_admin'}]);
+}
+
+/* Boot: pull the shared dataset from the server FIRST, then seed defaults
+   (only for keys the server has never seen), then keep it fresh. */
+const ADMIN_PANEL_LOADERS={dashboard:()=>loadDashboard(),resume:()=>loadAdminCandidates(),schedule:()=>loadSchedules(),'live-admin':()=>loadLiveAdmin(),'results-admin':()=>loadAdminResults(),positions:()=>loadPositions()};
+const CAND_PANEL_LOADERS={'cand-profile':()=>loadCandProfile(),'cand-schedule':()=>loadCandSchedule(),'cand-result':()=>loadCandResult()};
+function refreshOpenPanel(changedKeys){
+  if(!changedKeys.length) return;
+  const active=document.querySelector('.panel.active'); if(!active) return;
+  const id=active.id.replace('panel-','');
+  const loader=(userMode==='admin'?ADMIN_PANEL_LOADERS:userMode==='candidate'?CAND_PANEL_LOADERS:{})[id];
+  if(loader){ try{ loader(); }catch(e){ console.warn('[store] refresh '+id+' failed:',e); } }
+}
+const storeReady=(async function bootStore(){
+  try{ await DB.pull(); console.log('[store] synced from server'); }
+  catch(e){ DB._ready=true; console.warn('[store] server unreachable, using local cache:',e.message); }
+  initDB();
+  setInterval(async()=>{ try{ refreshOpenPanel(await DB.pull()); }catch{} },15000);
+  document.addEventListener('visibilitychange',async()=>{ if(document.visibilityState==='visible'){ try{ refreshOpenPanel(await DB.pull()); }catch{} } });
+})();
+// Preload speech voices
+if(window.speechSynthesis){window.speechSynthesis.getVoices();window.speechSynthesis.onvoiceschanged=()=>{window.speechSynthesis.getVoices();}}
+// Init EmailJS if configured
+(function(){const cfg=DB.get('emailjs_config',{});if(cfg.publicKey&&typeof emailjs!=='undefined'){emailjs.init({publicKey:cfg.publicKey});console.log('📧 EmailJS initialized');}})();
+
+function showNotif(msg,isErr=false){
+  const n=document.getElementById('notif');
+  n.textContent=msg;n.style.borderColor=isErr?'var(--red)':'var(--green)';
+  n.classList.add('show');setTimeout(()=>n.classList.remove('show'),3500);
+}
+function initClock(){setInterval(()=>{document.getElementById('clock').textContent=new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit',second:'2-digit'});},1000);}
+
+// LOGIN
+function switchLoginTab(tab){
+  ['admin','candidate'].forEach(t=>{
+    document.getElementById('ltab-'+t).classList.toggle('active',t===tab);
+    document.getElementById('login-'+t+'-section').style.display=t===tab?'':'none';
+  });
+  if(tab==='candidate')loadPositionsForReg();
+}
+function switchCandTab(tab){
+  ['login','register'].forEach(t=>{
+    document.getElementById('ctab-'+t).classList.toggle('active',t===tab);
+    document.getElementById('cand-'+t+'-form').style.display=t===tab?'':'none';
+  });
+}
+function loadPositionsForReg(){
+  const positions=DB.get('positions',[]).filter(p=>p.active);
+  const sel=document.getElementById('reg-position');
+  sel.innerHTML='<option value="">-- Select Position --</option>'+
+    positions.map(p=>`<option value="${p.id}">${p.title} — ${p.department} (${p.salary||''})</option>`).join('');
+}
+
+async function doAdminLogin(){
+  const email=document.getElementById('login-email').value.trim();
+  const pass=document.getElementById('login-pass').value;
+  if(!email||!pass){showNotif('❌ Email aur Password daalo',true);return;}
+  // Real backend login FIRST (gives a JWT that can write shared positions/settings)
+  try{
+    const ctrl0=new AbortController();const tid0=setTimeout(()=>ctrl0.abort(),6000);
+    const r0=await fetch(`${API_BASE}/auth/login`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password:pass}),signal:ctrl0.signal});
+    clearTimeout(tid0);
+    const d0=await r0.json();
+    if(r0.ok){TOKEN=d0.access_token;localStorage.setItem('nova_token',TOKEN);localStorage.setItem('nova_user',JSON.stringify({name:d0.user.name,role:d0.user.role}));launchAdmin(d0.user.name,d0.user.role);showNotif('Welcome '+d0.user.name+'!');return;}
+  }catch{}
+  // Fallback: local demo admin (offline only; cannot save admin-only settings to server)
+  const admins=DB.get('admins',[]);
+  const admin=admins.find(a=>a.email.toLowerCase()===email.toLowerCase()&&a.password===pass);
+  if(admin){TOKEN='demo';currentUser={name:admin.name,role:admin.role};localStorage.setItem('nova_token','demo');localStorage.setItem('nova_user',JSON.stringify({name:admin.name,role:admin.role}));launchAdmin(admin.name,admin.role);showNotif('✅ Welcome '+admin.name+'!');return;}
+  // Try backend with short timeout
+  try{
+    const ctrl=new AbortController();const tid=setTimeout(()=>ctrl.abort(),3000);
+    const r=await fetch(`${API_BASE}/auth/login`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password:pass}),signal:ctrl.signal});
+    clearTimeout(tid);
+    const d=await r.json();
+    if(r.ok){TOKEN=d.access_token;localStorage.setItem('nova_token',TOKEN);localStorage.setItem('nova_user',JSON.stringify({name:d.user.name,role:d.user.role}));launchAdmin(d.user.name,d.user.role);showNotif('✅ Welcome '+d.user.name+'!');return;}
+  }catch{}
+  showNotif('❌ Incorrect email or password',true);
+}
+
+async function doCandidateLogin(){
+  const cid=parseInt(document.getElementById('cand-id-input').value);
+  const email=document.getElementById('cand-email-input').value.trim().toLowerCase();
+  if(!cid||!email){showNotif('❌ ID aur Email dono chahiye',true);return;}
+  const cands=DB.get('candidates',[]);
+  const cand=cands.find(c=>c.id===cid&&c.email.toLowerCase()===email);
+  if(!cand){showNotif('❌ Incorrect ID or email',true);return;}
+  currentCandidate=cand;userMode='candidate';
+  localStorage.setItem('nova_candidate',JSON.stringify(cand));
+  launchCandidate(cand);showNotif('✅ Welcome '+cand.name+'!');
+}
+
+async function doRegisterCandidate(){
+  const name=document.getElementById('reg-name').value.trim();
+  const email=document.getElementById('reg-email').value.trim();
+  const phone=document.getElementById('reg-phone').value.trim();
+  const posId=document.getElementById('reg-position').value;
+  const exp=parseInt(document.getElementById('reg-exp').value)||0;
+  const skills=document.getElementById('reg-skills').value.split(',').map(s=>s.trim()).filter(Boolean);
+  const fileInp=document.getElementById('reg-resume');
+  if(!name||!email||!posId){showNotif('❌ Name, Email, Position required!',true);return;}
+  if(!fileInp.files[0]){showNotif('❌ Resume upload is required!',true);return;}
+  const cands=DB.get('candidates',[]);
+  if(cands.find(c=>c.email.toLowerCase()===email.toLowerCase())){showNotif('❌ This email is already registered!',true);return;}
+  const positions=DB.get('positions',[]);
+  const pos=positions.find(p=>p.id===parseInt(posId));
+  const btn=document.getElementById('reg-btn');btn.textContent='Processing...';btn.disabled=true;
+  const file=fileInp.files[0];
+  let resumeData='';
+  try{resumeData=await new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=rej;r.readAsDataURL(file);});}catch{}
+  const newId=Math.floor(100000+Math.random()*900000);
+  const candidate={id:newId,name,email,phone,position_id:parseInt(posId),position_title:pos?pos.title:'Unknown',experience_years:exp,skills,resume_name:file.name,resume_data:resumeData,status:'pending',ai_score:0,registered_at:new Date().toISOString(),result:null};
+  // Save candidate - agar localStorage full ho jaye (badi resume file) to bina resume_data ke save karo
+  try{
+    cands.push(candidate);DB.set('candidates',cands);
+  }catch(storageErr){
+    console.error('Storage full, retrying without resume data:',storageErr);
+    try{
+      candidate.resume_data='';
+      DB.set('candidates',cands);
+      showNotif('Note: resume file was too large to store fully, but your registration was saved.',true);
+    }catch(e2){
+      cands.pop();
+      btn.textContent='Register & Apply';btn.disabled=false;
+      showNotif('Registration failed: browser storage is full. Please use a smaller resume (PDF under 2MB).',true);
+      return;
+    }
+  }
+  // Email notification to admin when new candidate registers (failure yahan registration ko nahi rokegi)
+  try{
+    const admins2=DB.get('admins',[]);
+    const adminEmail=admins2.length?admins2[0].email:'admin@ardhnarishvar.com';
+    sendEmailNotification(
+      adminEmail,
+      `New Candidate Registered: ${name}`,
+      `Hello Admin,\n\nA new candidate has registered:\n\nName: ${name}\nEmail: ${email}\nPhone: ${phone||'N/A'}\nPosition: ${pos?pos.title:'Unknown'}\nCandidate ID: ${newId}\nExperience: ${exp} years\nSkills: ${skills.join(', ')||'N/A'}\n\nPlease login and review the application.\n\n--- Ardhnarishvar HR System`
+    );
+  }catch(mailErr){console.error('Email notify failed:',mailErr);}
+  btn.textContent='📝 Register & Apply';btn.disabled=false;
+  showNotif(`✅ Registration done! Your ID: ${newId}`);
+  setTimeout(()=>{
+    const msg=`🎉 Registration Successful!\n\nYour Candidate ID: ${newId}\n\n⚠️ ZARURI: Ye ID note kar lo!\nLogin ke liye Candidate ID aur Email dono chahiye.\n\nID: ${newId}\nEmail: ${email}`;
+    if(confirm(msg+'\n\n[Click OK to go to login page]')){
+      try{navigator.clipboard.writeText(String(newId)).then(()=>showNotif('📋 ID copied!'));}catch(e){}
+      switchCandTab('login');
+      document.getElementById('cand-id-input').value=newId;
+      document.getElementById('cand-email-input').value=email;
+    }
+  },400);
+}
+
+function launchAdmin(name,role){
+  userMode='admin';currentUser={name,role};
+  document.getElementById('login-screen').style.display='none';
+  document.getElementById('main-app').style.display='flex';
+  document.getElementById('user-name').textContent=name;
+  document.getElementById('user-role').textContent=role;
+  document.getElementById('user-av').textContent=name.split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2);
+  document.getElementById('sidebar-mode-label').textContent='Admin Panel';
+  buildAdminNav();showPanel('dashboard');initClock();
+}
+
+function launchCandidate(cand){
+  userMode='candidate';
+  document.getElementById('login-screen').style.display='none';
+  document.getElementById('main-app').style.display='flex';
+  document.getElementById('user-name').textContent=cand.name;
+  document.getElementById('user-role').textContent='Candidate #'+cand.id;
+  document.getElementById('user-av').textContent=cand.name.split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2);
+  document.getElementById('sidebar-mode-label').textContent='Candidate Portal';
+  buildCandidateNav(cand);showPanel('cand-profile');initClock();
+}
+
+function buildAdminNav(){
+  document.getElementById('main-nav').innerHTML=`
+    <div class="nav-sec">Overview</div>
+    <div class="nav-item active" onclick="showPanel('dashboard')">📊 Dashboard</div>
+    <div class="nav-sec">Recruitment</div>
+    <div class="nav-item" onclick="showPanel('resume')">📄 Resume Shortlist</div>
+    <div class="nav-item" onclick="showPanel('schedule')">📅 Schedule</div>
+    <div class="nav-item" onclick="showPanel('live-admin')">🎥 Live Monitor</div>
+    <div class="nav-item" onclick="showPanel('results-admin')">📊 Results</div>
+    <div class="nav-sec">Settings</div>
+    <div class="nav-item" onclick="showPanel('positions')">💼 Job Positions</div>
+    <div class="nav-item" onclick="showPanel('admin-settings')">⚙️ Admin Settings</div>`;
+}
+
+function buildCandidateNav(cand){
+  document.getElementById('main-nav').innerHTML=`
+    <div class="nav-sec">My Application</div>
+    <div class="nav-item active" onclick="showPanel('cand-profile')">👤 My Profile</div>
+    <div class="nav-item" onclick="showPanel('cand-schedule')">📅 My Schedule</div>
+    <div class="nav-item" onclick="showPanel('interview');preFillCandidate(${cand.id})">🎥 Live Interview</div>
+    <div class="nav-item" onclick="showPanel('cand-result')">📊 My Result</div>`;
+}
+
+function preFill(id,role){setTimeout(()=>{const el=document.getElementById('iv-cand-id');if(el)el.value=id;const rl=document.getElementById('iv-job-role');if(rl&&role)rl.value=role;},100);}
+
+function preFillCandidate(id){
+  setTimeout(()=>{
+    const cands=DB.get('candidates',[]);
+    const cand=cands.find(c=>c.id===id);
+    const el=document.getElementById('iv-cand-id');
+    if(el)el.value=id;
+    if(cand){
+      const rl=document.getElementById('iv-job-role');
+      if(rl&&cand.position_title)rl.value=cand.position_title;
+      // Show resume+skills preview in interview setup
+      const setupCard=document.querySelector('#interview-start-area .card');
+      if(setupCard&&!document.getElementById('cand-resume-preview')){
+        const preview=document.createElement('div');
+        preview.id='cand-resume-preview';
+        preview.style.cssText='background:var(--bg2);border:1px solid var(--border2);border-radius:8px;padding:12px;margin-bottom:12px;font-size:12px;';
+        const skillsHtml=(cand.skills||[]).map(s=>`<span class="tag">${s}</span>`).join('');
+        preview.innerHTML=`
+          <div style="font-size:10px;font-weight:700;color:var(--accent3);text-transform:uppercase;margin-bottom:8px;letter-spacing:.05em">✅ Profile Auto-Loaded from Registration</div>
+          <div style="color:var(--text2);margin-bottom:4px">👤 <strong style="color:var(--text)">${cand.name}</strong></div>
+          <div style="color:var(--text2);margin-bottom:4px">💼 <strong style="color:var(--accent)">${cand.position_title}</strong> · ${cand.experience_years}y exp</div>
+          <div style="color:var(--text2);margin-bottom:6px">📄 Resume: <span style="color:var(--text3)">${cand.resume_name||'Uploaded'}</span></div>
+          <div style="margin-top:4px"><span style="font-size:10px;color:var(--text3);font-weight:600">SKILLS: </span>${skillsHtml||'<span style="color:var(--text3)">N/A</span>'}</div>
+          <div style="font-size:10px;color:var(--green);margin-top:8px">🤖 AI Robot will ask skill-specific questions based on your profile!</div>`;
+        // Insert before start button
+        const startBtn=setupCard.querySelector('.btn-sm.green.btn-full');
+        if(startBtn)setupCard.insertBefore(preview,startBtn);
+        else setupCard.appendChild(preview);
+      }
+    }
+  },150);
+}
+
+function logout(){
+  localStorage.removeItem('nova_token');localStorage.removeItem('nova_user');localStorage.removeItem('nova_candidate');TOKEN='';userMode='';currentUser={};currentCandidate=null;
+  if(mediaRecorder && mediaRecorder.state==='recording') saveAndStopRecording();
+  stopCamera();clearInterval(timerInt);clearInterval(emotionInt);
+  document.getElementById('login-screen').style.display='flex';
+  document.getElementById('main-app').style.display='none';
+}
+
+function showPanel(id){
+  // Agar interview chal rha hai aur hum door ja rahe hain — pehle recording save karo
+  if(id!=='interview' && mediaRecorder && mediaRecorder.state==='recording'){
+    saveAndStopRecording();
+  }
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  const p=document.getElementById('panel-'+id);if(p)p.classList.add('active');
+  const titles={'dashboard':'Command Dashboard','resume':'Resume Shortlist','schedule':'Interview Schedule','live-admin':'Live Interview Monitor','interview':'🎥 Live Interview — Claude AI','results-admin':'Interview Results','positions':'Job Positions','admin-settings':'Admin Settings','cand-profile':'My Profile','cand-schedule':'My Interview Schedule','cand-result':'My Interview Result'};
+  document.getElementById('panel-title').textContent=titles[id]||id;
+  document.querySelectorAll('.nav-item').forEach(n=>{const oc=n.getAttribute('onclick')||'';if(oc.includes("'"+id+"'"))n.classList.add('active');});
+  if(id==='dashboard')loadDashboard();
+  if(id==='resume')loadAdminCandidates();
+  if(id==='schedule')loadSchedules();
+  if(id==='live-admin')loadLiveAdmin();
+  if(id==='results-admin')loadAdminResults();
+  if(id==='positions')loadPositions();
+  if(id==='admin-settings')loadAdminSettings();
+  if(id==='cand-profile')loadCandProfile();
+  if(id==='cand-schedule')loadCandSchedule();
+  if(id==='cand-result')loadCandResult();
+}
+
+// DASHBOARD
+function loadDashboard(){
+  const cands=DB.get('candidates',[]);
+  const scheds=DB.get('schedules',[]);
+  const results=DB.get('results',[]);
+  document.getElementById('m-total').textContent=cands.length;
+  document.getElementById('m-short').textContent=cands.filter(c=>c.status==='shortlisted').length;
+  document.getElementById('m-done').textContent=results.length;
+  document.getElementById('m-sel').textContent=results.filter(r=>r.status==='selected').length;
+  document.getElementById('dash-cb').textContent=cands.length+' total';
+  const del=document.getElementById('dash-candidates');
+  const recent=[...cands].reverse().slice(0,5);
+  del.innerHTML=recent.length?recent.map(c=>`<div class="r-item"><div class="av" style="background:linear-gradient(135deg,var(--accent),var(--accent2))">${c.name.split(' ').map(n=>n[0]).join('').slice(0,2).toUpperCase()}</div><div style="flex:1"><div class="r-name">${c.name}</div><div class="r-meta">${c.position_title} · #${c.id}</div></div><span class="badge ${c.status==='shortlisted'?'b-green':c.status==='rejected'?'b-red':'b-amber'}">${c.status}</span></div>`).join(''):'<div style="color:var(--text3);font-size:12px;text-align:center;padding:16px">No candidates found</div>';
+  const sel=document.getElementById('dash-interviews');
+  const up=scheds.slice(-5).reverse();
+  sel.innerHTML=up.length?up.map(s=>{const dt=new Date(s.scheduled_at);return`<div class="r-item"><div style="text-align:center;width:50px;flex-shrink:0"><div style="font-size:12px;font-weight:700;color:var(--accent3);font-family:monospace">${dt.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'})}</div><div style="font-size:9px;color:var(--text3)">${dt.toLocaleDateString('en-IN',{day:'2-digit',month:'short'})}</div></div><div style="flex:1"><div class="r-name">Candidate #${s.candidate_id}</div><div class="r-meta">${s.round}</div></div><span class="badge ${s.status==='scheduled'?'b-blue':'b-green'}">${s.status}</span></div>`;}).join(''):'<div style="color:var(--text3);font-size:12px;text-align:center;padding:16px">No schedules found</div>';
+}
+
+// RESUME SHORTLIST
+function loadAdminCandidates(){
+  const filter=document.getElementById('filter-status').value;
+  let cands=DB.get('candidates',[]);
+  if(filter!=='all')cands=cands.filter(c=>c.status===filter);
+  document.getElementById('admin-cand-count').textContent=cands.length+' candidates';
+  const el=document.getElementById('admin-candidates-list');
+  if(!cands.length){el.innerHTML='<div style="color:var(--text3);text-align:center;padding:30px;font-size:12px">No candidates found</div>';return;}
+  el.innerHTML=`<div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Candidate</th><th>ID</th><th>Position</th><th>Exp</th><th>Skills</th><th>Status</th><th>Actions</th></tr></thead><tbody>${cands.map(c=>`<tr><td><div style="font-weight:600;color:var(--text);font-size:14px">${c.name}</div><div style="font-size:11px;color:var(--text3)">${c.email}</div></td><td><span class="cid-chip">#${c.id}</span></td><td style="font-size:13px">${c.position_title}</td><td style="font-size:13px">${c.experience_years}y</td><td>${(c.skills||[]).slice(0,3).map(s=>`<span class="tag">${s}</span>`).join('')}</td><td><span class="badge ${c.status==='shortlisted'?'b-green':c.status==='rejected'?'b-red':'b-amber'}">${c.status}</span></td><td><div style="display:flex;gap:5px;flex-wrap:wrap"><button class="btn-sm outline" style="font-size:11px;padding:5px 10px" onclick="viewResume(${c.id})">📄 Resume</button>${c.status!=='shortlisted'?`<button class="btn-sm green" style="font-size:11px;padding:5px 10px" onclick="updateStatus(${c.id},'shortlisted')">✓ Shortlist</button>`:''} ${c.status!=='rejected'?`<button class="btn-sm danger" style="font-size:11px;padding:5px 10px" onclick="updateStatus(${c.id},'rejected')">✗ Reject</button>`:''}<button class="btn-sm" style="font-size:11px;padding:5px 10px;background:rgba(239,68,68,.2);border:1px solid var(--red);color:var(--red)" onclick="deleteCandidate(${c.id},'${c.name.replace(/'/g,"\\'")}')">🗑 Delete</button></div></td></tr>`).join('')}</tbody></table></div>`;
+}
+
+function viewResume(candId){
+  const cands=DB.get('candidates',[]);const cand=cands.find(c=>c.id===candId);if(!cand)return;
+  document.getElementById('resume-view-name').textContent=cand.name;
+  document.getElementById('resume-view-content').innerHTML=`<div style="text-align:center;padding:20px"><div style="font-size:40px;margin-bottom:10px">📄</div><div style="font-weight:600;margin-bottom:6px">${cand.resume_name||'Resume'}</div><div style="font-size:11px;color:var(--text3);margin-bottom:10px">${cand.name} · ${cand.position_title}</div><div style="font-size:11px;color:var(--text2)">Skills: ${(cand.skills||[]).join(', ')||'N/A'}</div><div style="font-size:11px;color:var(--text2)">Experience: ${cand.experience_years} years</div><div style="font-size:11px;color:var(--text2)">Email: ${cand.email}</div></div>`;
+  window._vrc=cand;document.getElementById('resume-view-modal').classList.add('show');
+}
+function downloadResume(){const c=window._vrc;if(!c||!c.resume_data){showNotif('❌ Resume data not available',true);return;}const fname=c.resume_name||'resume.pdf';
+// Data URL ko Blob mein convert karo - bade base64 data URL direct download par corrupt/fail ho jate hain
+const xhr=new XMLHttpRequest();xhr.open('GET',c.resume_data,true);xhr.responseType='blob';
+xhr.onload=function(){
+  const raw=xhr.response;
+  const blob=raw&&raw.type?raw:new Blob([raw],{type:'application/pdf'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download=fname;
+  document.body.appendChild(a);a.click();document.body.removeChild(a);
+  setTimeout(()=>URL.revokeObjectURL(url),10000);
+};
+xhr.onerror=function(){showNotif('Resume download failed - file data may be corrupted',true);};
+xhr.send();showNotif('⬇ Downloading...');}
+
+function updateStatus(id,status){
+  const cands=DB.get('candidates',[]);const idx=cands.findIndex(c=>c.id===id);if(idx===-1)return;
+  cands[idx].status=status;DB.set('candidates',cands);loadAdminCandidates();
+  showNotif(`✅ Candidate ${status==='shortlisted'?'shortlisted!':'rejected!'}`);
+}
+
+function deleteCandidate(id,name){
+  if(!confirm(`⚠️ "${name}" will be permanently deleted. Are you sure?\n\nThis action cannot be undone!`))return;
+  // Delete from candidates
+  let cands=DB.get('candidates',[]);
+  cands=cands.filter(c=>c.id!==id);
+  DB.set('candidates',cands);
+  // Delete related results
+  let results=DB.get('results',[]);
+  results=results.filter(r=>r.candidate_id!==id);
+  DB.set('results',results);
+  // Delete related schedules
+  let scheds=DB.get('schedules',[]);
+  scheds=scheds.filter(s=>s.candidate_id!==id);
+  DB.set('schedules',scheds);
+  loadAdminCandidates();
+  showNotif(`🗑 Candidate "${name}" delete kar diya gaya!`);
+}
+
+// SCHEDULE
+function loadSchedules(){
+  const scheds=DB.get('schedules',[]);
+  document.getElementById('sched-count').textContent=scheds.length+' scheduled';
+  const el=document.getElementById('schedule-list');
+  if(!scheds.length){el.innerHTML='<div style="color:var(--text3);text-align:center;padding:30px;font-size:12px">No schedules. Add one using "+ New Schedule".</div>';return;}
+  const cands=DB.get('candidates',[]);
+  el.innerHTML=scheds.map(s=>{const cand=cands.find(c=>c.id===s.candidate_id);const dt=new Date(s.scheduled_at);return`<div class="r-item"><div style="text-align:center;width:56px;flex-shrink:0"><div style="font-size:13px;font-weight:700;color:var(--accent3);font-family:monospace">${dt.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'})}</div><div style="font-size:10px;color:var(--text3)">${dt.toLocaleDateString('en-IN',{day:'2-digit',month:'short'})}</div></div><div style="flex:1"><div class="r-name">${cand?cand.name:'#'+s.candidate_id}</div><div class="r-meta">${cand?cand.position_title:''} · ${s.round}</div>${s.notes?`<div class="r-meta" style="color:var(--text3)">${s.notes}</div>`:''}</div><span class="badge ${s.status==='scheduled'?'b-blue':'b-green'}">${s.status}</span></div>`;}).join('');
+}
+
+function openScheduleModal(){
+  document.getElementById('sch-cand-id').value='';
+  document.getElementById('sch-notes').value='';
+  const dt=new Date();dt.setHours(dt.getHours()+1);dt.setMinutes(0);
+  document.getElementById('sch-datetime').value=dt.toISOString().slice(0,16);
+  const et=new Date(dt);et.setMinutes(et.getMinutes()+45);
+  document.getElementById('sch-endtime').value=et.toISOString().slice(0,16);
+  document.getElementById('schedule-modal').classList.add('show');
+}
+
+function saveSchedule(){
+  const cid=parseInt(document.getElementById('sch-cand-id').value);
+  const dt=document.getElementById('sch-datetime').value;
+  const round=document.getElementById('sch-round').value;
+  const notes=document.getElementById('sch-notes').value;
+  if(!cid||!dt){showNotif('❌ Candidate ID aur Date/Time required',true);return;}
+  const cands=DB.get('candidates',[]);const cand=cands.find(c=>c.id===cid);
+  if(!cand){showNotif('❌ Candidate #'+cid+' does not exist!',true);return;}
+  if(cand.status==='rejected'){showNotif('❌ Cannot schedule interview for a rejected candidate!',true);return;}
+  const scheds=DB.get('schedules',[]);
+  const endDt=document.getElementById('sch-endtime').value;
+  if(!endDt){showNotif('❌ Interview end time bhi daalo!',true);return;}
+  if(new Date(endDt)<=new Date(dt)){showNotif('❌ End time, start time se baad honi chahiye!',true);return;}
+  scheds.push({id:Date.now(),candidate_id:cid,scheduled_at:dt,interview_end_at:endDt,round,notes,status:'scheduled'});
+  DB.set('schedules',scheds);closeModal('schedule-modal');loadSchedules();
+  // Email notification to candidate
+  const interviewDt=new Date(dt);
+  sendEmailNotification(
+    cand.email,
+    `Interview Schedule: ${cand.name} — Ardhnarishvar HR`,
+    `Hello ${cand.name},\n\nYour interview has been scheduled!\n\nDetails:\nPosition: ${cand.position_title}\nDate & Time: ${interviewDt.toLocaleString('en-IN')}\nRound: ${round}\n${notes?'Notes: '+notes+'\n':''}\nPlease login at this time and join the Live Interview.\nLogin ke liye apna Candidate ID (#${cand.id}) and email to login.\n\n--- Ardhnarishvar HR Robot System`
+  );
+  showNotif('✅ Interview scheduled for '+cand.name+'! Email notification sent.');
+}
+
+// LIVE ADMIN MONITOR
+function loadLiveAdmin(){
+  const results=DB.get('results',[]);const cands=DB.get('candidates',[]);
+  const el=document.getElementById('admin-completed-list');
+  if(!results.length){el.innerHTML='<div style="color:var(--text3);font-size:12px;text-align:center;padding:20px">No completed interviews</div>';return;}
+  el.innerHTML=results.slice(-8).reverse().map(r=>{const c=cands.find(x=>x.id===r.candidate_id);const durSec=r.video_duration||0;const durStr=durSec>0?(Math.floor(durSec/60)+'m '+(durSec%60)+'s'):'—';return`<div class="r-item"><div class="av" style="background:linear-gradient(135deg,var(--accent),var(--accent2))">${c?c.name.split(' ').map(n=>n[0]).join('').slice(0,2).toUpperCase():'??'}</div><div style="flex:1"><div class="r-name">${c?c.name:'#'+r.candidate_id}</div><div class="r-meta">Score: ${r.score||0}% · ${r.status}</div><div class="r-meta" style="color:var(--accent3)">🎥 Duration: ${durStr}</div></div><div style="display:flex;gap:5px"><button class="btn-sm outline" style="font-size:11px;padding:5px 10px" onclick="viewIVVideo(${r.candidate_id})">🎥 Video</button><button class="btn-sm outline" style="font-size:11px;padding:5px 10px" onclick="viewResume(${r.candidate_id})">📄 Resume</button></div></div>`;}).join('');
+}
+function viewIVVideo(id){
+  const cands=DB.get('candidates',[]);
+  const c=cands.find(x=>x.id===id);
+  const results=DB.get('results',[]);
+  const r=results.find(x=>x.candidate_id===id);
+  document.getElementById('video-view-name').textContent=c?c.name:'#'+id;
+  window._videoViewId=id;
+  const player=document.getElementById('iv-video-player');
+  const placeholder=document.getElementById('iv-video-placeholder');
+  const info=document.getElementById('iv-video-info');
+  const dlBtn=document.getElementById('btn-iv-download');
+  // Stop any existing playback
+  player.pause();player.src='';
+  document.getElementById('video-view-modal').classList.add('show');
+
+  // Helper: render video from a dataUrl string
+  function _renderVideo(dataUrl, mime, rMeta){
+    try{
+      if(!dataUrl) throw new Error('empty dataUrl');
+      // Convert dataUrl to Blob using XMLHttpRequest (most reliable for large videos)
+      const xhr = new XMLHttpRequest();
+      xhr.open('GET', dataUrl, true);
+      xhr.responseType = 'blob';
+      xhr.onload = function(){
+        if(xhr.status === 200 || xhr.status === 0){
+          const blob = xhr.response;
+          const url = URL.createObjectURL(blob);
+          if(player._blobUrl) URL.revokeObjectURL(player._blobUrl);
+          player._blobUrl = url;
+          player.src = url;
+          player.load();
+          player.style.display='block';
+          placeholder.style.display='none';
+          info.style.display='block';
+          const durSec=(rMeta&&rMeta.video_duration)||0;
+          const durStr=durSec>0?(Math.floor(durSec/60)+'m '+(durSec%60)+'s'):'N/A';
+          info.textContent='Format: '+(blob.type||mime)+' | Candidate: '+(c?c.name:'#'+id)+' | Duration: '+durStr+' | Saved: '+((rMeta&&rMeta.saved_at)?new Date(rMeta.saved_at).toLocaleString():'N/A');
+          dlBtn.style.display='inline-flex';
+        } else {
+          throw new Error('XHR status '+xhr.status);
+        }
+      };
+      xhr.onerror = function(){
+        console.error('XHR failed, trying direct src');
+        // Last resort: set dataUrl directly as src
+        if(player._blobUrl) URL.revokeObjectURL(player._blobUrl);
+        player._blobUrl = null;
+        player.src = dataUrl;
+        player.load();
+        player.style.display='block';
+        placeholder.style.display='none';
+        info.style.display='block';
+        dlBtn.style.display='inline-flex';
+      };
+      xhr.send();
+    } catch(e){
+      console.error('Video render error:',e);
+      player.style.display='none';
+      placeholder.style.display='flex';
+      info.style.display='none';
+      dlBtn.style.display='none';
+    }
+  }
+
+  // Try IndexedDB first (new storage), then fall back to inline video_data (legacy)
+  VideoDB.getVideo(id).then(rec=>{
+    if(rec && rec.dataUrl){
+      _renderVideo(rec.dataUrl, rec.mime||'video/webm', r);
+    } else if(r && r.video_data){
+      // Legacy path: video_data stored directly in result
+      _renderVideo(r.video_data, r.video_mime||'video/webm', r);
+    } else {
+      player.style.display='none';
+      placeholder.style.display='flex';
+      info.style.display='none';
+      dlBtn.style.display='none';
+    }
+  }).catch(()=>{
+    // IndexedDB failed, try legacy inline
+    if(r && r.video_data){
+      _renderVideo(r.video_data, r.video_mime||'video/webm', r);
+    } else {
+      player.style.display='none';
+      placeholder.style.display='flex';
+      info.style.display='none';
+      dlBtn.style.display='none';
+    }
+  });
+}
+function closeVideoModal(){
+  const player=document.getElementById('iv-video-player');
+  player.pause();
+  if(player._blobUrl){URL.revokeObjectURL(player._blobUrl);player._blobUrl=null;}
+  player.src='';
+  document.getElementById('video-view-modal').classList.remove('show');
+}
+function downloadIVVideo(){
+  const id=window._videoViewId;
+  const cands=DB.get('candidates',[]);
+  const c=cands.find(x=>x.id===id);
+  function _doDownload(dataUrl, mime){
+    const ext=(mime||'').includes('mp4')?'mp4':'webm';
+    const fname=`interview_${id}_${c?c.name.replace(/\s+/g,'_'):'candidate'}.${ext}`;
+    // Data URL ko pehle Blob me convert karo - bade videos ke liye direct data: href corrupt/truncate ho jata hai
+    const xhr=new XMLHttpRequest();
+    xhr.open('GET', dataUrl, true);
+    xhr.responseType='blob';
+    xhr.onload=function(){
+      if(xhr.status===200||xhr.status===0){
+        const raw=xhr.response;
+        // Blob par sahi mime type set karo taki media player file ko pehchane
+        const blob=raw.type?raw:new Blob([raw],{type:mime||'video/webm'});
+        const url=URL.createObjectURL(blob);
+        const a=document.createElement('a');
+        a.href=url;
+        a.download=fname;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        setTimeout(()=>URL.revokeObjectURL(url),10000);
+        _notifyDownloaded(blob);
+      } else { showNotif('Video download failed. Please try again.',true); }
+    };
+    xhr.onerror=function(){ showNotif('Video download failed. Please try again.',true); };
+    xhr.send();
+  }
+  function _notifyDownloaded(blob){
+    showNotif('⬇ Downloading video...');
+  }
+  VideoDB.getVideo(id).then(rec=>{
+    if(rec&&rec.dataUrl){ _doDownload(rec.dataUrl, rec.mime||'video/webm'); }
+    else {
+      const results=DB.get('results',[]);
+      const r=results.find(x=>x.candidate_id===id);
+      if(r&&r.video_data){ _doDownload(r.video_data, r.video_mime||'video/webm'); }
+      else { showNotif('❌ No video recording available.',true); }
+    }
+  }).catch(()=>{ showNotif('❌ No video recording available.',true); });
+}
+
+// RESULTS (ADMIN)
+function loadAdminResults(){
+  const results=DB.get('results',[]);const cands=DB.get('candidates',[]);const scheds=DB.get('schedules',[]);
+  const scheduled=new Set(scheds.map(s=>s.candidate_id));
+  const eligible=cands.filter(c=>c.status==='shortlisted'&&scheduled.has(c.id));
+  document.getElementById('result-count').textContent=eligible.length+' candidates';
+  const el=document.getElementById('admin-results-list');
+  if(!eligible.length){el.innerHTML='<div style="color:var(--text3);text-align:center;padding:30px;font-size:12px">First shortlist and schedule candidates, then results will appear here.</div>';return;}
+  el.innerHTML=eligible.map(cand=>{const res=results.find(r=>r.candidate_id===cand.id);return`<div class="r-item"><div class="av" style="background:linear-gradient(135deg,var(--accent),var(--accent2))">${cand.name.split(' ').map(n=>n[0]).join('').slice(0,2).toUpperCase()}</div><div style="flex:1"><div class="r-name">${cand.name}</div><div class="r-meta">${cand.position_title} · #${cand.id}</div>${res?`<div class="r-meta" style="margin-top:2px">Score: <span style="color:var(--green);font-weight:600">${res.score||0}%</span> · <span class="badge ${res.status==='selected'?'b-green':res.status==='not_selected'?'b-red':'b-amber'}">${res.status}</span></div>`:'<div class="r-meta" style="color:var(--amber)">⏳ Result pending</div>'}</div><button class="btn-sm primary" style="font-size:12px;padding:7px 14px" onclick="openResultModal(${cand.id})">${res?'✏ Edit':'+ Result'}</button></div>`;}).join('');
+}
+
+function openResultModal(candId){
+  const cands=DB.get('candidates',[]);const results=DB.get('results',[]);
+  const cand=cands.find(c=>c.id===candId);const res=results.find(r=>r.candidate_id===candId);
+  document.getElementById('result-cand-id').value=candId;
+  document.getElementById('result-cand-name').textContent=cand?cand.name:'#'+candId;
+  document.getElementById('result-cand-role').textContent=cand?cand.position_title:'';
+  document.getElementById('result-status').value=res?.status||'selected';
+  document.getElementById('result-score').value=res?.score||'';
+  document.getElementById('result-comm').value=res?.communication||'';
+  document.getElementById('result-tech').value=res?.technical||'';
+  document.getElementById('result-feedback').value=res?.feedback||'';
+  document.getElementById('result-modal').classList.add('show');
+}
+
+function saveResult(){
+  const candId=parseInt(document.getElementById('result-cand-id').value);
+  const obj={candidate_id:candId,status:document.getElementById('result-status').value,score:parseInt(document.getElementById('result-score').value)||0,communication:parseInt(document.getElementById('result-comm').value)||0,technical:parseInt(document.getElementById('result-tech').value)||0,feedback:document.getElementById('result-feedback').value,saved_at:new Date().toISOString()};
+  const results=DB.get('results',[]);const idx=results.findIndex(r=>r.candidate_id===candId);
+  if(idx>=0)results[idx]=obj;else results.push(obj);DB.set('results',results);
+  closeModal('result-modal');loadAdminResults();showNotif('✅ Result saved! Candidate can now view it.');
+}
+
+// POSITIONS
+function loadPositions(){
+  const pos=DB.get('positions',[]);
+  document.getElementById('pos-count').textContent=pos.filter(p=>p.active).length;
+  document.getElementById('positions-list').innerHTML=pos.map(p=>`<div class="r-item"><div style="flex:1"><div class="r-name">${p.title}</div><div class="r-meta">${p.department} · Min ${p.exp_min}y ${p.salary?'· '+p.salary:''}</div>${p.description?`<div class="r-meta" style="color:var(--text3)">${p.description}</div>`:''}</div><span class="badge ${p.active?'b-green':'b-red'}">${p.active?'Active':'Closed'}</span><button class="btn-sm danger" style="margin-left:8px;font-size:9px;padding:3px 8px" onclick="togglePos(${p.id})">${p.active?'Close':'Reopen'}</button></div>`).join('');
+}
+function togglePos(id){const pos=DB.get('positions',[]);const i=pos.findIndex(p=>p.id===id);if(i>=0){pos[i].active=!pos[i].active;DB.set('positions',pos);loadPositions();}}
+function openPositionModal(){['pos-title','pos-dept','pos-salary','pos-desc'].forEach(id=>document.getElementById(id).value='');document.getElementById('pos-exp').value='2';document.getElementById('position-modal').classList.add('show');}
+function addPosition(){
+  const t=document.getElementById('pos-title').value.trim(),d=document.getElementById('pos-dept').value.trim();
+  if(!t||!d){showNotif('❌ Title aur Department required',true);return;}
+  const pos=DB.get('positions',[]);pos.push({id:Date.now(),title:t,department:d,exp_min:parseInt(document.getElementById('pos-exp').value)||0,salary:document.getElementById('pos-salary').value,description:document.getElementById('pos-desc').value,active:true});
+  DB.set('positions',pos);closeModal('position-modal');loadPositions();showNotif('✅ Position added!');
+}
+
+// ADMIN SETTINGS
+function loadAdminSettings(){
+  const admins=DB.get('admins',[]);
+  document.getElementById('admin-users-list').innerHTML=admins.map(a=>`<div class="r-item"><div class="av" style="background:linear-gradient(135deg,var(--accent),var(--accent2))">${a.name.split(' ').map(n=>n[0]).join('').slice(0,2).toUpperCase()}</div><div style="flex:1"><div class="r-name">${a.name}</div><div class="r-meta">${a.email}</div></div><span class="badge b-purple" style="font-size:9px">${a.role}</span><button class="btn-sm outline" style="margin-left:8px;font-size:10px;padding:4px 9px" onclick="openEditAdminModal(${a.id})">✏ Edit</button></div>`).join('');
+  // Load EmailJS config
+  const ejsCfg=DB.get('emailjs_config',{});
+  if(document.getElementById('ejs-service')){
+    document.getElementById('ejs-service').value=ejsCfg.serviceId||'';
+    document.getElementById('ejs-pubkey').value=ejsCfg.publicKey||'';
+    document.getElementById('ejs-tpl-cand').value=ejsCfg.templateCandidate||'';
+    document.getElementById('ejs-tpl-admin').value=ejsCfg.templateAdmin||'';
+    document.getElementById('ejs-admin-email').value=ejsCfg.adminEmail||'';
+    const badge=document.getElementById('ejs-status-badge');
+    if(ejsCfg.serviceId&&ejsCfg.publicKey){badge.textContent='✅ Configured';badge.className='badge b-green';}
+    else{badge.textContent='⚠ Not Configured';badge.className='badge b-amber';}
+  }
+}
+function saveEmailJSConfig(){
+  const cfg={
+    serviceId:document.getElementById('ejs-service').value.trim(),
+    publicKey:document.getElementById('ejs-pubkey').value.trim(),
+    templateCandidate:document.getElementById('ejs-tpl-cand').value.trim(),
+    templateAdmin:document.getElementById('ejs-tpl-admin').value.trim(),
+    adminEmail:document.getElementById('ejs-admin-email').value.trim()
+  };
+  if(!cfg.serviceId||!cfg.publicKey){showNotif('❌ Service ID aur Public Key required!',true);return;}
+  DB.set('emailjs_config',cfg);
+  if(typeof emailjs!=='undefined')emailjs.init({publicKey:cfg.publicKey});
+  loadAdminSettings();showNotif('✅ Email config saved! Please test it.');
+}
+async function testEmailJS(){
+  const cfg=DB.get('emailjs_config',{});
+  if(!cfg.serviceId||!cfg.publicKey){showNotif('❌ Please save Email config first!',true);return;}
+  document.getElementById('ejs-test-result').textContent='🔄 Sending test email...';
+  try{
+    if(typeof emailjs!=='undefined')emailjs.init({publicKey:cfg.publicKey});
+    await sendEmailNotification(cfg.adminEmail||'test@example.com','Test — Ardhnarishvar HR System','This is a test email. Email notifications are working correctly! ✅');
+    document.getElementById('ejs-test-result').textContent='✅ Test email sent! Please check your inbox.';
+  }catch(e){
+    document.getElementById('ejs-test-result').textContent='❌ Error: '+e.message;
+  }
+}
+function viewEmailLogs(){
+  const logs=DB.get('email_logs',[]);
+  if(!logs.length){showNotif('📭 No email logs found');return;}
+  const msg=logs.slice(-5).reverse().map(l=>`To: ${l.to}\nSubject: ${l.subject}\nTime: ${new Date(l.sent_at).toLocaleString('en-IN')}\nStatus: ${l.status||'sent'}\n---`).join('\n');
+  alert('📧 Recent Email Logs (last 5):\n\n'+msg);
+}
+function openAddUserModal(){document.getElementById('add-user-modal').classList.add('show');}
+function addAdminUser(){
+  const n=document.getElementById('nu-name').value.trim(),e=document.getElementById('nu-email').value.trim(),p=document.getElementById('nu-pass').value,r=document.getElementById('nu-role').value;
+  if(!n||!e||!p){showNotif('❌ All fields required',true);return;}
+  const admins=DB.get('admins',[]);admins.push({id:Date.now(),name:n,email:e,password:p,role:r});
+  DB.set('admins',admins);closeModal('add-user-modal');loadAdminSettings();showNotif('✅ Admin created!');
+}
+
+// CANDIDATE VIEWS
+function openEditAdminModal(adminId){
+  const admins=DB.get('admins',[]);
+  const a=admins.find(x=>x.id===adminId);
+  if(!a){showNotif('❌ Admin not found',true);return;}
+  document.getElementById('edit-admin-id').value=adminId;
+  document.getElementById('edit-admin-name').value=a.name;
+  document.getElementById('edit-admin-email').value=a.email;
+  document.getElementById('edit-admin-pass').value='';
+  document.getElementById('edit-admin-role').value=a.role;
+  document.getElementById('edit-admin-modal').classList.add('show');
+}
+function saveEditAdmin(){
+  const id=parseInt(document.getElementById('edit-admin-id').value);
+  const name=document.getElementById('edit-admin-name').value.trim();
+  const email=document.getElementById('edit-admin-email').value.trim();
+  const pass=document.getElementById('edit-admin-pass').value;
+  const role=document.getElementById('edit-admin-role').value;
+  if(!name||!email){showNotif('❌ Name aur Email required',true);return;}
+  const admins=DB.get('admins',[]);
+  const idx=admins.findIndex(a=>a.id===id);
+  if(idx===-1){showNotif('❌ Admin not found',true);return;}
+  admins[idx].name=name;admins[idx].email=email;admins[idx].role=role;
+  if(pass)admins[idx].password=pass;
+  DB.set('admins',admins);closeModal('edit-admin-modal');loadAdminSettings();
+  showNotif('✅ Admin account updated successfully!');
+}
+
+async function sendEmailNotification(to,subject,body){
+  const logs=DB.get('email_logs',[]);
+  const logEntry={to,subject,body,sent_at:new Date().toISOString(),status:'pending'};
+  console.log('📧 Sending email to:',to,'Subject:',subject);
+  const cfg=DB.get('emailjs_config',{});
+  if(cfg.serviceId&&cfg.publicKey&&cfg.templateCandidate){
+    try{
+      if(typeof emailjs!=='undefined'){
+        emailjs.init({publicKey:cfg.publicKey});
+        const templateId=to===cfg.adminEmail?cfg.templateAdmin||cfg.templateCandidate:cfg.templateCandidate;
+        await emailjs.send(cfg.serviceId,templateId,{
+          to_email:to,
+          to_name:to.split('@')[0],
+          subject:subject,
+          message:body,
+          reply_to:'noreply@ardhnarishvar.com'
+        });
+        logEntry.status='sent_emailjs';
+        console.log('✅ EmailJS sent to:',to);
+      }
+    }catch(e){
+      console.error('EmailJS error:',e);
+      logEntry.status='emailjs_error:'+e.message;
+    }
+  } else {
+    // Fallback: mailto
+    logEntry.status='mailto_fallback';
+    try{window.open(`mailto:${to}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`,'_blank');}catch(e){}
+  }
+  logs.push(logEntry);
+  DB.set('email_logs',logs);
+}
+
+function loadCandProfile(){
+  if(!currentCandidate)return;
+  const c=currentCandidate;const results=DB.get('results',[]);const res=results.find(r=>r.candidate_id===c.id);
+  document.getElementById('cand-profile-content').innerHTML=`
+    <div class="id-banner">
+      <div><div style="font-size:10px;color:var(--text3);font-weight:600;text-transform:uppercase;margin-bottom:4px">Your Candidate ID</div><div class="big-id">#${c.id}</div><div style="font-size:11px;color:var(--text3)">Keep this ID safe &mdash; you will need it for your interview</div></div>
+      <div style="flex:1"></div>
+      <div style="text-align:right"><span class="badge ${c.status==='shortlisted'?'b-green':c.status==='rejected'?'b-red':'b-amber'}" style="font-size:12px;padding:6px 12px">${c.status.toUpperCase()}</span>${res&&(res.status||res.result)?`<div style="margin-top:8px;font-size:11px;color:var(--text3)">Final Result: <span style="color:${(res.status||res.result)==='selected'?'var(--green)':'var(--red)'};font-weight:700;text-transform:capitalize">${res.status||res.result}</span></div>`:''}</div>
+    </div>
+    <div class="g2">
+      <div class="card"><div class="card-h"><div class="card-t">Personal Info</div></div><div style="font-size:12px;color:var(--text2);line-height:2.3"><div>Name: <span style="color:var(--text);font-weight:600">${c.name}</span></div><div>Email: <span style="color:var(--text)">${c.email}</span></div><div>Phone: <span style="color:var(--text)">${c.phone||'N/A'}</span></div><div>Experience: <span style="color:var(--text)">${c.experience_years} years</span></div><div>Registered: <span style="color:var(--text)">${new Date(c.registered_at).toLocaleDateString('en-IN')}</span></div></div></div>
+      <div class="card"><div class="card-h"><div class="card-t">Application</div></div><div style="font-size:12px;color:var(--text2);line-height:2.3"><div>Position: <span style="color:var(--accent);font-weight:600">${c.position_title}</span></div><div>Resume: <span style="color:var(--text)">${c.resume_name||'Uploaded'}</span></div><div>Status: <span class="badge ${c.status==='shortlisted'?'b-green':c.status==='rejected'?'b-red':'b-amber'}">${c.status}</span></div></div><div style="margin-top:10px"><div style="font-size:10px;color:var(--text3);font-weight:600;margin-bottom:6px;text-transform:uppercase">Skills</div><div>${(c.skills||[]).map(s=>`<span class="tag">${s}</span>`).join('')||'<span style="font-size:11px;color:var(--text3)">No skills</span>'}</div></div></div>
+    </div>`;
+}
+
+function loadCandSchedule(){
+  if(!currentCandidate)return;
+  const scheds=DB.get('schedules',[]).filter(s=>s.candidate_id===currentCandidate.id);
+  const el=document.getElementById('cand-schedule-content');
+  if(!scheds.length){el.innerHTML=`<div class="card"><div style="text-align:center;padding:30px"><div style="font-size:36px;margin-bottom:10px">📅</div><div style="font-size:14px;font-weight:600;margin-bottom:8px">No interview scheduled</div><div style="font-size:12px;color:var(--text3)">When admin schedules, it will appear here.</div></div></div>`;return;}
+  el.innerHTML=scheds.map(s=>{const dt=new Date(s.scheduled_at);const up=new Date(s.scheduled_at)>new Date();return`<div class="card"><div style="display:flex;align-items:center;gap:14px"><div style="text-align:center;min-width:64px;background:var(--bg3);padding:10px;border-radius:10px"><div style="font-size:22px;font-weight:700;color:var(--accent3);font-family:monospace">${dt.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'})}</div><div style="font-size:11px;color:var(--text3)">${dt.toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'})}</div></div><div style="flex:1"><div style="font-size:14px;font-weight:600">Interview Scheduled!</div><div style="font-size:12px;color:var(--text2);margin-top:3px">Round: ${s.round}</div>${s.notes?`<div style="font-size:11px;color:var(--text3);margin-top:3px">${s.notes}</div>`:''}</div><div style="text-align:right"><span class="badge ${s.status==='scheduled'?'b-blue':'b-green'}">${s.status}</span>${up?`<div style="margin-top:8px"><button class="btn-sm green" onclick="showPanel('interview');preFill(${currentCandidate.id},'${(currentCandidate.position_title||'').replace(/'/g,'\\\'')}')">📹 Join Interview</button></div>`:''}</div></div></div>`;}).join('');
+}
+
+function loadCandResult(){
+  if(!currentCandidate)return;
+  const res=DB.get('results',[]).find(r=>r.candidate_id===currentCandidate.id);
+  const el=document.getElementById('cand-result-content');
+  if(!res||!res.status){el.innerHTML=`<div class="card"><div class="result-card"><div class="result-icon">⏳</div><div class="result-status" style="color:var(--amber)">Result Pending</div><div class="result-sub" style="margin-top:8px">Admin will enter the result after the interview.<br>Please wait a moment.</div></div></div>`;return;}
+  const ok=res.status==='selected';
+  el.innerHTML=`<div class="card"><div class="result-card"><div class="result-icon">${ok?'🎉':'😔'}</div><div class="result-status" style="color:${ok?'var(--green)':'var(--red)'}">${ok?'CONGRATULATIONS! SELECTED':'NOT SELECTED'}</div><div class="result-score" style="color:${ok?'var(--green)':'var(--amber)'};margin-top:12px">${res.score||0}%</div><div class="result-sub">Overall Score</div></div></div><div class="g2"><div class="card"><div class="card-h"><div class="card-t">Score Breakdown</div></div><div style="font-size:12px;color:var(--text2);line-height:2.4"><div>Communication: <span style="color:var(--accent3);font-weight:600">${res.communication||0}/10</span></div><div>Technical: <span style="color:var(--accent3);font-weight:600">${res.technical||0}/10</span></div><div>Overall: <span style="color:var(--green);font-weight:600">${res.score||0}%</span></div></div></div><div class="card"><div class="card-h"><div class="card-t">Feedback</div></div><div style="font-size:12px;color:var(--text2);line-height:1.7">${res.feedback||'No additional feedback.'}</div></div></div>`;
+}
+
+// LIVE VIDEO INTERVIEW
+function buildSys(name,role,lang,resumeSkills){
+  const lr=lang==='english'?'Conduct entire interview in English only.':
+    lang==='hinglish'?'Conduct entire interview in Hinglish (natural Hindi+English mix).':
+    'Start in English. If candidate uses Hindi, switch to Hinglish permanently.';
+
+  const skills=resumeSkills&&resumeSkills.skills?resumeSkills.skills:(Array.isArray(resumeSkills)?resumeSkills:[]);
+  const expYears=resumeSkills&&resumeSkills.exp?resumeSkills.exp:0;
+  const position=resumeSkills&&resumeSkills.position?resumeSkills.position:role;
+
+  let skillSection='';
+  if(skills.length>0){
+    const sList=skills.map((s,i)=>(i+1)+'. '+s).join('\n');
+    skillSection='\n\nCANDIDATE PROFILE:\n'
+      +'Name: '+name+'\n'
+      +'Position: '+position+'\n'
+      +'Experience: '+expYears+' years\n'
+      +'Skills: '+skills.join(', ')+'\n\n'
+      +'MANDATORY SKILL QUESTIONS — ask these IN ORDER:\n'+sList+'\n\n'
+      +'For EACH skill above, ask ONE specific technical question naming that skill.\n'
+      +'Example: "I can see you have '+skills[0]+' experience. Can you explain a real project where you used it and what challenges you faced?"\n'
+      +'DO NOT ask generic questions like strengths/weaknesses until ALL skill questions are done.';
+  }else{
+    skillSection='\n\nAsk technical questions relevant to '+position+' role.';
+  }
+
+  return 'You are Ardhnarishvar AI Interview Robot — a warm, patient, HUMAN-LIKE interviewer conducting a real job interview.\n'
+    +lr+'\n'
+    +skillSection+'\n\n'
+    +'INTERVIEW FLOW:\n'
+    +'1. Greet candidate warmly, introduce yourself as Ardhnarishvar AI Interview Robot\n'
+    +'2. Ask candidate to introduce themselves\n'
+    +'3. Ask about their experience in '+position+'\n'
+    +'4. Ask skill-specific questions (ONE per skill from the list above)\n'
+    +'5. Ask one behavioral/situational question\n'
+    +'6. Close professionally\n\n'
+    +'LANGUAGE RULES — VERY IMPORTANT:\n'
+    +'- Ask every question in SIMPLE, EASY ENGLISH. Short sentences. Everyday words only.\n'
+    +'- NO jargon, NO long or complex sentence structure. A school student should understand your question.\n'
+    +'- BAD: "Describe your experience architecting responsive component hierarchies."\n'
+    +'- GOOD: "Tell me about a website you made. How did you make it work well on mobile phones?"\n'
+    +'- If the candidate seems confused, repeat the question in even simpler words.\n\n'
+    +'ANSWER EVALUATION — DO THIS SILENTLY FOR EVERY ANSWER:\n'
+    +'- Judge if the answer is CORRECT, PARTIALLY CORRECT, WRONG, or OFF-TOPIC for the question asked.\n'
+    +'- If correct: give a short genuine acknowledgment ("Good, that is right.") and go deeper or move on.\n'
+    +'- If partially correct: acknowledge the right part, then ask ONE simple follow-up on the missing part.\n'
+    +'- If wrong or off-topic: do NOT say "wrong" harshly. Gently say something like "Okay, thank you." and either give one small hint or simply move to the next question. Never argue.\n'
+    +'- Never reveal scores or judgments during the interview. Stay kind and neutral.\n\n'
+    +'HUMAN BEHAVIOR RULES:\n'
+    +'- Talk like a real, friendly human interviewer — natural, warm, encouraging.\n'
+    +'- ONE question per message. Max 3 short sentences total.\n'
+    +'- Briefly acknowledge the previous answer in a natural way (vary your words — never repeat the same phrase twice).\n'
+    +'- If an answer is very short or empty, kindly encourage: "No problem, take your time. Can you tell me a little more?"\n'
+    +'- Never rush the candidate. Never stack multiple questions.';
+}
+
+async function startLiveInterview(){
+  const cId=parseInt(document.getElementById('iv-cand-id').value);
+  const role=document.getElementById('iv-job-role').value||'Software Engineer';
+  const lang=document.getElementById('iv-lang').value;
+  if(!cId){showNotif('❌ Please enter Candidate ID!',true);return;}
+  const cands=DB.get('candidates',[]);
+  const cand=cands.find(c=>c.id===cId)||{name:'Candidate',id:cId};
+
+  // ── SCHEDULE TIME WINDOW CHECK ──
+  if(userMode==='candidate'){
+    const scheds2=DB.get('schedules',[]);
+    const mySchedule=scheds2.find(s=>s.candidate_id===cId&&s.status==='scheduled');
+    if(!mySchedule){
+      showNotif('❌ Aapka interview abhi schedule nahi hua hai. Admin ka wait karo.',true);
+      return;
+    }
+    const now=new Date();
+    const startTime=new Date(mySchedule.scheduled_at);
+    const endTime=mySchedule.interview_end_at?new Date(mySchedule.interview_end_at):null;
+    // 1 minute pehle bhi allow karo join karne ke liye
+    const earlyJoin=new Date(startTime.getTime()-1*60*1000);
+    if(now < earlyJoin){
+      const diffMin=Math.ceil((startTime-now)/60000);
+      showNotif('⏰ Interview not started! after'+diffMin+' minute . Schedule: '+startTime.toLocaleString('en-IN'),true);
+      return;
+    }
+    if(endTime && now > endTime){
+      showNotif('❌ Interview window khatam ho gayi! Scheduled time '+startTime.toLocaleString('en-IN')+' se '+endTime.toLocaleString('en-IN')+' tha.',true);
+      return;
+    }
+  }
+  // ─────────────────────────────────────
+  // Auto-fill job role from candidate's registered position
+  if(cand&&cand.position_title){
+    const rlEl=document.getElementById('iv-job-role');
+    if(rlEl&&(!rlEl.value||rlEl.value==='Software Engineer'))rlEl.value=cand.position_title;
+  }
+  document.getElementById('iv-cname').textContent=cand.name;
+  document.getElementById('iv-crole').textContent=role;
+  document.getElementById('iv-phase').textContent='Phase: Starting...';
+  document.getElementById('interview-session-info').textContent=`${cand.name} · #${cId}`;
+  await startCamera();
+  // CAMERA MANDATORY: interview cannot begin until the camera is actually LIVE.
+  // Retry for up to 30s (candidate may need to click Allow in the address bar).
+  {
+    let camWait=0;
+    while(!(localStream&&localStream.getVideoTracks().some(t=>t.readyState==='live'))&&camWait<30000){
+      if(camWait===0)showNotif('Camera is required to start the interview. Please allow camera access.',true);
+      await new Promise(r2=>setTimeout(r2,2000));camWait+=2000;
+      await startCamera();
+    }
+    if(!(localStream&&localStream.getVideoTracks().some(t=>t.readyState==='live'))){
+      showNotif('Interview cannot start without a working camera. Allow camera access (camera icon in address bar) or close apps using it (Zoom/Teams), then press Start again.',true);
+      document.getElementById('iv-phase').textContent='Phase: Waiting for camera';
+      return;
+    }
+  }
+  document.getElementById('interview-start-area').style.display='none';
+  document.getElementById('video-controls').style.display='flex';
+  document.getElementById('live-badge').style.display='flex';
+  document.getElementById('interview-timer').style.display='block';
+  timerSec=0;clearInterval(timerInt);
+  timerInt=setInterval(()=>{timerSec++;const m=Math.floor(timerSec/60).toString().padStart(2,'0');const s=(timerSec%60).toString().padStart(2,'0');document.getElementById('interview-timer').textContent=m+':'+s;},1000);
+  document.getElementById('interview-chat').innerHTML='';
+  document.getElementById('voice-status').style.display='none';
+  document.getElementById('voice-controls').style.display='none';
+  ivHistory=[];
+  currentSessionId='iv_'+Date.now();
+  emotionInt=setInterval(updateEmotions,2000);
+  showNotif('🤖 Interview starting...');
+  // Start robot idle animation when interview begins
+  const rimg=document.getElementById('robot-img');
+  if(rimg){rimg.classList.add('idle');}
+  const resumeSkills={skills:cand.skills||[],exp:cand.experience_years||0,resume:cand.resume_name||'',position:cand.position_title||role};
+  const sys=buildSys(cand.name,role,lang,resumeSkills);
+  const skillNames=(resumeSkills&&resumeSkills.skills&&resumeSkills.skills.length)?resumeSkills.skills.join(', '):'your listed skills';
+  const greeting=await callClaude(sys,`START_INTERVIEW: You are interviewing ${cand.name} for ${role}. Their skills include: ${skillNames}. Begin: greet them as Ardhnarishvar AI Interview Robot, welcome them warmly, mention you have reviewed their profile, and ask them to introduce themselves.`,[]);
+  ivHistory.push({role:'user',content:'START_INTERVIEW'},{role:'assistant',content:greeting});
+  addIvMsg('robot',greeting);
+  document.getElementById('iv-phase').textContent='Phase: Greeting & Introduction';
+  showNotif('✅ AI Robot Interview started!');
+
+  // ── Background window timer — time khatam hone par auto-end ──
+  // BUGFIX: capture the end-time ONCE from the ACTIVE 'scheduled' entry that the
+  // pre-start check validated. The old code re-searched every 30s and could match
+  // a STALE completed/expired schedule row, killing a live interview instantly.
+  window._ivWindowEnd=null;
+  if(userMode==='candidate'){
+    const _schedsT=DB.get('schedules',[]);
+    // only ACTIVE schedules, newest first; ignore invalid/past-at-start end times
+    const _actives=_schedsT.filter(s=>s.candidate_id===cId&&s.status==='scheduled'&&s.interview_end_at)
+      .sort((a,b)=>new Date(b.scheduled_at)-new Date(a.scheduled_at));
+    for(const s of _actives){
+      const e=new Date(s.interview_end_at);
+      if(!isNaN(e)&&e>new Date()){window._ivWindowEnd=e;break;}
+    }
+    if(window._ivWindowEnd){
+      const _winTimer=setInterval(()=>{
+        if(!currentSessionId){clearInterval(_winTimer);return;} // interview already over
+        const now4=new Date();
+        const remMin=Math.ceil((window._ivWindowEnd-now4)/60000);
+        if(now4>window._ivWindowEnd){
+          clearInterval(_winTimer);
+          addIvMsg('robot','⏰ Interview window khatam ho gayi! Bahut dhanyavaad aapka. HR team jald hi aapko result ke baare mein batayegi. 🙏',false);
+          setTimeout(()=>endInterview(),2500);
+        } else if(remMin===5){
+          showNotif('⚠️ Sirf 5 minute bache hain interview mein!');
+        } else if(remMin===2){
+          showNotif('⚠️ Sirf 2 minute bache hain!');
+        }
+      },30000); // har 30 second check
+    }
+  }
+}
+
+async function sendInterviewAnswer(){
+  const inp=document.getElementById('candidate-input');
+  const msg=inp.value.trim();if(!msg||!currentSessionId)return;
+
+  // ── Time window khatam? Auto-end karo ──
+  // BUGFIX: use the end-time captured at interview start (validated, active
+  // schedule only) — never re-search, which matched stale expired rows.
+  if(userMode==='candidate'&&window._ivWindowEnd&&new Date()>window._ivWindowEnd){
+    addIvMsg('robot','⏰ Aapki interview window khatam ho gayi hai. Bahut dhanyavaad! HR team jald hi aapko inform karegi.',false);
+    setTimeout(()=>endInterview(),2500);
+    return;
+  }
+  // ─────────────────────────────────────
+  // Stop any ongoing speech/listening (silently — answer is being sent right now)
+  cancelListening();
+  if(speechSynth)speechSynth.cancel();
+  if(currentRobotAudio){try{currentRobotAudio.pause();}catch(e){} currentRobotAudio=null;}
+  showVoiceStatus('hidden');
+  document.getElementById('voice-status').style.display='none';
+  document.getElementById('voice-controls').style.display='none';
+  addIvMsg('user',msg,false);inp.value='';
+  ivHistory.push({role:'user',content:msg});
+  const role=document.getElementById('iv-job-role').value;
+  const lang=document.getElementById('iv-lang').value;
+  const name=document.getElementById('iv-cname').textContent;
+  const cand2=DB.get('candidates',[]).find(c=>c.id===parseInt(document.getElementById('iv-cand-id').value))||{};
+  const resumeSkills2={skills:cand2.skills||[],exp:cand2.experience_years||0,resume:cand2.resume_name||'',position:cand2.position_title||role};
+  const sys=buildSys(name,role,lang,resumeSkills2);
+  const typId='tp_'+Date.now();
+  const chat=document.getElementById('interview-chat');
+  const td=document.createElement('div');td.id=typId;td.innerHTML=`<div style="background:var(--bg3);border-radius:10px;padding:10px 14px;font-size:13px;color:var(--text3)">🤖 <span class="typing-dots"><span>●</span><span>●</span><span>●</span></span> Thinking...</div>`;
+  chat.appendChild(td);chat.scrollTop=chat.scrollHeight;
+  // Stop listening while robot thinks (silent — answer already captured)
+  cancelListening();
+  const resp=await callClaude(sys,msg,ivHistory.slice(0,-1));
+  const te=document.getElementById(typId);if(te)te.remove();
+  ivHistory.push({role:'assistant',content:resp});
+  addIvMsg('robot',resp,true);updateScore();
+  const lo=resp.toLowerCase();
+  // BUGFIX: old check ended the interview if the reply merely CONTAINED
+  // 'khatam'/'all the best'/'next steps' anywhere — casual Hinglish phrases
+  // killed live interviews. Now: require min 8 exchanges AND explicit farewell.
+  const _minTurns=ivHistory.length>=16; // ~8 Q&A exchanges
+  const _farewell=/(interview (is )?(now )?(complete|over|concluded)|interview complete (hua|ho gaya)|interview khatam (ho gaya|hua)|thank you for your time.*(best|luck|result)|hr team.*(result|inform|contact))/i.test(resp);
+  if((_minTurns&&_farewell)||ivHistory.length>38){
+    document.getElementById('iv-phase').textContent='Phase: Completed ✓';
+    showNotif('✅ Interview concluded!');setTimeout(()=>endInterview(),3000);
+  }
+}
+
+async function endInterview(){
+  // 1. Capture duration BEFORE clearing timer
+  const interviewDurationSec = timerSec || 0;
+  const _cId = parseInt(document.getElementById('iv-cand-id').value);
+  clearInterval(timerInt); clearInterval(emotionInt); stopAllVoice();
+
+  // 2. Stop auto-save interval
+  if(autoSaveInt){ clearInterval(autoSaveInt); autoSaveInt=null; }
+
+  // 3. Save recording with proper Promise-based flow
+  if(mediaRecorder && mediaRecorder.state === 'recording'){
+    await new Promise((resolve)=>{
+      const _mime = recordingMime || 'video/webm';
+      mediaRecorder.onstop = ()=>{
+        if(recordedChunks.length > 0){
+          const blob = new Blob(recordedChunks, {type: _mime});
+          const reader = new FileReader();
+          reader.onload = ()=>{
+            try{
+              const videoData = reader.result;
+              saveVideoForCandidate(_cId, videoData, _mime, interviewDurationSec);
+              console.log('✅ Final save! cId:'+_cId+' dur:'+interviewDurationSec+'s size:'+Math.round(blob.size/1024)+'KB');
+            } catch(e){ console.error('Save err:', e); }
+            resolve();
+          };
+          reader.onerror = ()=>{ console.error('FileReader error'); resolve(); };
+          reader.readAsDataURL(blob);
+        } else { resolve(); }
+      };
+      try{ mediaRecorder.requestData(); } catch(e){}
+      setTimeout(()=>{ try{ mediaRecorder.stop(); } catch(e){ resolve(); } }, 200);
+    });
+  } else if(recordedChunks.length > 0){
+    // Recorder already stopped but chunks exist — save now
+    await new Promise((resolve)=>{
+      const _mime = recordingMime || 'video/webm';
+      const blob = new Blob(recordedChunks, {type: _mime});
+      const reader = new FileReader();
+      reader.onload = ()=>{
+        try{
+          const videoData = reader.result;
+          saveVideoForCandidate(_cId, videoData, _mime, interviewDurationSec);
+          console.log('✅ Saved from existing chunks. cId:'+_cId);
+        } catch(e){}
+        resolve();
+      };
+      reader.onerror = ()=>resolve();
+      reader.readAsDataURL(blob);
+    });
+  }
+
+  // 3. Clean up streams + recorder
+  if(localStream){localStream.getTracks().forEach(t=>t.stop());localStream=null;}
+  mediaRecorder=null; recordedChunks=[];
+  document.getElementById('interview-start-area').style.display='';
+  document.getElementById('video-controls').style.display='none';
+  document.getElementById('live-badge').style.display='none';
+  document.getElementById('interview-timer').style.display='none';
+  const cId=parseInt(document.getElementById('iv-cand-id').value);
+  if(cId){const scheds=DB.get('schedules',[]);const i=scheds.findIndex(s=>s.candidate_id===cId&&s.status==='scheduled');if(i>=0){scheds[i].status='completed';DB.set('schedules',scheds);}}
+  currentSessionId=null;ivHistory=[];
+  // Reset robot image animation
+  const rimg=document.getElementById('robot-img');
+  if(rimg){rimg.classList.remove('talking','idle');}
+  // Auto-close: notify then switch to result panel after 3 sec
+  showNotif('✅ Interview complete! Redirecting to results in 3 seconds...');
+  setTimeout(()=>{
+    // If candidate mode — go to result panel
+    if(userMode==='candidate'){
+      showPanel('cand-result');loadCandResult();
+    } else {
+      // Admin mode — go back to dashboard
+      showPanel('dashboard');loadDashboard();
+    }
+  }, 3000);
+}
+
+function addIvMsg(role, content, autoSpeak=true) {
+  const chat = document.getElementById('interview-chat');
+  const div = document.createElement('div');
+  div.style.cssText = `background:var(--bg3);border-radius:10px;padding:12px 14px;margin-bottom:8px;font-size:13px;border-left:3px solid ${role==='robot'?'var(--accent)':'var(--green)'}`;
+  div.innerHTML = `<div style="font-size:11px;font-weight:700;color:${role==='robot'?'var(--accent)':'var(--green)'};margin-bottom:5px">${role==='robot'?'🤖 Ardhnarishvar AI Robot':'👤 You'}</div><div style="color:var(--text2);line-height:1.7">${content.replace(/\n/g,'<br>')}</div>`;
+  chat.appendChild(div);
+  chat.scrollTop = chat.scrollHeight;
+  // Auto-speak robot messages
+  if (role === 'robot' && autoSpeak) {
+    robotSpeak(content, () => {
+      // After robot speaks, enable candidate mic
+      const inp = document.getElementById('candidate-input');
+      if (inp) { inp.value = ''; inp.focus(); }
+    });
+  }
+}
+
+function attachCameraStream(stream){
+  // Attach stream to PiP, show video, hide placeholder, start recording
+  localStream=stream;
+  const hasVideo=stream.getVideoTracks().length>0;
+  const lv=document.getElementById('local-video');
+  if(hasVideo){
+    lv.srcObject=localStream;lv.style.display='block';
+    try{const pl=lv.play();if(pl&&pl.catch)pl.catch(()=>{});}catch(e){}
+    document.getElementById('self-placeholder').style.display='none';
+  }else{
+    // audio-only fallback: mic works, camera still retryable via placeholder
+    setCameraPlaceholder('🎤 Mic connected — 📷 click here to retry camera',true);
+  }
+  const selfLbl=document.getElementById('self-label');selfLbl.style.display='block';selfLbl.textContent=document.getElementById('user-name').textContent||'You';
+  // Start recording — reliable approach: set onstop BEFORE start
+  try{
+    recordedChunks=[];
+    const mimeTypes=['video/webm;codecs=vp9,opus','video/webm;codecs=vp8,opus','video/webm;codecs=h264','video/webm','video/mp4'];
+    let chosenMime='';
+    for(const mt of mimeTypes){if(MediaRecorder.isTypeSupported(mt)){chosenMime=mt;break;}}
+    mediaRecorder=new MediaRecorder(localStream,chosenMime?{mimeType:chosenMime}:{});
+    recordingMime=mediaRecorder.mimeType||chosenMime||'video/webm'; // capture BEFORE start
+    mediaRecorder.ondataavailable=e=>{if(e.data&&e.data.size>0)recordedChunks.push(e.data);};
+    mediaRecorder.start(500); // collect every 500ms for more chunks
+    console.log('🔴 Recording started, mimeType:',recordingMime);
+    // Start auto-save every 30s
+    const _autoCId = parseInt((document.getElementById('iv-cand-id')||{}).value||0);
+    if(_autoCId) startAutoSave(_autoCId);
+  }catch(re){console.warn('⚠ Recording not supported:',re);}
+  showNotif('📹 Camera connected! 🔴 Recording...');
+}
+function setCameraPlaceholder(msg, clickable){
+  const pl=document.getElementById('self-placeholder');
+  if(!pl)return;
+  pl.style.display='flex';
+  pl.textContent=msg;
+  if(clickable){
+    pl.style.cursor='pointer';
+    pl.onclick=()=>{pl.textContent='Connecting camera...';pl.onclick=null;pl.style.cursor='default';startCamera();};
+  }else{pl.style.cursor='default';pl.onclick=null;}
+}
+async function startCamera(){
+  if(localStream&&localStream.getVideoTracks().length>0)return; // camera already connected
+  if(localStream){
+    // audio-only stream exists — retry camera and merge the video track in
+    try{
+      const vs=await navigator.mediaDevices.getUserMedia({video:true,audio:false});
+      const vt=vs.getVideoTracks()[0];
+      if(vt){
+        localStream.addTrack(vt);
+        const lv=document.getElementById('local-video');
+        lv.srcObject=localStream;lv.style.display='block';
+        try{const pl=lv.play();if(pl&&pl.catch)pl.catch(()=>{});}catch(e){}
+        document.getElementById('self-placeholder').style.display='none';
+        showNotif('📹 Camera connected!');
+      }
+    }catch(e){
+      const n=(e&&e.name)||'';
+      let m='📷 Camera still unavailable — click to retry';
+      if(n==='NotAllowedError')m='📷 Camera BLOCKED — click the camera icon in the address bar, choose Allow, then click here';
+      else if(n==='NotReadableError')m='📷 Camera busy — another app (Zoom/Teams/OBS?) is using it. Close it, then click here';
+      else if(n==='NotFoundError')m='📷 No camera found on this device — connect one, then click here';
+      console.warn('camera retry failed:',n,e&&e.message);
+      setCameraPlaceholder(m,true);
+    }
+    return;
+  }
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){
+    setCameraPlaceholder('Camera not supported in this browser',false);
+    return;
+  }
+  // Try FULL (video+audio) first; if that fails (busy mic, missing device,
+  // partial permission) fall back to VIDEO-ONLY so the camera monitor still
+  // opens; finally AUDIO-ONLY so at least the answer mic works.
+  // Clean voice capture: echo cancellation kills the robot's speaker voice,
+  // noise suppression removes background hum, auto-gain keeps volume steady.
+  const AUDIO_OPTS={echoCancellation:true,noiseSuppression:true,autoGainControl:true,channelCount:1};
+  const attempts=[
+    {video:true,audio:AUDIO_OPTS},
+    {video:true,audio:true},
+    {video:true,audio:false},
+    {video:false,audio:AUDIO_OPTS},
+    {video:false,audio:true}
+  ];
+  let lastErr=null;
+  for(const constraints of attempts){
+    try{
+      const stream=await navigator.mediaDevices.getUserMedia(constraints);
+      attachCameraStream(stream);
+      if(!constraints.audio)console.warn('camera-only mode: mic unavailable/busy');
+      if(!constraints.video)console.warn('audio-only mode: camera unavailable/busy');
+      return;
+    }catch(e){lastErr=e;}
+  }
+  // All attempts failed — show quiet, specific guidance ON the placeholder (no popup)
+  const name=(lastErr&&lastErr.name)||'';
+  let msg='📷 Click here to enable camera';
+  if(name==='NotAllowedError')msg='📷 Camera blocked — click the camera icon in the address bar, allow, then click here';
+  else if(name==='NotReadableError')msg='📷 Camera is used by another app — close it, then click here';
+  else if(name==='NotFoundError')msg='📷 No camera found — connect one, then click here';
+  console.warn('camera failed:',name,lastErr&&lastErr.message);
+  setCameraPlaceholder(msg,true);
+  // Auto-rescue: if permission is granted later via the address bar, attach automatically
+  if(navigator.permissions&&navigator.permissions.query){
+    navigator.permissions.query({name:'camera'}).then(st=>{
+      st.onchange=()=>{if(st.state==='granted'&&!localStream)startCamera();};
+    }).catch(()=>{});
+  }
+}
+// saveRecording: call this BEFORE stopping tracks; returns Promise
+function saveRecording(cId, durationSec){
+  return new Promise((resolve)=>{
+    if(!mediaRecorder||recordedChunks.length===0){resolve();return;}
+    const mime=recordingMime||'video/webm';
+    const blob=new Blob(recordedChunks,{type:mime});
+    const reader=new FileReader();
+    reader.onload=()=>{
+      try{
+        const videoData=reader.result;
+        saveVideoForCandidate(cId, videoData, mime, durationSec);
+        console.log('✅ Video saved! candidate #'+cId+' | duration:'+durationSec+'s | mime:'+mime+' | size:'+Math.round(blob.size/1024)+'KB');
+      }catch(e){console.error('❌ Video save error:',e);}
+      resolve();
+    };
+    reader.onerror=()=>{console.error('❌ FileReader error');resolve();};
+    reader.readAsDataURL(blob);
+  });
+}
+
+function stopCamera(){
+  // Just stop camera tracks + reset UI — saving is done in endInterview
+  if(mediaRecorder&&mediaRecorder.state!=='inactive'){
+    try{mediaRecorder.stop();}catch(e){}
+  }
+  if(localStream){localStream.getTracks().forEach(t=>t.stop());localStream=null;}
+  // Reset PiP back to placeholder
+  const lv=document.getElementById('local-video');lv.style.display='none';
+  document.getElementById('self-placeholder').style.display='flex';
+  document.getElementById('self-label').style.display='none';
+}
+function toggleMic(){micEnabled=!micEnabled;if(localStream)localStream.getAudioTracks().forEach(t=>t.enabled=micEnabled);const btn=document.getElementById('btn-mic');btn.className='vc-btn '+(micEnabled?'on':'off');btn.textContent=micEnabled?'🎤':'🔇';}
+function toggleCam(){/* CAMERA LOCK: camera must stay ON at all times during the interview */camEnabled=true;if(localStream)localStream.getVideoTracks().forEach(t=>t.enabled=true);if(typeof showNotif==='function')showNotif('Camera must stay ON during the interview. It cannot be turned off.',true);const btn=document.getElementById('btn-cam');btn.className='vc-btn '+(camEnabled?'on':'off');btn.textContent=camEnabled?'📹':'📷';}
+function updateEmotions(){const c=Math.floor(Math.random()*20+68),n=Math.floor(Math.random()*18+8),e=Math.floor(Math.random()*15+75);document.getElementById('ef-conf').style.width=c+'%';document.getElementById('ep-conf').textContent=c+'%';document.getElementById('ef-nerv').style.width=n+'%';document.getElementById('ep-nerv').textContent=n+'%';document.getElementById('ef-eng').style.width=e+'%';document.getElementById('ep-eng').textContent=e+'%';}
+function updateScore(){const turns=Math.min(ivHistory.filter(m=>m.role==='user').length,12);currentScore=Math.min(95,45+turns*4+Math.floor(Math.random()*8));const offset=201-(201*currentScore/100);const circle=document.getElementById('score-circle');if(circle)circle.style.strokeDashoffset=offset;document.getElementById('score-display').textContent=currentScore+'%';}
+
+// ═══════════════════════════════════════════
+// VOICE SYSTEM — TTS + STT
+// ═══════════════════════════════════════════
+let speechSynth = window.speechSynthesis;
+let recognition = null;
+let isRobotSpeaking = false;
+let isListening = false;
+let voiceAnswerBuffer = '';
+
+// Get best voice for robot — prefer Indian English (Heera, Ravi), fallback to any en-IN
+function getRobotVoice(lang) {
+  const voices = speechSynth.getVoices();
+  // 1st priority: Microsoft Heera (female Indian) or Ravi (male Indian)
+  const heera = voices.find(v => v.name.toLowerCase().includes('heera'));
+  if (heera) return heera;
+  const ravi = voices.find(v => v.name.toLowerCase().includes('ravi'));
+  if (ravi) return ravi;
+  // 2nd priority: any en-IN voice
+  const enIN = voices.find(v => v.lang === 'en-IN');
+  if (enIN) return enIN;
+  // 3rd priority: Google Indian English
+  const googleIN = voices.find(v => v.name.toLowerCase().includes('google') && v.lang.startsWith('en-IN'));
+  if (googleIN) return googleIN;
+  // 4th priority: any English voice
+  return voices.find(v => v.lang.startsWith('en')) || voices[0] || null;
+}
+
+// ── Premium neural voice (edge-tts via backend) with browser fallback ──
+let PREMIUM_TTS = true;          // auto-disables for the session if backend TTS fails
+let currentRobotAudio = null;    // active premium audio element
+
+function robotSpeakFinish(rimg, onDone) {
+  // Shared teardown for BOTH voice paths: flags, echo dead-zone, UI, hands-free mic
+  isRobotSpeaking = false;
+  try { VF_TTS_END_AT = Date.now(); } catch (e) {}
+  showVoiceStatus('candidate');
+  if (rimg) { rimg.classList.remove('talking'); rimg.classList.add('idle'); }
+  if (onDone) onDone();
+  try {
+    if (typeof AUTO_VOICE !== 'undefined' && AUTO_VOICE &&
+        typeof vfInterviewLive === 'function' && vfInterviewLive() && !isListening) {
+      const dz = (typeof VF_DEADZONE_MS !== 'undefined' ? VF_DEADZONE_MS : 2000) + 100;
+      setTimeout(() => { if (!isRobotSpeaking && !isListening) startListening(); }, dz);
+    }
+  } catch (e) {}
+}
+
+// Robot bolega (TTS)
+function robotSpeak(text, onDone) {
+  // Stop anything already speaking (both paths)
+  if (speechSynth) speechSynth.cancel();
+  if (currentRobotAudio) { try { currentRobotAudio.pause(); } catch (e) {} currentRobotAudio = null; }
+
+  // If the mic is still open, close it WITHOUT sending ??? the robot's voice
+  // must never leak into the candidate's transcript.
+  if (isListening) { try { cancelListening(); } catch (e) {} }
+
+  isRobotSpeaking = true;
+  showVoiceStatus('robot');
+  // Robot talking animation
+  const rimg = document.getElementById('robot-img');
+  if(rimg){rimg.classList.remove('idle');rimg.classList.add('talking');}
+
+  // Clean text for speech
+  const cleanText = text.replace(/[*_#`]/g, '').replace(/\n/g, ' ').trim();
+  if (!cleanText) { robotSpeakFinish(rimg, onDone); return; }
+
+  // 1) PREMIUM PATH — neural Indian voice from backend edge-tts
+  if (PREMIUM_TTS) {
+    const lang = (document.getElementById('iv-lang') || {}).value || 'en';
+    fetch(HR_ROBO_BASE+'/api/v1/tts', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text: cleanText, lang: /hindi|hinglish|hi/i.test(lang) ? 'hi' : 'en' })
+    })
+    .then(r => { if (!r.ok) throw new Error('tts ' + r.status); return r.blob(); })
+    .then(blob => {
+      const url = URL.createObjectURL(blob);
+      currentRobotAudio = new Audio(url);
+      currentRobotAudio.onended = () => { URL.revokeObjectURL(url); currentRobotAudio = null; robotSpeakFinish(rimg, onDone); };
+      currentRobotAudio.onerror = () => { URL.revokeObjectURL(url); currentRobotAudio = null; robotSpeakFinish(rimg, onDone); };
+      return currentRobotAudio.play();
+    })
+    .catch(err => {
+      console.warn('Premium TTS unavailable — using browser voice.', err);
+      PREMIUM_TTS = false;                 // don't retry every utterance
+      robotSpeakBrowser(cleanText, rimg, onDone); // graceful fallback
+    });
+    return;
+  }
+
+  // 2) FALLBACK PATH — browser speechSynthesis
+  robotSpeakBrowser(cleanText, rimg, onDone);
+}
+
+// Browser speechSynthesis path (fallback)
+function robotSpeakBrowser(cleanText, rimg, onDone) {
+  if (!speechSynth) { robotSpeakFinish(rimg, onDone); return; }
+  const utter = new SpeechSynthesisUtterance(cleanText);
+  utter.lang = 'en-IN';
+  utter.rate = 0.88;
+  utter.pitch = 0.95;
+  utter.volume = 1;
+
+  // Load voices if not ready
+  const voices = speechSynth.getVoices();
+  if (voices.length > 0) {
+    const v = getRobotVoice();
+    if (v) utter.voice = v;
+  }
+
+  utter.onend = () => robotSpeakFinish(rimg, onDone);
+  utter.onerror = () => robotSpeakFinish(rimg, onDone);
+
+  speechSynth.speak(utter);
+}
+
+// Show voice status UI
+function showVoiceStatus(mode) {
+  const vs = document.getElementById('voice-status');
+  const vt = document.getElementById('voice-status-text');
+  const vc = document.getElementById('voice-controls');
+  const bars = document.querySelectorAll('.wave-bar');
+  if (!vs) return;
+
+  vs.style.display = 'block';
+  if (mode === 'robot') {
+    vt.textContent = '🤖 Robot is speaking...';
+    vt.style.color = 'var(--accent)';
+    bars.forEach(b => b.classList.remove('green'));
+    if (vc) vc.style.display = 'none';
+  } else if (mode === 'candidate') {
+    vt.textContent = '🎤 Your turn — speak or type';
+    vt.style.color = 'var(--green)';
+    bars.forEach(b => b.classList.add('green'));
+    if (vc) vc.style.display = 'block';
+  } else {
+    vs.style.display = 'none';
+    if (vc) vc.style.display = 'none';
+  }
+}
+
+// Candidate voice answer toggle
+function toggleVoiceAnswer() {
+  if (isListening) {
+    stopListening();
+  } else {
+    startListening();
+  }
+}
+
+// ── HUMAN-PATIENCE LISTENING SYSTEM ──
+// The robot listens like a human: thinking pauses of 10-20s are FINE.
+// Answer completes only after long silence FOLLOWING real speech, or the Done button.
+const PATIENCE_MS = 18000;       // total silence allowed after last speech before auto-finish
+const THINKING_HINT_MS = 6000;   // show "Take your time..." after this much silence
+let patienceTimer = null;        // auto-finish timer (resets every time candidate speaks)
+let thinkingTimer = null;        // "take your time" hint timer
+let hasSpokenYet = false;        // candidate must speak at least once before silence can finish the answer
+let answerAudioRecorder = null;  // audio-only recorder for exact Whisper transcription
+let answerAudioChunks = [];
+
+function resetPatienceTimers() {
+  clearTimeout(patienceTimer); clearTimeout(thinkingTimer);
+  const preview = document.getElementById('transcript-preview');
+  if (!isListening) return;
+  thinkingTimer = setTimeout(() => {
+    if (isListening && preview) preview.textContent = hasSpokenYet ? '🤔 Take your time... I am listening.' : '🎤 I am listening. Speak whenever you are ready.';
+  }, THINKING_HINT_MS);
+  // Only auto-finish if candidate HAS spoken — never cut off someone who hasn't started
+  if (hasSpokenYet) {
+    patienceTimer = setTimeout(() => {
+      if (isListening) { showNotif('✅ Answer complete — thank you.'); stopListening(); }
+    }, PATIENCE_MS);
+  }
+}
+
+function startAnswerAudioCapture() {
+  answerAudioChunks = [];
+  try {
+    if (!localStream || !localStream.getAudioTracks || localStream.getAudioTracks().length === 0) return;
+    const audioStream = new MediaStream(localStream.getAudioTracks());
+    const mimes = ['audio/webm;codecs=opus', 'audio/webm', 'audio/mp4'];
+    let mt = ''; for (const m of mimes) { if (MediaRecorder.isTypeSupported(m)) { mt = m; break; } }
+    answerAudioRecorder = new MediaRecorder(audioStream, mt ? { mimeType: mt } : {});
+    answerAudioRecorder.ondataavailable = e => { if (e.data && e.data.size > 0) answerAudioChunks.push(e.data); };
+    answerAudioRecorder.start(1000);
+  } catch (e) { console.warn('answer audio capture unavailable:', e); answerAudioRecorder = null; }
+}
+
+async function finishAnswerAudioCapture() {
+  // Returns exact Whisper transcript, or null to use the browser transcript
+  if (!answerAudioRecorder) return null;
+  try {
+    const rec = answerAudioRecorder; answerAudioRecorder = null;
+    await new Promise(res => { rec.onstop = res; try { rec.requestData(); rec.stop(); } catch (e) { res(); } setTimeout(res, 3000); });
+    if (answerAudioChunks.length === 0) return null;
+    const blob = new Blob(answerAudioChunks, { type: answerAudioChunks[0].type || 'audio/webm' });
+    answerAudioChunks = [];
+    if (blob.size < 1200) return null; // too short to be a real answer
+    const lang = (document.getElementById('iv-lang') || {}).value || 'english';
+    const fd = new FormData();
+    fd.append('audio', blob, 'answer.webm');
+    fd.append('lang', /hindi|hinglish/i.test(lang) ? 'hi' : 'en');
+    const r = await fetch(HR_ROBO_BASE+'/api/v1/stt', { method: 'POST', body: fd });
+    if (!r.ok) return null;
+    const d = await r.json();
+    return (d.text || '').trim() || null;
+  } catch (e) { console.warn('whisper stt failed — using browser transcript:', e); return null; }
+}
+
+function startListening() {
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SpeechRecognition) {
+    showNotif('❌ Browser does not support voice. Please type.', true);
+    return;
+  }
+  // NEVER open the mic while the robot is still speaking: its voice would be
+  // captured and transcribed as part of the candidate's answer.
+  if (isRobotSpeaking) {
+    setTimeout(() => { if (!isRobotSpeaking && !isListening) startListening(); }, 700);
+    return;
+  }
+  if (isListening) return; // already capturing
+  recognition = new SpeechRecognition();
+  recognition.continuous = true;
+  recognition.interimResults = true;
+  recognition.maxAlternatives = 1;
+  recognition.lang = 'en-IN'; // Supports Hinglish too
+
+  const btn = document.getElementById('mic-answer-btn');
+  const preview = document.getElementById('transcript-preview');
+
+  recognition.onstart = () => {
+    isListening = true;
+    voiceAnswerBuffer = '';
+    hasSpokenYet = false;
+    btn.classList.add('mic-listening');
+    btn.textContent = '🔴 Listening — take your time (click when done)';
+    if (preview) preview.textContent = '';
+    startAnswerAudioCapture();
+    resetPatienceTimers();
+    showNotif('🎤 I am listening. Take your time.');
+  };
+
+  recognition.onresult = (e) => {
+    let interim = '';
+    let final = '';
+    for (let i = e.resultIndex; i < e.results.length; i++) {
+      if (e.results[i].isFinal) final += e.results[i][0].transcript + ' ';
+      else interim += e.results[i][0].transcript;
+    }
+    voiceAnswerBuffer += final;
+    if ((final + interim).trim()) { hasSpokenYet = true; resetPatienceTimers(); }
+    const inp = document.getElementById('candidate-input');
+    if (inp) inp.value = voiceAnswerBuffer + interim;
+    if (preview) preview.textContent = interim ? '...' + interim : '';
+  };
+
+  recognition.onerror = (e) => {
+    console.error('STT error:', e.error);
+    // no-speech is NORMAL during thinking pauses — never treat it as an error or stop
+    if (e.error === 'no-speech' || e.error === 'aborted') return;
+    showNotif('⚠ Voice error: ' + e.error, true);
+    stopListening();
+  };
+
+  recognition.onend = () => {
+    if (isListening) { try { recognition.start(); } catch (e) {} } // keep listening through pauses
+  };
+
+  recognition.start();
+}
+
+async function stopListening() {
+  if (!isListening && !recognition) return;
+  isListening = false;
+  clearTimeout(patienceTimer); clearTimeout(thinkingTimer);
+  if (recognition) { try { recognition.stop(); } catch (e) {} recognition = null; }
+  const btn = document.getElementById('mic-answer-btn');
+  const preview = document.getElementById('transcript-preview');
+  if (btn) { btn.classList.remove('mic-listening'); btn.textContent = '🎤 Click to speak'; }
+  if (preview) preview.textContent = '';
+  const inp = document.getElementById('candidate-input');
+  const browserTranscript = inp ? inp.value.trim() : '';
+  // Get EXACT transcript from Whisper (falls back to browser transcript automatically)
+  if (browserTranscript || answerAudioChunks.length > 0) {
+    if (preview) preview.textContent = '⏳ Understanding your exact answer...';
+    const exact = await finishAnswerAudioCapture();
+    if (preview) preview.textContent = '';
+    if (exact && (exact.split(/\s+/).length >= 3 || !browserTranscript || exact.split(/\s+/).length >= browserTranscript.split(/\s+/).length)) {
+      if (inp) inp.value = exact; // Whisper transcript wins — it is the exact spoken answer
+    }
+  } else {
+    finishAnswerAudioCapture(); // discard silently
+  }
+  if (inp && inp.value.trim()) {
+    showNotif('✅ Answer captured — sending...');
+    setTimeout(() => sendInterviewAnswer(), 400);
+  }
+}
+
+function cancelListening() {
+  // Abort voice capture WITHOUT auto-sending (used when answer already sent or interview ends)
+  isListening = false;
+  clearTimeout(patienceTimer); clearTimeout(thinkingTimer);
+  if (recognition) { try { recognition.stop(); } catch (e) {} recognition = null; }
+  if (answerAudioRecorder) { try { answerAudioRecorder.stop(); } catch (e) {} answerAudioRecorder = null; }
+  answerAudioChunks = [];
+  const btn = document.getElementById('mic-answer-btn');
+  const preview = document.getElementById('transcript-preview');
+  if (btn) { btn.classList.remove('mic-listening'); btn.textContent = '🎤 Click to speak'; }
+  if (preview) preview.textContent = '';
+}
+
+function stopAllVoice() {
+  if (speechSynth) speechSynth.cancel();
+  if (currentRobotAudio) { try { currentRobotAudio.pause(); } catch (e) {} currentRobotAudio = null; }
+  cancelListening();
+  isRobotSpeaking = false;
+  showVoiceStatus('hidden');
+}
+
+// ═══════════════════════════════════════════
+// CLAUDE AI
+async function callClaude(sys,msg,history=[]){
+  const messages=[...history,{role:'user',content:msg}];
+  try{
+    const r=await fetch(HR_ROBO_BASE+'/api/v1/interviews/chat',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({system:sys,messages:messages})
+    });
+    if(!r.ok){
+      let errDetail='Unknown error';
+      try{const e=await r.json();errDetail=e.detail||JSON.stringify(e);}catch(ex){}
+      console.error('Interview chat error:',errDetail);
+      if(errDetail.includes('GEMINI_API_KEY')||errDetail.includes('missing')){
+        return '⚠️ GEMINI_API_KEY not found in .env! Please restart the server.';
+      }
+      if(errDetail.includes('403')||errDetail.includes('Invalid')){
+        return '⚠️ Gemini API key is invalid! Please check .env.';
+      }
+      console.error('Full error:',errDetail);
+      return '⚠️ Server error: '+errDetail.substring(0,100);
+    }
+    const d=await r.json();
+    return d.reply||'Sorry, no response received. Please try again.';
+  }catch(e){
+    console.error('callClaude network error:',e);
+    return '⚠️ Network error — is the server running? Please check.';
+  }
+}
+
+// UTILS
+function closeModal(id){document.getElementById(id).classList.remove('show');}
+document.querySelectorAll('.modal-overlay').forEach(m=>m.addEventListener('click',e=>{if(e.target===m){if(m.id==='video-view-modal'){closeVideoModal();}else{m.classList.remove('show');}}}));
+loadPositionsForReg();
+</script>
+<script src="static/ai_engine.js?v=3"></script>
+<script src="static/proctor.js"></script>
+<script src="static/voice_flow.js?v=16-failsafe"></script>
+<script src="static/hrms_sync.js"></script>
+<script src="static/camera_guard.js?v=2-banner"></script>
+<script>
+/* ── Mobile sidebar toggle ── */
+function toggleSidebar(force){
+  var sb=document.querySelector('.sidebar');var ov=document.getElementById('sb-overlay');
+  if(!sb)return;
+  var open=(typeof force==='boolean')?force:!sb.classList.contains('open');
+  sb.classList.toggle('open',open);
+  if(ov)ov.classList.toggle('show',open);
+}
+document.addEventListener('click',function(ev){
+  if(window.innerWidth>768)return;
+  var nav=document.getElementById('main-nav');
+  if(nav&&nav.contains(ev.target))toggleSidebar(false);
+});
+
+/* ── Session restore on refresh ── */
+window.addEventListener('load',async function restoreSession(){
+  try{ await storeReady; }catch{}   // shared data must be in before any panel renders
+  try{
+    var savedCand=localStorage.getItem('nova_candidate');
+    if(savedCand){
+      var cand=JSON.parse(savedCand);
+      if(cand&&cand.email){currentCandidate=cand;userMode='candidate';launchCandidate(cand);return;}
+    }
+    var savedTok=localStorage.getItem('nova_token');
+    var savedUser=localStorage.getItem('nova_user');
+    if(savedTok&&savedUser){
+      var u=JSON.parse(savedUser);
+      if(u&&u.name){TOKEN=savedTok;currentUser=u;launchAdmin(u.name,u.role);return;}
+    }
+  }catch(e){
+    localStorage.removeItem('nova_token');localStorage.removeItem('nova_user');localStorage.removeItem('nova_candidate');
+  }
+});
+</script>
+</body>
+</html>

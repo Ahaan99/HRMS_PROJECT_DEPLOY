@@ -1,0 +1,414 @@
+/* ============================================================
+   Employee Verification System - Premium Login
+   Aurora lighting, cursor glow, animated gradient border,
+   light sweep, staggered entrances, shimmer button.
+   Loaded after index.css - overrides the base login styles.
+   ============================================================ */
+
+/* ---------- Background & lighting ---------- */
+
+.login-container {
+  position: relative;
+  overflow: hidden;
+  background: #08051a;
+  background-image: radial-gradient(
+      1100px 520px at 50% -12%,
+      rgba(124, 58, 237, 0.2),
+      transparent 60%
+    ),
+    linear-gradient(160deg, #100b26 0%, #0b0720 55%, #060412 100%);
+}
+
+/* Aurora blobs */
+.login-aurora {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+  opacity: 0.5;
+  pointer-events: none;
+  will-change: transform;
+}
+
+.login-aurora.a1 {
+  width: 480px;
+  height: 480px;
+  top: -140px;
+  left: -100px;
+  background: radial-gradient(circle at 30% 30%, #7c3aed, transparent 70%);
+  animation: aurora-drift-1 16s ease-in-out infinite alternate;
+}
+
+.login-aurora.a2 {
+  width: 420px;
+  height: 420px;
+  bottom: -160px;
+  right: -80px;
+  background: radial-gradient(circle at 70% 70%, #d946ef, transparent 70%);
+  opacity: 0.35;
+  animation: aurora-drift-2 20s ease-in-out infinite alternate;
+}
+
+.login-aurora.a3 {
+  width: 360px;
+  height: 360px;
+  top: 40%;
+  left: 55%;
+  background: radial-gradient(circle at 50% 50%, #4f46e5, transparent 70%);
+  opacity: 0.3;
+  animation: aurora-drift-3 24s ease-in-out infinite alternate;
+}
+
+@keyframes aurora-drift-1 {
+  from {
+    transform: translate(0, 0) scale(1);
+  }
+  to {
+    transform: translate(90px, 60px) scale(1.15);
+  }
+}
+
+@keyframes aurora-drift-2 {
+  from {
+    transform: translate(0, 0) scale(1.1);
+  }
+  to {
+    transform: translate(-80px, -70px) scale(0.95);
+  }
+}
+
+@keyframes aurora-drift-3 {
+  from {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  to {
+    transform: translate(-60px, 50px) rotate(30deg);
+  }
+}
+
+/* Cursor-tracking glow */
+.login-cursor-glow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    420px circle at var(--mx, 50%) var(--my, 50%),
+    rgba(167, 139, 250, 0.14),
+    transparent 65%
+  );
+  transition: background 0.12s ease-out;
+}
+
+/* Faint starfield twinkle */
+.login-container::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(1.5px 1.5px at 12% 22%, rgba(255, 255, 255, 0.35), transparent),
+    radial-gradient(1px 1px at 78% 14%, rgba(255, 255, 255, 0.3), transparent),
+    radial-gradient(1.5px 1.5px at 62% 82%, rgba(255, 255, 255, 0.25), transparent),
+    radial-gradient(1px 1px at 30% 68%, rgba(255, 255, 255, 0.3), transparent),
+    radial-gradient(1px 1px at 90% 55%, rgba(255, 255, 255, 0.25), transparent);
+  animation: star-twinkle 5s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+
+@keyframes star-twinkle {
+  from {
+    opacity: 0.4;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* ---------- Animated gradient border frame ---------- */
+
+.login-frame {
+  position: relative;
+  width: 100%;
+  max-width: 884px;
+  padding: 1.5px;
+  border-radius: 26px;
+  background: conic-gradient(
+    from var(--border-angle, 0deg),
+    rgba(124, 58, 237, 0.9),
+    rgba(217, 70, 239, 0.5),
+    rgba(79, 70, 229, 0.9),
+    rgba(167, 139, 250, 0.4),
+    rgba(124, 58, 237, 0.9)
+  );
+  animation: border-spin 6s linear infinite;
+  box-shadow: 0 0 60px rgba(124, 58, 237, 0.25), 0 30px 80px rgba(4, 2, 12, 0.7);
+}
+
+@property --border-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@keyframes border-spin {
+  to {
+    --border-angle: 360deg;
+  }
+}
+
+/* Fallback for browsers without @property: soft static glow border */
+@supports not (background: conic-gradient(from var(--border-angle, 0deg), red, blue)) {
+  .login-frame {
+    background: linear-gradient(135deg, rgba(124, 58, 237, 0.8), rgba(217, 70, 239, 0.5), rgba(79, 70, 229, 0.8));
+    animation: none;
+  }
+}
+
+.login-frame .login-shell {
+  max-width: none;
+  border-radius: 24.5px;
+  box-shadow: none;
+  animation: shell-rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes shell-rise {
+  from {
+    opacity: 0;
+    transform: translateY(26px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* ---------- Brand panel: light sweep + glow ---------- */
+
+.login-brand {
+  overflow: hidden;
+}
+
+.login-brand::before {
+  content: "";
+  position: absolute;
+  top: -60%;
+  left: -80%;
+  width: 60%;
+  height: 220%;
+  background: linear-gradient(
+    100deg,
+    transparent 20%,
+    rgba(255, 255, 255, 0.09) 50%,
+    transparent 80%
+  );
+  transform: rotate(12deg);
+  animation: light-sweep 6s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+
+@keyframes light-sweep {
+  0%,
+  55% {
+    left: -80%;
+  }
+  85%,
+  100% {
+    left: 160%;
+  }
+}
+
+.login-logo {
+  animation: logo-glow 3.2s ease-in-out infinite alternate;
+}
+
+@keyframes logo-glow {
+  from {
+    box-shadow: 0 8px 22px rgba(4, 2, 12, 0.5), 0 0 0 1px rgba(167, 139, 250, 0.35),
+      0 0 14px rgba(167, 139, 250, 0.25);
+  }
+  to {
+    box-shadow: 0 8px 22px rgba(4, 2, 12, 0.5), 0 0 0 1px rgba(167, 139, 250, 0.6),
+      0 0 30px rgba(167, 139, 250, 0.55);
+  }
+}
+
+/* Gradient animated headline accent */
+.login-brand-body h1 span {
+  background: linear-gradient(90deg, #a78bfa, #e879f9, #818cf8, #a78bfa);
+  background-size: 300% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  animation: gradient-flow 5s linear infinite;
+}
+
+@keyframes gradient-flow {
+  to {
+    background-position: 300% 0;
+  }
+}
+
+/* Staggered entrances */
+.login-brand-top {
+  animation: item-fade 0.6s 0.15s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.login-brand-body h1 {
+  animation: item-fade 0.6s 0.25s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.login-brand-body > p {
+  animation: item-fade 0.6s 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.login-points li {
+  animation: item-fade 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.login-points li:nth-child(1) {
+  animation-delay: 0.45s;
+}
+
+.login-points li:nth-child(2) {
+  animation-delay: 0.55s;
+}
+
+.login-points li:nth-child(3) {
+  animation-delay: 0.65s;
+}
+
+.login-points li::before {
+  background: linear-gradient(135deg, #a78bfa, #e879f9);
+  box-shadow: 0 0 10px rgba(167, 139, 250, 0.8);
+  animation: dot-pulse 2.4s ease-in-out infinite;
+}
+
+.login-points li:nth-child(2)::before {
+  animation-delay: 0.4s;
+}
+
+.login-points li:nth-child(3)::before {
+  animation-delay: 0.8s;
+}
+
+@keyframes dot-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 6px rgba(167, 139, 250, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 16px rgba(232, 121, 249, 0.9);
+  }
+}
+
+@keyframes item-fade {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ---------- Form panel ---------- */
+
+.login-card h2 {
+  animation: item-fade 0.6s 0.3s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.login-card .login-sub {
+  animation: item-fade 0.6s 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.login-card label,
+.login-card input {
+  animation: item-fade 0.55s 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.login-card button,
+.login-demo {
+  animation: item-fade 0.55s 0.65s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.login-card input {
+  border-radius: 12px;
+}
+
+.login-card input:focus {
+  border-color: #7c3aed;
+  box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.14), 0 0 20px rgba(124, 58, 237, 0.12);
+}
+
+/* Shimmer sign-in button */
+.login-card button {
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #7c3aed, #4f46e5, #7c3aed);
+  background-size: 200% 100%;
+  animation: item-fade 0.55s 0.65s cubic-bezier(0.22, 1, 0.36, 1) both,
+    gradient-flow 4s linear infinite;
+}
+
+.login-card button::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -70%;
+  width: 45%;
+  height: 100%;
+  background: linear-gradient(
+    100deg,
+    transparent 10%,
+    rgba(255, 255, 255, 0.35) 50%,
+    transparent 90%
+  );
+  transform: skewX(-18deg);
+  animation: btn-shimmer 3s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes btn-shimmer {
+  0%,
+  55% {
+    left: -70%;
+  }
+  85%,
+  100% {
+    left: 140%;
+  }
+}
+
+.login-card button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 36px rgba(99, 62, 218, 0.55), 0 0 24px rgba(124, 58, 237, 0.35);
+}
+
+.login-card button:disabled::after {
+  display: none;
+}
+
+/* ---------- Reduced motion ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .login-aurora,
+  .login-container::before,
+  .login-frame,
+  .login-brand::before,
+  .login-logo,
+  .login-brand-body h1 span,
+  .login-points li::before,
+  .login-card button,
+  .login-card button::after {
+    animation: none !important;
+  }
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 760px) {
+  .login-frame {
+    max-width: 444px;
+  }
+}

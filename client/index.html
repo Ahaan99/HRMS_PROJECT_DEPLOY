@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/jpeg" href="/logo.jpeg" />
+
+    <!-- Responsive -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- SEO -->
+    <title>Client Dashboard | HRMS</title>
+    <meta
+      name="description"
+      content="Client dashboard to manage employees, tasks, reports, and overall HRMS operations."
+    />
+    <meta
+      name="keywords"
+      content="Client Dashboard, HRMS, Employee Management, Work Tracking, CRM"
+    />
+    <meta name="author" content="Your Company Name" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Client Dashboard | HRMS" />
+    <meta
+      property="og:description"
+      content="Track employees, manage work, and monitor progress easily."
+    />
+    <meta property="og:image" content="/logo.jpeg" />
+    <meta property="og:type" content="website" />
+
+    <!-- Block indexing (important for dashboards) -->
+    <meta name="robots" content="noindex, nofollow" />
+
+    <!-- Theme color -->
+    <meta name="theme-color" content="#4f46e5" />
+
+    <!-- PWA -->
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="/pwa-192.png" />
+
+    <!-- Premium font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+    <!-- Apply saved theme before React loads: prevents white flash in dark mode -->
+    <script>
+      (function () {
+        try {
+          var t = localStorage.getItem("hrms-theme");
+          var dark =
+            t === "dark" ||
+            ((t === null || t === "system") &&
+              window.matchMedia("(prefers-color-scheme: dark)").matches);
+          if (dark) document.documentElement.classList.add("dark");
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en" data-sa-base="/api/smart-attendance">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Attendance — Login</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Manrope:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --green:#10b981;--green-dark:#059669;--blue:#38bdf8;
+  --red:#f43f5e;--bg:#05070d;--card:#0d1322;--border:#243149;
+  --text:#eef3fb;--muted:#8a97ad;--font-head:'Sora',sans-serif;--font-body:'Manrope',sans-serif;
+}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);min-height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:40px 40px;opacity:.4;z-index:0}
+body::after{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(ellipse at 60% 40%,rgba(29,158,117,.08) 0%,transparent 60%),radial-gradient(ellipse at 30% 70%,rgba(55,138,221,.06) 0%,transparent 50%);z-index:0}
+
+.wrap{position:relative;z-index:1;width:100%;max-width:420px;padding:20px}
+
+.logo-block{text-align:center;margin-bottom:36px}
+.logo{width:56px;height:56px;background:var(--green);border-radius:16px;display:inline-flex;align-items:center;justify-content:center;font-family:var(--font-head);font-size:18px;font-weight:800;color:#fff;margin-bottom:14px;box-shadow:0 0 40px rgba(29,158,117,.3)}
+.logo-block h1{font-family:var(--font-head);font-size:24px;font-weight:700;letter-spacing:-.5px}
+.logo-block p{color:var(--muted);font-size:13px;margin-top:4px}
+
+.card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:28px}
+
+.role-tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:24px}
+.role-btn{padding:12px;border-radius:10px;border:1px solid var(--border);background:transparent;color:var(--muted);font-family:var(--font-body);font-size:14px;font-weight:500;cursor:pointer;transition:.2s;display:flex;align-items:center;justify-content:center;gap:6px}
+.role-btn.active-admin{background:rgba(55,138,221,.12);border-color:var(--blue);color:var(--blue)}
+.role-btn.active-emp{background:rgba(29,158,117,.12);border-color:var(--green);color:var(--green)}
+.role-btn:hover:not(.active-admin):not(.active-emp){border-color:var(--muted);color:var(--text)}
+
+.field-group{margin-bottom:16px}
+.field-group label{display:block;font-size:12px;color:var(--muted);font-weight:500;margin-bottom:6px;letter-spacing:.3px;text-transform:uppercase}
+.field-group input{width:100%;padding:12px 14px;background:#121a2e;border:1px solid var(--border);border-radius:10px;color:var(--text);font-family:var(--font-body);font-size:14px;outline:none;transition:.2s}
+.field-group input:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(29,158,117,.1)}
+.field-group input::placeholder{color:#3A3F4E}
+
+.btn-primary{width:100%;padding:14px;border:none;border-radius:10px;font-family:var(--font-head);font-size:15px;font-weight:700;cursor:pointer;transition:.2s;margin-top:8px;letter-spacing:.3px}
+.btn-admin{background:var(--blue);color:#fff}
+.btn-admin:hover{background:#0ea5e9;transform:translateY(-1px)}
+.btn-emp{background:var(--green);color:#fff}
+.btn-emp:hover{background:var(--green-dark);transform:translateY(-1px)}
+.btn-primary:disabled{opacity:.6;cursor:not-allowed;transform:none!important}
+
+.error-msg{background:rgba(216,90,48,.1);border:1px solid rgba(216,90,48,.3);color:var(--red);padding:10px 14px;border-radius:8px;font-size:13px;margin-top:12px;display:none}
+.error-msg.show{display:block}
+
+.link-btn{display:block;text-align:center;color:var(--muted);font-size:13px;text-decoration:none;margin-top:16px;transition:.2s}
+.link-btn:hover{color:var(--text)}
+.link-btn span{color:var(--green)}
+
+.fade-in{animation:fadeIn .4s ease forwards}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* === v0 premium polish layer === */
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-thumb{background:rgba(56,189,248,.28);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:rgba(56,189,248,.5)}
+body{background-image:radial-gradient(1100px 480px at 50% -10%,rgba(56,189,248,.08),transparent 60%),radial-gradient(800px 380px at 100% 112%,rgba(16,185,129,.06),transparent 55%);background-attachment:fixed}
+button,.btn,[class*="btn"]{transition:transform .16s ease,box-shadow .16s ease,filter .16s ease}
+button:hover,.btn:hover,[class*="btn"]:hover{transform:translateY(-1px)}
+button:active,.btn:active{transform:translateY(0)}
+input,select,textarea{transition:border-color .16s,box-shadow .16s}
+input:focus,select:focus,textarea:focus{border-color:var(--blue,#38bdf8)!important;box-shadow:0 0 0 3px rgba(56,189,248,.14)!important;outline:none}
+[class*="card"]{box-shadow:0 10px 32px rgba(0,0,0,.32),inset 0 1px 0 rgba(255,255,255,.04);transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease}
+[class*="card"]:hover{border-color:rgba(56,189,248,.30)}
+table tr{transition:background .14s}
+h1,h2,h3{letter-spacing:-.02em}
+/* === end polish === */
+</style>
+</head>
+<body>
+<div class="wrap fade-in">
+  <div class="logo-block">
+    <div class="logo">SA</div>
+    <h1>Smart Attendance</h1>
+    <p>See Dashboard through Login</p>
+  </div>
+
+  <div class="card">
+    <div class="role-tabs">
+      <button class="role-btn active-admin" id="btn-admin" onclick="setRole('admin')">👑 Admin</button>
+      <button class="role-btn" id="btn-emp" onclick="setRole('employee')">👤 Employee</button>
+    </div>
+
+    <div class="field-group">
+      <label>Mobile Number</label>
+      <input type="tel" id="mobile" placeholder="10 digit mobile number" maxlength="10">
+    </div>
+    <div class="field-group">
+      <label>Password</label>
+      <input type="password" id="password" placeholder="Password" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+
+    <button class="btn-primary btn-admin" id="login-btn" onclick="doLogin()">Login as Admin</button>
+    <div class="error-msg" id="error-msg"></div>
+  </div>
+
+  <a href="/api/smart-attendance/register-account" class="link-btn">Account not  find? <span>Register here</span></a>
+</div>
+
+<script>
+let currentRole = 'admin';
+
+function setRole(role) {
+  currentRole = role;
+  const adminBtn = document.getElementById('btn-admin');
+  const empBtn   = document.getElementById('btn-emp');
+  const loginBtn = document.getElementById('login-btn');
+
+  if (role === 'admin') {
+    adminBtn.className = 'role-btn active-admin';
+    empBtn.className   = 'role-btn';
+    loginBtn.className = 'btn-primary btn-admin';
+    loginBtn.textContent = 'Login as Admin';
+  } else {
+    empBtn.className   = 'role-btn active-emp';
+    adminBtn.className = 'role-btn';
+    loginBtn.className = 'btn-primary btn-emp';
+    loginBtn.textContent = 'Login as Employee';
+  }
+  hideError();
+}
+
+function showError(msg) {
+  const el = document.getElementById('error-msg');
+  el.textContent = msg;
+  el.classList.add('show');
+}
+function hideError() { document.getElementById('error-msg').classList.remove('show'); }
+
+async function doLogin() {
+  const mobile   = document.getElementById('mobile').value.trim();
+  const password = document.getElementById('password').value.trim();
+  const btn      = document.getElementById('login-btn');
+
+  if (!mobile || !password) { showError('Mobile aur password dono bharo'); return; }
+  if (mobile.length !== 10 || isNaN(mobile)) { showError('10 digit mobile number chahiye'); return; }
+
+  btn.textContent = '...';
+  btn.disabled    = true;
+  hideError();
+
+  try {
+    const res  = await fetch('/api/smart-attendance/api/login', {
+      method:  'POST',
+      headers: {'Content-Type': 'application/json'},
+      body:    JSON.stringify({ mobile, password, role: currentRole })
+    });
+    const data = await res.json();
+
+    if (data.ok) {
+      // ✅ mobile bhi store karo — OTP ke liye zaroori hai
+      sessionStorage.setItem('user', JSON.stringify(data));
+      window.location.href = data.role === 'admin' ? '/api/smart-attendance/admin' : '/api/smart-attendance/employee';
+    } else {
+      showError(data.error || 'Login fail hua');
+      btn.disabled    = false;
+      btn.textContent = currentRole === 'admin' ? 'Login as Admin' : 'Login as Employee';
+    }
+  } catch(e) {
+    showError('Server se connect nahi ho paya');
+    btn.disabled    = false;
+    btn.textContent = currentRole === 'admin' ? 'Login as Admin' : 'Login as Employee';
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,323 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ---------- MagicCard (premium spotlight card) ---------- */
+.magic-card {
+  --mx: -999px;
+  --my: -999px;
+  --mo: 0;
+  --glow: 99 102 241;
+  padding: 1px;
+  background: linear-gradient(180deg, rgba(15, 23, 42, 0.08), rgba(15, 23, 42, 0.04));
+  box-shadow:
+    0 1px 2px rgba(15, 23, 42, 0.04),
+    0 12px 32px -18px rgba(15, 23, 42, 0.25);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.magic-card:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 1px 2px rgba(15, 23, 42, 0.05),
+    0 22px 48px -20px rgb(var(--glow) / 0.35);
+}
+.magic-card__border {
+  background: radial-gradient(
+    260px circle at var(--mx) var(--my),
+    rgb(var(--glow) / 0.9),
+    rgb(var(--glow) / 0.25) 35%,
+    transparent 70%
+  );
+  opacity: var(--mo);
+  transition: opacity 0.35s ease;
+}
+.magic-card__surface {
+  overflow: hidden;
+}
+.magic-card__spot {
+  background: radial-gradient(
+    420px circle at var(--mx) var(--my),
+    rgb(var(--glow) / 0.10),
+    transparent 60%
+  );
+  opacity: var(--mo);
+  transition: opacity 0.35s ease;
+}
+.dark .magic-card {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.10), rgba(255, 255, 255, 0.04));
+}
+
+/* Stagger-in for lists rendered inside magic cards */
+@keyframes magicRise {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.magic-rise {
+  animation: magicRise 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.th {
+  @apply px-5 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider whitespace-nowrap;
+}
+
+.td {
+  @apply px-5 py-4 whitespace-nowrap text-gray-700 font-medium;
+}
+
+.input {
+  @apply w-full px-3 py-2.5 rounded-xl border border-gray-200
+         bg-white text-sm text-gray-800
+         focus:ring-2 focus:ring-black focus:border-black
+         outline-none transition;
+}
+
+@keyframes slideAcross {
+  0% {
+    transform: translateX(-120%);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(100vw);
+    opacity: 1;
+  }
+}
+
+.animate-slide-across {
+  animation: slideAcross 10s linear forwards;
+}
+
+.label {
+  @apply block text-sm font-medium text-gray-600 mb-1;
+}
+
+.input {
+  @apply w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500;
+}
+/* Hide scrollbar but keep scrolling */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+
+
+/* ===== Mobile responsive hardening (global) ===== */
+html, body { overflow-x: hidden; }
+img, video, canvas { max-width: 100%; height: auto; }
+@media (max-width: 768px) {
+  table { display: block; width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  pre { overflow-x: auto; }
+  input, select, textarea { font-size: 16px; }
+}
+
+
+
+/* ============================================================
+   PREMIUM DARK THEME LAYER
+   Applied when <html> has the .dark class (see ThemeContext)
+   ============================================================ */
+
+.theme-transition,
+.theme-transition * {
+  transition:
+    background-color 0.25s ease,
+    border-color 0.25s ease,
+    color 0.25s ease !important;
+}
+
+.dark {
+  color-scheme: dark;
+}
+
+.dark body {
+  background-color: #0b0f1a;
+  color: #e2e8f0;
+}
+
+/* --- Core surface overrides --- */
+.dark .bg-white {
+  background-color: #111827 !important;
+}
+/* Opacity variants (navbar, glass cards) — Tailwind emits these as separate classes */
+.dark .bg-white\/95,
+.dark .bg-white\/90 {
+  background-color: rgba(17, 24, 39, 0.92) !important;
+}
+.dark .bg-white\/80,
+.dark .bg-white\/70 {
+  background-color: rgba(15, 23, 42, 0.82) !important;
+}
+.dark .bg-white\/60,
+.dark .bg-white\/50 {
+  background-color: rgba(15, 23, 42, 0.6) !important;
+}
+.dark .shadow-slate-200\/50,
+.dark .shadow-indigo-200,
+.dark .shadow-rose-200 {
+  --tw-shadow-color: rgba(0, 0, 0, 0.45) !important;
+}
+.dark .ring-purple-100 {
+  --tw-ring-color: rgba(168, 85, 247, 0.35) !important;
+}
+.dark .border-slate-200\/70,
+.dark .border-gray-200\/70 {
+  border-color: rgba(51, 65, 85, 0.7) !important;
+}
+/* Light text that would vanish on dark surfaces */
+.dark .text-white\/35,
+.dark .text-white\/25 {
+  color: #94a3b8 !important;
+}
+.dark .bg-gray-50,
+.dark .bg-slate-50 {
+  background-color: #0b0f1a !important;
+}
+.dark .bg-gray-100,
+.dark .bg-slate-100 {
+  background-color: #1f2937 !important;
+}
+.dark .bg-gray-200,
+.dark .bg-slate-200 {
+  background-color: #273449 !important;
+}
+.dark .bg-indigo-50 {
+  background-color: rgba(99, 102, 241, 0.12) !important;
+}
+.dark .bg-blue-50,
+.dark .bg-sky-50 {
+  background-color: rgba(59, 130, 246, 0.12) !important;
+}
+.dark .bg-green-50,
+.dark .bg-emerald-50 {
+  background-color: rgba(16, 185, 129, 0.12) !important;
+}
+.dark .bg-red-50,
+.dark .bg-rose-50 {
+  background-color: rgba(244, 63, 94, 0.12) !important;
+}
+.dark .bg-amber-50,
+.dark .bg-yellow-50,
+.dark .bg-orange-50 {
+  background-color: rgba(245, 158, 11, 0.12) !important;
+}
+.dark .bg-purple-50,
+.dark .bg-violet-50 {
+  background-color: rgba(139, 92, 246, 0.12) !important;
+}
+
+/* --- Text --- */
+.dark .text-gray-900,
+.dark .text-slate-900,
+.dark .text-black {
+  color: #f1f5f9 !important;
+}
+.dark .text-gray-800,
+.dark .text-slate-800 {
+  color: #e2e8f0 !important;
+}
+.dark .text-gray-700,
+.dark .text-slate-700 {
+  color: #cbd5e1 !important;
+}
+.dark .text-gray-600,
+.dark .text-slate-600 {
+  color: #94a3b8 !important;
+}
+.dark .text-gray-500,
+.dark .text-slate-500 {
+  color: #7c8aa0 !important;
+}
+.dark .text-gray-400,
+.dark .text-slate-400 {
+  color: #64748b !important;
+}
+
+/* --- Borders / dividers --- */
+.dark .border-gray-100,
+.dark .border-slate-100,
+.dark .border-gray-200,
+.dark .border-slate-200,
+.dark .border-gray-300,
+.dark .border-slate-300 {
+  border-color: #273449 !important;
+}
+.dark .divide-gray-100 > *,
+.dark .divide-gray-200 > *,
+.dark .divide-slate-100 > *,
+.dark .divide-slate-200 > * {
+  border-color: #273449 !important;
+}
+
+/* --- Hover states --- */
+.dark .hover\:bg-gray-50:hover,
+.dark .hover\:bg-slate-50:hover,
+.dark .hover\:bg-gray-100:hover,
+.dark .hover\:bg-slate-100:hover {
+  background-color: #1f2937 !important;
+}
+.dark .hover\:bg-indigo-50:hover {
+  background-color: rgba(99, 102, 241, 0.18) !important;
+}
+
+/* --- Shadows: soften for dark surfaces --- */
+.dark .shadow-sm,
+.dark .shadow,
+.dark .shadow-md,
+.dark .shadow-lg,
+.dark .shadow-xl,
+.dark .shadow-2xl {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45) !important;
+}
+
+/* --- Custom utility classes (.th .td .input .label) --- */
+.dark .th {
+  color: #94a3b8;
+}
+.dark .td {
+  color: #cbd5e1;
+}
+.dark input,
+.dark select,
+.dark textarea {
+  color-scheme: dark;
+}
+.dark .input {
+  background-color: #1f2937 !important;
+  border-color: #334155 !important;
+  color: #e2e8f0 !important;
+}
+.dark .label {
+  color: #94a3b8;
+}
+.dark input::placeholder,
+.dark textarea::placeholder {
+  color: #5b6b82;
+}
+
+/* --- Tables --- */
+.dark table thead {
+  background-color: #16203a;
+}
+.dark table tbody tr:hover {
+  background-color: rgba(99, 102, 241, 0.06);
+}
+
+/* --- Scrollbars --- */
+.dark ::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+.dark ::-webkit-scrollbar-track {
+  background: #0b0f1a;
+}
+.dark ::-webkit-scrollbar-thumb {
+  background: #273449;
+  border-radius: 8px;
+}
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #334155;
+}
+

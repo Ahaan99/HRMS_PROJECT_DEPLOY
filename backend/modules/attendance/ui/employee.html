@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en" data-sa-base="/api/smart-attendance">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Attendance</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Manrope:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --green:#10b981;--green-dark:#059669;--blue:#38bdf8;--blue-dark:#0ea5e9;
+  --purple:#8b5cf6;--purple-dark:#7c3aed;--red:#f43f5e;
+  --bg:#05070d;--card:#0d1322;--card2:#121a2e;--border:#243149;
+  --text:#eef3fb;--muted:#8a97ad;
+  --font-head:'Sora',sans-serif;--font-body:'Manrope',sans-serif
+}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);min-height:100vh;display:flex;flex-direction:column}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:40px 40px;opacity:.3;z-index:0}
+
+/* ── Topbar ── */
+.topbar{position:relative;z-index:10;background:rgba(17,19,24,.92);border-bottom:1px solid var(--border);padding:0 20px;height:54px;display:flex;align-items:center;gap:12px;backdrop-filter:blur(12px)}
+.logo{width:34px;height:34px;background:var(--green);border-radius:9px;display:flex;align-items:center;justify-content:center;font-family:var(--font-head);font-size:12px;font-weight:800;color:#fff}
+.topbar h1{font-family:var(--font-head);font-size:15px;font-weight:700}
+.badge-emp{padding:3px 10px;background:rgba(29,158,117,.2);color:var(--green);border-radius:20px;font-size:11px;font-weight:600}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+.btn-logout{padding:6px 14px;border:1px solid var(--border);border-radius:8px;background:transparent;color:var(--red);font-family:var(--font-body);font-size:12px;cursor:pointer;transition:.2s}
+.btn-logout:hover{background:rgba(216,90,48,.1)}
+
+/* ── Content ── */
+.content{position:relative;z-index:1;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px 16px;gap:20px}
+
+/* ── Emp Card ── */
+.emp-card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:20px 24px;width:100%;max-width:460px;display:flex;align-items:center;gap:16px}
+.emp-avatar{width:52px;height:52px;background:linear-gradient(135deg,var(--green),var(--blue));border-radius:14px;display:flex;align-items:center;justify-content:center;font-family:var(--font-head);font-size:20px;font-weight:800;color:#fff;flex-shrink:0}
+.emp-info h2{font-family:var(--font-head);font-size:17px;font-weight:700}
+.emp-info p{font-size:12px;color:var(--muted);margin-top:3px}
+.status-pill{margin-left:auto;padding:5px 12px;border-radius:20px;font-size:11px;font-weight:600;flex-shrink:0}
+.pill-present{background:rgba(29,158,117,.2);color:var(--green)}
+.pill-absent{background:rgba(216,90,48,.15);color:var(--red)}
+
+/* ── Heading ── */
+.section-title{font-family:var(--font-head);font-size:13px;font-weight:600;color:var(--muted);letter-spacing:.6px;text-transform:uppercase;width:100%;max-width:460px}
+
+/* ── Method Cards ── */
+.method-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;width:100%;max-width:460px}
+.method-card{background:var(--card);border:2px solid var(--border);border-radius:16px;padding:20px 14px;cursor:pointer;transition:all .25s;display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;text-decoration:none;position:relative;overflow:hidden}
+.method-card::before{content:'';position:absolute;inset:0;opacity:0;transition:.25s}
+.method-card:hover{transform:translateY(-3px)}
+
+.method-card.face{--accent:var(--green)}
+.method-card.wifi{--accent:var(--blue)}
+.method-card.otp {--accent:var(--purple)}
+
+.method-card:hover{border-color:var(--accent);box-shadow:0 0 24px rgba(0,0,0,.4)}
+.method-card:hover::before{opacity:1;background:radial-gradient(ellipse at top,rgba(var(--accent-rgb),.08),transparent 70%)}
+
+.method-icon{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;transition:.25s}
+.method-card.face .method-icon{background:rgba(29,158,117,.15)}
+.method-card.wifi .method-icon{background:rgba(55,138,221,.15)}
+.method-card.otp  .method-icon{background:rgba(124,92,191,.15)}
+.method-card:hover.face .method-icon{background:rgba(29,158,117,.25)}
+.method-card:hover.wifi .method-icon{background:rgba(55,138,221,.25)}
+.method-card:hover.otp  .method-icon{background:rgba(124,92,191,.25)}
+
+.method-name{font-family:var(--font-head);font-size:13px;font-weight:700}
+.method-card.face .method-name{color:var(--green)}
+.method-card.wifi .method-name{color:var(--blue)}
+.method-card.otp  .method-name{color:var(--purple)}
+.method-desc{font-size:11px;color:var(--muted);line-height:1.4}
+
+.method-card.disabled-card{opacity:.45;cursor:not-allowed;pointer-events:none}
+.method-card.disabled-card:hover{transform:none}
+
+/* ── Already marked banner ── */
+.marked-banner{background:rgba(29,158,117,.1);border:1px solid rgba(29,158,117,.3);border-radius:14px;padding:14px 18px;width:100%;max-width:460px;display:flex;align-items:center;gap:12px}
+.marked-banner .icon{font-size:24px}
+.marked-banner .text h3{font-family:var(--font-head);font-size:14px;font-weight:700;color:var(--green)}
+.marked-banner .text p{font-size:12px;color:var(--muted);margin-top:2px}
+
+/* ── Today info ── */
+.today-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px 18px;width:100%;max-width:460px}
+.today-card h3{font-family:var(--font-head);font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.5px;text-transform:uppercase;margin-bottom:10px}
+.info-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--border)}
+.info-row:last-child{border:none}
+.info-row .lbl{font-size:12px;color:var(--muted)}
+.info-row .val{font-size:12px;font-weight:500}
+
+
+.btn-checkout{width:100%;margin-top:10px;padding:10px;border:none;border-radius:10px;background:var(--green);color:#fff;font-family:var(--font-head);font-size:13px;font-weight:700;cursor:pointer;transition:.2s}
+.btn-checkout:hover{background:var(--green-dark)}
+.btn-checkout:disabled{opacity:.5;cursor:not-allowed}
+.c-input{width:100%;margin-top:8px;padding:9px 12px;background:var(--card2);border:1px solid var(--border);border-radius:9px;color:var(--text);font-family:var(--font-body);font-size:12px}
+
+.fade-in{animation:fadeIn .4s ease forwards}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+@media(max-width:380px){
+  .method-grid{grid-template-columns:1fr}
+  .method-card{flex-direction:row;text-align:left;padding:16px}
+  .method-icon{flex-shrink:0}
+}
+
+/* === v0 premium polish layer === */
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-thumb{background:rgba(56,189,248,.28);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:rgba(56,189,248,.5)}
+body{background-image:radial-gradient(1100px 480px at 50% -10%,rgba(56,189,248,.08),transparent 60%),radial-gradient(800px 380px at 100% 112%,rgba(16,185,129,.06),transparent 55%);background-attachment:fixed}
+button,.btn,[class*="btn"]{transition:transform .16s ease,box-shadow .16s ease,filter .16s ease}
+button:hover,.btn:hover,[class*="btn"]:hover{transform:translateY(-1px)}
+button:active,.btn:active{transform:translateY(0)}
+input,select,textarea{transition:border-color .16s,box-shadow .16s}
+input:focus,select:focus,textarea:focus{border-color:var(--blue,#38bdf8)!important;box-shadow:0 0 0 3px rgba(56,189,248,.14)!important;outline:none}
+[class*="card"]{box-shadow:0 10px 32px rgba(0,0,0,.32),inset 0 1px 0 rgba(255,255,255,.04);transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease}
+[class*="card"]:hover{border-color:rgba(56,189,248,.30)}
+table tr{transition:background .14s}
+h1,h2,h3{letter-spacing:-.02em}
+/* === end polish === */
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="logo">SA</div>
+  <h1>My Attendance</h1>
+  <span class="badge-emp">Employee</span>
+  <div class="topbar-right">
+    <button class="btn-logout" onclick="doLogout()">Logout</button>
+  </div>
+</div>
+
+<div class="content fade-in">
+
+  <!-- Employee Info -->
+  <div class="emp-card">
+    <div class="emp-avatar" id="emp-avatar">?</div>
+    <div class="emp-info">
+      <h2 id="emp-name">Loading...</h2>
+      <p id="emp-id-text">Emp ID: —</p>
+    </div>
+    <span class="status-pill pill-absent" id="today-pill">Loading...</span>
+  </div>
+
+  <!-- Already Marked Banner (hidden by default) -->
+  <div class="marked-banner" id="marked-banner" style="display:none">
+    <div class="icon">✅</div>
+    <div class="text">
+      <h3>Today Attendance Mark</h3>
+      <p id="marked-detail">—</p>
+    </div>
+  </div>
+
+  <!-- Choose Method -->
+  <div class="section-title" id="choose-label">Choose Attendance Method </div>
+
+  <div class="method-grid">
+    <!-- Face -->
+    <a class="method-card face" href="/api/smart-attendance/employee/face" id="card-face">
+      <div class="method-icon">🤳</div>
+      <div class="method-name">By Face</div>
+      <div class="method-desc">Scan Face on Camera</div>
+    </a>
+
+    <!-- WiFi -->
+    <a class="method-card wifi" href="/api/smart-attendance/employee/wifi" id="card-wifi">
+      <div class="method-icon">📶</div>
+      <div class="method-name">By WiFi</div>
+      <div class="method-desc">Office WiFi  auto mark</div>
+    </a>
+
+    <!-- OTP -->
+    <a class="method-card otp" href="/api/smart-attendance/employee/otp" id="card-otp">
+      <div class="method-icon">🔢</div>
+      <div class="method-name">By OTP</div>
+      <div class="method-desc">Mobile  OTP  verify</div>
+    </a>
+  </div>
+
+
+  <!-- Check Out -->
+  <div class="today-card" id="checkout-card" style="display:none">
+    <h3>Check Out</h3>
+    <div class="info-row"><span class="lbl">Check-out Time</span><span class="val" id="co-time">-</span></div>
+    <div class="info-row"><span class="lbl">Hours Worked</span><span class="val" id="co-hours">-</span></div>
+    <div class="info-row"><span class="lbl">Overtime</span><span class="val" id="co-ot">-</span></div>
+    <button class="btn-checkout" id="btn-checkout" onclick="doCheckout()">Check Out Now</button>
+  </div>
+
+  <!-- This Month -->
+  <div class="today-card">
+    <h3>This Month</h3>
+    <div class="info-row"><span class="lbl">Days Present</span><span class="val" id="h-days">-</span></div>
+    <div class="info-row"><span class="lbl">Late Days</span><span class="val" id="h-late">-</span></div>
+    <div class="info-row"><span class="lbl">Half Days</span><span class="val" id="h-half">-</span></div>
+    <div class="info-row"><span class="lbl">Total Hours</span><span class="val" id="h-hours">-</span></div>
+    <div class="info-row"><span class="lbl">Overtime</span><span class="val" id="h-ot">-</span></div>
+  </div>
+
+  <!-- Correction Request -->
+  <div class="today-card">
+    <h3>Request Correction</h3>
+    <input id="c-date" type="date" class="c-input">
+    <div style="display:flex;gap:8px">
+      <input id="c-in" type="time" class="c-input" title="Correct check-in">
+      <input id="c-out" type="time" class="c-input" title="Correct check-out">
+    </div>
+    <textarea id="c-reason" class="c-input" rows="2" placeholder="Reason (min 5 characters)"></textarea>
+    <button class="btn-checkout" onclick="submitCorrection()">Submit Request</button>
+    <p id="c-msg" style="font-size:11px;margin-top:6px;color:var(--muted)"></p>
+  </div>
+
+  <!-- Today Info -->
+  <div class="today-card">
+    <h3>Today Info</h3>
+    <div class="info-row"><span class="lbl">Date</span><span class="val" id="info-date">—</span></div>
+    <div class="info-row"><span class="lbl">Status</span><span class="val" id="info-status">—</span></div>
+    <div class="info-row"><span class="lbl">Time</span><span class="val" id="info-time">—</span></div>
+    <div class="info-row"><span class="lbl">Method</span><span class="val" id="info-method">—</span></div>
+  </div>
+
+</div>
+
+<script>
+const user = JSON.parse(sessionStorage.getItem('user') || '{}');
+
+// ── Set emp info ──
+const name   = user.name   || '—';
+const emp_id = user.emp_id || '—';
+document.getElementById('emp-name').textContent    = `Welcome, ${name}`;
+document.getElementById('emp-id-text').textContent = `Emp ID: ${emp_id}`;
+document.getElementById('emp-avatar').textContent  = name.charAt(0).toUpperCase();
+document.getElementById('info-date').textContent   = new Date().toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'});
+
+// ── Check today status ──
+async function checkStatus() {
+  const d = await fetch('/api/smart-attendance/api/my-status').then(r => r.json()).catch(() => null);
+  if (!d || !d.ok) return;
+
+  const pill   = document.getElementById('today-pill');
+  const banner = document.getElementById('marked-banner');
+
+  if (d.marked && d.record) {
+    // Already marked
+    pill.textContent  = '✓ Present';
+    pill.className    = 'status-pill pill-present';
+
+    banner.style.display = 'flex';
+    document.getElementById('marked-detail').textContent =
+      `Time: ${d.record.time || '—'} • Method: ${d.record.method || 'Face'}`;
+
+    document.getElementById('info-status').textContent = 'Present ✓';
+    document.getElementById('info-time').textContent   = d.record.time   || '—';
+    document.getElementById('info-method').textContent = d.record.method || 'Face';
+
+    // Disable all method cards
+    ['card-face','card-wifi','card-otp'].forEach(id => {
+      const el = document.getElementById(id);
+      el.classList.add('disabled-card');
+      el.removeAttribute('href');
+    });
+    document.getElementById('choose-label').textContent = 'Aaj ki Attendance Ho Chuki Hai';
+
+  } else {
+    pill.textContent = 'Not Marked';
+    pill.className   = 'status-pill pill-absent';
+    document.getElementById('info-status').textContent = 'Not marked yet';
+    document.getElementById('info-time').textContent   = '—';
+    document.getElementById('info-method').textContent = '—';
+  }
+}
+
+async function doLogout() {
+  await fetch('/api/smart-attendance/api/logout', {method:'POST'});
+  sessionStorage.clear();
+  window.location.href = '/api/smart-attendance/';
+}
+
+
+async function loadExtras() {
+  const s = await fetch('/api/smart-attendance/api/my-status').then(r => r.json()).catch(() => null);
+  if (s && s.ok && s.marked && s.record) {
+    document.getElementById('checkout-card').style.display = 'block';
+    if (s.record.check_out) {
+      document.getElementById('co-time').textContent  = s.record.check_out;
+      document.getElementById('co-hours').textContent = (s.record.hours || 0) + ' h';
+      document.getElementById('co-ot').textContent    = (s.record.overtime || 0) + ' h';
+      const b = document.getElementById('btn-checkout');
+      b.disabled = true; b.textContent = 'Checked Out';
+    }
+  }
+  const h = await fetch('/api/smart-attendance/api/my-history').then(r => r.json()).catch(() => null);
+  if (h && h.ok && h.summary) {
+    document.getElementById('h-days').textContent  = h.summary.days_present;
+    document.getElementById('h-late').textContent  = h.summary.late_days;
+    document.getElementById('h-half').textContent  = h.summary.half_days;
+    document.getElementById('h-hours').textContent = h.summary.total_hours + ' h';
+    document.getElementById('h-ot').textContent    = h.summary.total_overtime + ' h';
+  }
+}
+async function doCheckout() {
+  const b = document.getElementById('btn-checkout');
+  b.disabled = true;
+  const d = await fetch('/api/smart-attendance/api/check-out', {method: 'POST'}).then(r => r.json()).catch(() => null);
+  if (d && d.ok) {
+    document.getElementById('co-time').textContent  = d.check_out;
+    document.getElementById('co-hours').textContent = d.hours + ' h';
+    document.getElementById('co-ot').textContent    = d.overtime + ' h';
+    b.textContent = 'Checked Out';
+  } else {
+    alert((d && d.error) || 'Check-out failed');
+    b.disabled = false;
+  }
+}
+async function submitCorrection() {
+  const body = {
+    date: document.getElementById('c-date').value,
+    check_in: document.getElementById('c-in').value,
+    check_out: document.getElementById('c-out').value,
+    reason: document.getElementById('c-reason').value
+  };
+  const d = await fetch('/api/smart-attendance/api/corrections', {
+    method: 'POST', headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(body)
+  }).then(r => r.json()).catch(() => null);
+  document.getElementById('c-msg').textContent = d ? (d.message || d.error) : 'Request failed';
+}
+
+checkStatus();
+loadExtras();
+</script>
+</body>
+</html>

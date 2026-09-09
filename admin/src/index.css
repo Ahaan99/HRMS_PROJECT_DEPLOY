@@ -1,0 +1,459 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ═══════════════════════════════════════════════════════════
+   RECRUWEB ADMIN — PREMIUM DESIGN SYSTEM
+   Palette: ink navy #0B1220 · accent indigo #4F63F0 · paper #F7F8FB
+   Type: Inter (UI) · JetBrains Mono (numbers/IDs)
+   ═══════════════════════════════════════════════════════════ */
+
+:root {
+  --ink: #0b1220;
+  --ink-2: #33405c;
+  --ink-3: #7b8698;
+  --paper: #f7f8fb;
+  --card: #ffffff;
+  --line: #e6e9f0;
+  --line-2: #d5dae4;
+  --accent: #4f63f0;
+  --accent-soft: #eef0fe;
+  --green: #148662;
+  --green-soft: #e7f5f0;
+  --amber: #b45309;
+  --amber-soft: #fdf3e3;
+  --red: #c73e4c;
+  --red-soft: #fdeef0;
+}
+
+html,
+body {
+  font-family: "Inter", system-ui, -apple-system, sans-serif;
+  background: var(--paper);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+.font-mono,
+.num {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Thin, visible scrollbars everywhere — horizontal table/nav scroll
+   stays discoverable; content scrollable via wheel, touch, keyboard */
+* {
+  scrollbar-width: thin; /* Firefox */
+  scrollbar-color: #c7cbd6 transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px; /* horizontal scrollbar visible */
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: #c7cbd6;
+  border-radius: 8px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: #a3a9b8;
+}
+
+/* Dark-theme scrollbar for the admin sidebar — subtle thumb that
+   matches the dark gradient background */
+.sidebar-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.18) transparent;
+}
+
+.sidebar-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sidebar-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sidebar-scroll::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.18);
+  border-radius: 8px;
+}
+
+.sidebar-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.32);
+}
+
+/* Opt-out utility for spots that intentionally hide the scrollbar */
+.scrollbar-none {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+@keyframes slideAcross {
+  0% {
+    transform: translateX(-120%);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(100vw);
+    opacity: 1;
+  }
+}
+
+.animate-slide-across {
+  animation: slideAcross 10s linear forwards;
+}
+
+/* ═ premium card primitives — use across all pages ═ */
+@layer components {
+  .card-premium {
+    @apply bg-white rounded-2xl border border-[#e6e9f0] transition-shadow duration-200;
+    box-shadow:
+      0 1px 2px rgba(11, 18, 32, 0.04),
+      0 8px 24px -12px rgba(11, 18, 32, 0.1);
+  }
+  .card-premium:hover {
+    box-shadow:
+      0 1px 2px rgba(11, 18, 32, 0.05),
+      0 16px 40px -12px rgba(11, 18, 32, 0.16);
+  }
+  .card-header-premium {
+    @apply text-[15px] font-bold text-[#0b1220] tracking-[-0.01em];
+  }
+  .card-sub-premium {
+    @apply text-xs text-[#7b8698] mt-0.5;
+  }
+  .chip-premium {
+    @apply inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold;
+  }
+  .btn-premium {
+    @apply inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold
+      bg-[#0b1220] text-white transition-all duration-150
+      hover:bg-[#1c2740] active:scale-[0.98];
+    box-shadow: 0 4px 14px -4px rgba(11, 18, 32, 0.35);
+  }
+  .btn-premium-outline {
+    @apply inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold
+      bg-white text-[#0b1220] border border-[#d5dae4] transition-all duration-150
+      hover:border-[#0b1220] hover:bg-[#f7f8fb] active:scale-[0.98];
+  }
+  .input-premium {
+    @apply w-full px-3.5 py-2.5 rounded-xl text-sm bg-white border border-[#d5dae4]
+      placeholder:text-[#7b8698] transition-shadow duration-150
+      focus:outline-none focus:border-[#4f63f0];
+  }
+  .input-premium:focus {
+    box-shadow: 0 0 0 3px rgba(79, 99, 240, 0.14);
+  }
+}
+
+/* page fade-in for a composed feel */
+@keyframes pageIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+main > * {
+  animation: pageIn 0.3s cubic-bezier(0.2, 0.9, 0.3, 1) both;
+}
+
+/* ============================================================
+   FORM PRIMITIVES — .input / .btn-primary / .btn-secondary
+   Used across OfferLetter, ServiceManagement, CreateInvoice,
+   LeaveManagement, AttendanceTracker, AIChatbot pages.
+   Styled to match the admin design system tokens above.
+   ============================================================ */
+@layer components {
+  .input {
+    @apply w-full rounded-xl border px-3.5 py-2.5 text-sm transition;
+    border-color: var(--line);
+    background: var(--paper);
+    color: var(--ink);
+  }
+  .input::placeholder {
+    color: var(--ink-3);
+  }
+  .input:focus {
+    outline: none;
+    border-color: var(--accent);
+    background: var(--card);
+    box-shadow: 0 0 0 4px var(--accent-soft);
+  }
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition;
+    background: var(--ink);
+  }
+  .btn-primary:hover {
+    background: #1c2740;
+  }
+  .btn-primary:disabled {
+    opacity: 0.6;
+  }
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl border px-5 py-2.5 text-sm font-medium transition;
+    border-color: var(--line);
+    background: var(--card);
+    color: var(--ink-2);
+  }
+  .btn-secondary:hover {
+    background: var(--paper);
+    color: var(--ink);
+  }
+}
+
+
+/* ===== Mobile responsive hardening (global) ===== */
+html, body { overflow-x: hidden; }
+img, video, canvas { max-width: 100%; height: auto; }
+@media (max-width: 768px) {
+  table { display: block; width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  pre { overflow-x: auto; }
+  input, select, textarea { font-size: 16px; }
+}
+
+/* ============================================================
+   PREMIUM DARK MODE - deep navy/slate SaaS palette
+   Activated via class="dark" on <html> (ThemeContext + inline
+   script in index.html). Two layers of theming:
+   1. CSS variable redefinition (custom classes pick this up)
+   2. Utility-class overrides for the audited hardcoded palette
+   ============================================================ */
+
+.dark {
+  color-scheme: dark;
+  --ink: #f1f5f9;
+  --ink-2: #cbd5e1;
+  --ink-3: #8b96a9;
+  --paper: #0b0f1a;
+  --card: #121828;
+  --line: #232d45;
+  --line-2: #2c3856;
+  --accent: #7c8cf5;
+  --accent-soft: rgba(124, 140, 245, 0.16);
+  --green: #34d399;
+  --green-soft: rgba(52, 211, 153, 0.12);
+  --amber: #f5b04d;
+  --amber-soft: rgba(245, 176, 77, 0.12);
+  --red: #f28b96;
+  --red-soft: rgba(242, 139, 150, 0.12);
+}
+
+.dark body {
+  background: var(--paper);
+  color: var(--ink);
+}
+
+/* ---------- surfaces ---------- */
+.dark .bg-white { background-color: var(--card); }
+.dark .bg-\[\#f7f8fb\],
+.dark .bg-\[\#f9faff\],
+.dark .bg-\[\#f8fafc\],
+.dark .bg-gray-50,
+.dark .bg-slate-50 { background-color: #0e1422; }
+.dark .bg-\[\#f1f3f8\],
+.dark .bg-\[\#f2f4f8\],
+.dark .bg-\[\#eceff4\],
+.dark .bg-gray-100,
+.dark .bg-slate-100 { background-color: #1a2238; }
+.dark .bg-gray-200 { background-color: #242f4c; }
+.dark .hover\:bg-gray-50:hover,
+.dark .hover\:bg-\[\#f7f8fb\]:hover,
+.dark .hover\:bg-\[\#f9faff\]:hover,
+.dark .hover\:bg-slate-50:hover { background-color: #182034; }
+.dark .hover\:bg-gray-100:hover,
+.dark .hover\:bg-\[\#f1f3f8\]:hover,
+.dark .hover\:bg-\[\#eceff4\]:hover { background-color: #202a44; }
+.dark .hover\:bg-white:hover { background-color: var(--card); }
+
+/* ---------- text ---------- */
+.dark .text-\[\#0b1220\],
+.dark .text-gray-900,
+.dark .text-slate-900,
+.dark .text-gray-800,
+.dark .text-slate-800,
+.dark .text-black { color: var(--ink); }
+.dark .text-\[\#33405c\],
+.dark .text-\[\#1f2c4d\],
+.dark .text-gray-700,
+.dark .text-slate-700,
+.dark .text-gray-600,
+.dark .text-slate-600 { color: var(--ink-2); }
+.dark .text-\[\#7b8698\],
+.dark .text-gray-500,
+.dark .text-slate-500,
+.dark .text-gray-400,
+.dark .text-slate-400 { color: var(--ink-3); }
+.dark .hover\:text-\[\#0b1220\]:hover,
+.dark .hover\:text-gray-900:hover,
+.dark .hover\:text-gray-700:hover { color: var(--ink); }
+
+/* ---------- borders / dividers ---------- */
+.dark .border-\[\#e6e9f0\],
+.dark .border-\[\#e4e8f0\],
+.dark .border-\[\#eceff4\],
+.dark .border-\[\#d5dae4\],
+.dark .border-gray-100,
+.dark .border-gray-200,
+.dark .border-slate-100,
+.dark .border-slate-200,
+.dark .border-gray-300,
+.dark .border { border-color: var(--line); }
+.dark .divide-gray-100 > *,
+.dark .divide-gray-200 > * { border-color: var(--line); }
+.dark .border-b, .dark .border-t, .dark .border-l, .dark .border-r { border-color: var(--line); }
+.dark .hover\:border-\[\#0b1220\]:hover,
+.dark .hover\:border-gray-300:hover { border-color: var(--line-2); }
+
+/* ---------- accent (indigo) ---------- */
+.dark .bg-\[\#eef0fe\],
+.dark .bg-\[\#eef2ff\],
+.dark .bg-indigo-50,
+.dark .bg-blue-50 { background-color: var(--accent-soft); }
+.dark .text-\[\#4f63f0\],
+.dark .text-\[\#3d4fd8\],
+.dark .text-\[\#4655c4\],
+.dark .text-indigo-600,
+.dark .text-indigo-700,
+.dark .text-blue-600,
+.dark .text-blue-700 { color: var(--accent); }
+.dark .border-blue-100, .dark .border-indigo-100 { border-color: rgba(124, 140, 245, 0.3); }
+
+/* ---------- status: green / amber / red ---------- */
+.dark .bg-\[\#e9f9ef\],
+.dark .bg-\[\#e7f5f0\],
+.dark .bg-green-50,
+.dark .bg-green-100,
+.dark .bg-emerald-50,
+.dark .bg-emerald-100 { background-color: var(--green-soft); }
+.dark .text-\[\#148662\],
+.dark .text-\[\#1d9e55\],
+.dark .text-green-600,
+.dark .text-green-700,
+.dark .text-green-800,
+.dark .text-emerald-600,
+.dark .text-emerald-700 { color: var(--green); }
+.dark .bg-\[\#fff7e8\],
+.dark .bg-amber-50,
+.dark .bg-amber-100,
+.dark .bg-yellow-50,
+.dark .bg-yellow-100 { background-color: var(--amber-soft); }
+.dark .text-amber-600,
+.dark .text-amber-700,
+.dark .text-amber-800,
+.dark .text-yellow-600,
+.dark .text-yellow-700,
+.dark .text-yellow-800 { color: var(--amber); }
+.dark .bg-\[\#fdeef0\],
+.dark .bg-red-50,
+.dark .bg-red-100,
+.dark .bg-rose-50 { background-color: var(--red-soft); }
+.dark .text-\[\#c73e4c\],
+.dark .text-red-500,
+.dark .text-red-600,
+.dark .text-red-700,
+.dark .text-rose-600 { color: var(--red); }
+.dark .border-green-200 { border-color: rgba(52, 211, 153, 0.3); }
+.dark .border-amber-200, .dark .border-yellow-200 { border-color: rgba(245, 176, 77, 0.3); }
+.dark .border-red-200, .dark .border-red-100 { border-color: rgba(242, 139, 150, 0.3); }
+
+/* ---------- shadows: soften on dark (muddy otherwise) ---------- */
+.dark .shadow-sm,
+.dark .shadow,
+.dark .shadow-md,
+.dark .shadow-lg,
+.dark .shadow-xl { box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.05), 0 8px 24px -12px rgba(0, 0, 0, 0.5); }
+.dark .shadow-\[inset_0_0_0_1px_\#e6e9f0\] { box-shadow: inset 0 0 0 1px var(--line); }
+.dark .shadow-\[0_8px_24px_rgba\(11\,18\,32\,0\.10\)\] { box-shadow: 0 0 0 1px rgba(255,255,255,0.06), 0 8px 24px rgba(0, 0, 0, 0.45); }
+
+/* ---------- premium component classes (@apply compiled) ---------- */
+.dark .card-premium {
+  background-color: var(--card);
+  border-color: var(--line);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.03), 0 8px 24px -12px rgba(0, 0, 0, 0.5);
+}
+.dark .card-premium:hover {
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.06), 0 16px 40px -12px rgba(0, 0, 0, 0.6);
+}
+.dark .card-header-premium { color: var(--ink); }
+.dark .btn-premium {
+  background-color: var(--accent);
+  color: #0b0f1a;
+  box-shadow: 0 4px 14px -4px rgba(124, 140, 245, 0.4);
+}
+.dark .btn-premium:hover { background-color: #8e9cf7; }
+.dark .btn-premium-outline {
+  background-color: var(--card);
+  color: var(--ink);
+  border-color: var(--line-2);
+}
+.dark .btn-premium-outline:hover {
+  border-color: var(--accent);
+  background-color: #182034;
+}
+.dark .input-premium {
+  background-color: #0e1422;
+  border-color: var(--line-2);
+  color: var(--ink);
+}
+.dark .input-premium:focus { box-shadow: 0 0 0 3px rgba(124, 140, 245, 0.2); }
+.dark .btn-primary { background: var(--accent); color: #0b0f1a; }
+.dark .btn-primary:hover { background: #8e9cf7; }
+
+/* ---------- forms: native controls match the theme ---------- */
+.dark input,
+.dark select,
+.dark textarea { color-scheme: dark; }
+.dark input::placeholder,
+.dark textarea::placeholder { color: var(--ink-3); }
+.dark option { background-color: var(--card); color: var(--ink); }
+
+/* ---------- charts (Recharts) ---------- */
+.dark .recharts-cartesian-grid line { stroke: var(--line); }
+.dark .recharts-cartesian-axis-line,
+.dark .recharts-cartesian-axis-tick-line { stroke: var(--line-2); }
+.dark .recharts-text { fill: var(--ink-3); }
+.dark .recharts-default-tooltip {
+  background-color: var(--card) !important;
+  border: 1px solid var(--line) !important;
+  border-radius: 12px;
+}
+.dark .recharts-tooltip-item,
+.dark .recharts-tooltip-label { color: var(--ink) !important; }
+.dark .recharts-legend-item-text { color: var(--ink-2) !important; }
+
+/* ---------- scrollbars ---------- */
+.dark * { scrollbar-color: #2c3856 transparent; }
+.dark *::-webkit-scrollbar-thumb { background: #2c3856; }
+.dark *::-webkit-scrollbar-thumb:hover { background: #3a4a70; }
+
+/* ---------- tables ---------- */
+.dark thead.bg-gray-50 th,
+.dark thead .bg-gray-50 { background-color: #0e1422; }
+.dark tbody tr.hover\:bg-gray-50:hover { background-color: #182034; }
+
+/* smooth theme transition (skip on page load via no-transition guard) */
+html.theme-transition,
+html.theme-transition * {
+  transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease !important;
+}
+
