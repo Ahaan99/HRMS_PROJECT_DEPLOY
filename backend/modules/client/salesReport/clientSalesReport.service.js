@@ -74,18 +74,20 @@ export const getClientSalesReportService = async (
 ) => {
   const client_id = await getClientId(client_code);
 
-  let where = `WHERE client_id = ?`;
+  let where = `WHERE r.client_id = ?`;
   const params = [client_id];
 
   if (employee_id) {
-    where += ` AND employee_id = ?`;
+    where += ` AND r.employee_id = ?`;
     params.push(employee_id);
   }
 
   const [rows] = await db.query(
-    `SELECT * FROM client_sales_report
+    `SELECT r.*, e.name AS employee_name, e.employeeCode AS employee_code
+       FROM client_sales_report r
+       LEFT JOIN client_employees e ON e.id = r.employee_id
      ${where}
-     ORDER BY id DESC`,
+     ORDER BY r.id DESC`,
     params
   );
 
@@ -96,11 +98,13 @@ export const getClientSalesReportService = async (
 export const updateClientSalesReportService = async (
   client_code,
   id,
-  payload
+  payload,
+  forcedEmployeeId = null
 ) => {
   const client_id = await getClientId(client_code);
 
   const {
+    employee_id,
     plan_name,
     billing_months,
     amount,
@@ -116,6 +120,7 @@ export const updateClientSalesReportService = async (
 
   await db.query(
     `UPDATE client_sales_report SET
+      employee_id=?,
       plan_name=?,
       billing_months=?,
       amount=?,
@@ -129,6 +134,7 @@ export const updateClientSalesReportService = async (
       remarks=?
      WHERE id=? AND client_id=?`,
     [
+      forcedEmployeeId ?? (employee_id ? Number(employee_id) : null),
       plan_name,
       billing_months,
       amount,

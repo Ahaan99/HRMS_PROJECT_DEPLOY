@@ -4,10 +4,18 @@ import {
   updateClientSalesReportService,
 } from "./clientSalesReport.service.js";
 
-// helper
+// A logged-in client EMPLOYEE is always the salesperson on their own rows.
+// A client ADMIN picks the salesperson in the form (employee_id in body).
 const getEmployeeFromToken = (req) => {
   if (req.employee?.employee_id) return req.employee.employee_id;
   return null;
+};
+
+const resolveEmployeeId = (req) => {
+  const fromToken = getEmployeeFromToken(req);
+  if (fromToken) return fromToken;
+  const fromBody = req.body?.employee_id;
+  return fromBody ? Number(fromBody) : null;
 };
 
 // ================= CREATE =================
@@ -16,7 +24,7 @@ export const createClientSalesReport = async (req, res) => {
     const client_code =
       req.client?.client_code || req.employee?.client_code;
 
-    const employee_id = getEmployeeFromToken(req);
+    const employee_id = resolveEmployeeId(req);
 
     const id = await createClientSalesReportService(
       client_code,
@@ -60,7 +68,8 @@ export const updateClientSalesReport = async (req, res) => {
     await updateClientSalesReportService(
       client_code,
       id,
-      req.body
+      req.body,
+      getEmployeeFromToken(req)
     );
 
     res.json({ success: true });

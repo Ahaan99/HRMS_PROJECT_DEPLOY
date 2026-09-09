@@ -3,6 +3,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 
 const initialForm = {
+  employee_id: "",
   plan_name: "",
   billing_months: 1,
   amount: "",
@@ -29,12 +30,14 @@ const AddEditSaleModal = ({
   refresh,
   BASE_URL,
   token,
+  employees = [],
 }) => {
   const [form, setForm] = useState(initialForm);
   const isEdit = !!editingSale;
 
   useEffect(() => {
-    if (editingSale) setForm(editingSale);
+    if (editingSale)
+      setForm({ ...editingSale, employee_id: editingSale.employee_id ?? "" });
     else setForm(initialForm);
   }, [editingSale]);
 
@@ -78,6 +81,24 @@ const AddEditSaleModal = ({
         </h2>
 
         <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-3">
+          <div className="flex flex-col gap-1 col-span-2">
+            <Label required>Sold by (employee)</Label>
+            <select
+              name="employee_id"
+              value={form.employee_id ?? ""}
+              onChange={handleChange}
+              className="input"
+              required
+            >
+              <option value="">Select employee</option>
+              {employees.map((e) => (
+                <option key={e.id} value={e.id}>
+                  {e.name} {e.employeeCode ? `(${e.employeeCode})` : ""}
+                </option>
+              ))}
+            </select>
+          </div>
+
           <div className="flex flex-col gap-1">
             <Label required>Plan name</Label>
 

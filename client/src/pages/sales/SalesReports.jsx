@@ -10,6 +10,7 @@ const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const SalesReports = () => {
   const [sales, setSales] = useState([]);
+  const [employees, setEmployees] = useState([]);
   const [openModal, setOpenModal] = useState(false);
   const [editingSale, setEditingSale] = useState(null);
   const [filters, setFilters] = useState({
@@ -36,8 +37,20 @@ const SalesReports = () => {
     }
   };
 
+  const fetchEmployees = async () => {
+    try {
+      const res = await axios.get(`${BASE_URL}/client/employees`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setEmployees(res.data.data || res.data || []);
+    } catch (err) {
+      console.error("Fetch employees error:", err);
+    }
+  };
+
   useEffect(() => {
     fetchSales();
+    fetchEmployees();
   }, []);
 
   // ================= HELPERS =================
@@ -62,9 +75,12 @@ const SalesReports = () => {
 
   // ================= FILTER LOGIC =================
   const filteredSales = sales.filter((s) => {
+    const q = filters.search.toLowerCase();
     const searchMatch =
       !filters.search ||
-      s.plan_name?.toLowerCase().includes(filters.search.toLowerCase());
+      s.plan_name?.toLowerCase().includes(q) ||
+      s.employee_name?.toLowerCase().includes(q) ||
+      s.employee_code?.toLowerCase().includes(q);
 
     const statusMatch =
       !filters.payment_status || s.payment_status === filters.payment_status;
@@ -153,6 +169,7 @@ const SalesReports = () => {
             <thead className="sticky top-0 z-10 bg-gray-50 text-gray-600 sticky top-0 z-10">
               <tr>
                 <th className="px-4 py-3 text-left font-semibold">Plan</th>
+                <th className="px-4 py-3 text-left font-semibold">Employee</th>
                 <th className="px-4 py-3 text-left font-semibold">Amount</th>
                 <th className="px-4 py-3 text-left font-semibold">Paid</th>
                 <th className="px-4 py-3 text-left font-semibold">Status</th>
@@ -182,6 +199,16 @@ const SalesReports = () => {
                         {s.plan_name}
                       </div>
                       <div className="text-xs text-gray-400">#{s.id}</div>
+                    </td>
+
+                    {/* EMPLOYEE */}
+                    <td className="px-4 py-3">
+                      <div className="font-medium text-gray-900">
+                        {s.employee_name || "-"}
+                      </div>
+                      {s.employee_code && (
+                        <div className="text-xs text-gray-400">{s.employee_code}</div>
+                      )}
                     </td>
 
                     {/* AMOUNT */}
@@ -259,6 +286,7 @@ const SalesReports = () => {
 
       {/* MODAL */}
       <AddEditSaleModal
+        employees={employees}
         isOpen={openModal}
         onClose={() => setOpenModal(false)}
         editingSale={editingSale}
